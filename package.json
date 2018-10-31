@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "Software engineering 2 - Project API",
   "main": "index.js",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.8.0",
     "jest": "^23.6.0"
   },
-  "devDependencies": {},
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .",
     "test": "jest"
   },
   "jest": {
