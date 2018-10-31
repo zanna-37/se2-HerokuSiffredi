@@ -1,0 +1,30 @@
+{
+  "name": "se2-herokusiffredi",
+  "version": "1.0.0",
+  "description": "Software engineering 2 - Project API",
+  "main": "index.js",
+  "dependencies": {
+    "jest": "^23.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zanna-37/se2-HerokuSiffredi.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zanna-37/se2-HerokuSiffredi/issues"
+  },
+  "homepage": "https://github.com/zanna-37/se2-HerokuSiffredi#readme"
+}
