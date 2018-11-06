@@ -1,3 +1,5 @@
 # se2-HerokuSiffredi
 
-Miriam Punzi
+Partecipanti:
+- Tommaso Bonomo
+- Miriam Punzi
