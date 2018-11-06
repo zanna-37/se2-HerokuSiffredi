@@ -9,13 +9,10 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-console": "warn",
         "indent": [
             "error",
             4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
         ],
         "quotes": [
             "error",
