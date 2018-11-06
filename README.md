@@ -1,3 +1,8 @@
 # se2-HerokuSiffredi
 
-Andrea Zanotto
+Partecipanti:
+- Tommaso Bonomo
+- Federico Favotto
+- Miriam Punzi
+- Mattia Sangermano
+- Andrea Zanotto
