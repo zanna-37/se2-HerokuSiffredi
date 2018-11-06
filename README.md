@@ -1,4 +1,6 @@
 # se2-HerokuSiffredi
 
-Tommaso Bonomo
-Federico Favotto
+Partecipanti:
+- Tommaso Bonomo
+- Federico Favotto
+- Miriam Punzi
