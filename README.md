@@ -1,3 +1,7 @@
 # se2-HerokuSiffredi
 
-Mattia Sangermano 
+Partecipanti:
+- Tommaso Bonomo
+- Federico Favotto
+- Miriam Punzi
+- Mattia Sangermano
