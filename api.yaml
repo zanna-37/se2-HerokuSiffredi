@@ -1,0 +1,418 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: 'SE2-HerokuSiffredi'
+  description: '' 
+  license:
+    name: MIT
+    url: https://github.com/zanna-37/se2-HerokuSiffredi
+basePath: /
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+    /tasks:
+        get:
+            summary: Returns a list of all tasks. 
+            responses:
+                200:
+                    description: Array of Task objects
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Task'
+    /tasks/{id}:
+        get:
+            summary: Returns a specific task
+            parameters:
+            - in: path
+              name: id
+              description: ID of task
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: Task object with given ID
+                    schema:
+                        $ref: '#/definitions/Task'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No Task for that ID
+    
+    /taskCategories:
+        get:
+            summary: Returns a list of all task categories. 
+            responses:
+                200:
+                    description: Array of TaskCategory objects
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/TaskCategory'
+    /taskCategories/{id}:
+        get:
+            summary: Returns a specific task category
+            parameters:
+            - in: path
+              name: id
+              description: ID of task category
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: TaskCategory object with given ID
+                    schema:
+                        $ref: '#/definitions/TaskCategory'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No TaskCategory for that ID
+     
+    /users:
+        get:
+            summary: Returns a list of all users. 
+            responses:
+                200:
+                    description: Array of User objects
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/User'
+    /users/{id}:
+        get:
+            summary: Returns a specific user
+            parameters:
+            - in: path
+              name: id
+              description: ID of user
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: User object with given ID
+                    schema:
+                        $ref: '#/definitions/User'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No User for that ID
+    /groups:
+         get:
+             summary: Returns a list of all groups. 
+             responses:
+                 200:
+                     description: Array of Group objects
+                     schema:
+                         type: array
+                         items:
+                             $ref: '#/definitions/Group'
+    /groups/{id}:
+         get:
+             summary: Returns a specific Group
+             parameters:
+             - in: path
+               name: id
+               description: ID of Group
+               required: true
+               type: integer
+             responses:
+                 200:
+                     description: Group object with given ID
+                     schema:
+                         $ref: '#/definitions/Group'
+                 400:
+                     description: Specified ID is not valid
+                 404:
+                     description: No Group for that ID
+     
+    /courses:
+        get:
+            summary: Returns a list of all courses. 
+            responses:
+                200:
+                    description: Array of Course objects
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Course'
+    /courses/{id}:
+        get:
+            summary: Returns a specific course
+            parameters:
+            - in: path
+              name: id
+              description: ID of course
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: Course object with given ID
+                    schema:
+                        $ref: '#/definitions/Course'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No Course for that ID
+    
+    /exams:
+        get:
+            summary: Returns all ExamEvents
+            responses:
+                200:
+                    description: Array of ExamEvents objects
+                    schema:
+                        $ref: '#/definitions/ExamEvent'
+    /exams/{id}:
+        get:
+            summary: Returns a specific ExamEvent
+            parameters:
+            - in: path
+              name: id
+              description: ID of ExamEvent
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: ExamEvent object with given ID
+                    schema:
+                        $ref: '#/definitions/ExamEvent'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No ExamEvent for that ID
+    /exams/{examID}/users/{userID}:
+        get:
+            summary: Returns an AtomicExam
+            description: Returns the instance of AtomicExam corresponding to the specified _examID_ and _userID_
+            parameters:
+            - in: path
+              name: examID
+              description: ID of the ExamEvent
+              required: true
+              type: integer 
+            - in: path
+              name: userID
+              description: ID of the User
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: Specific AtomicExam object
+                    schema:
+                        $ref: '#/definitions/AtomicExam'
+                400:
+                    description: Specified IDs are not valid
+                404:
+                    description: No AtomicExam found for that examID and userID
+    /exams/{examID}/tasks/{taskID}:
+        get:
+            summary: Returns a Submission
+            description: Returns the instance of Submission corresponding to the specified _examID_ and _taskID_
+            parameters:
+            - in: path
+              name: examID
+              description: ID of the ExamEvent
+              required: true
+              type: integer 
+            - in: path
+              name: taskID
+              description: ID of the Task
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: Specific Submission object
+                    schema:
+                        $ref: '#/definitions/Submission'
+                400:
+                    description: Specified IDs are not valid
+                404:
+                    description: No Submission found for that examID and taskID
+    /examTemplates:
+        get:
+            summary: Returns all ExamTemplates
+            responses:
+                200:
+                    description: Array of ExamTemplate
+                    schema:
+                        $ref: '#/definitions/ExamTemplate'
+    /examTemplates/{id}:
+        get:
+            summary: Returns a specific ExamTemplate
+            parameters:
+            - in: path
+              name: id
+              description: ID of ExamTemplate
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: ExamTemplate object with given ID
+                    schema:
+                        $ref: '#/definitions/ExamTemplate'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No ExamTemplate for that ID               
+definitions:
+    TaskCategory:
+        title: Task Category
+        type: object
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+        required:
+        - id
+        - name
+    Task:        
+        title: Task
+        type: object
+        properties:
+            id:
+                type: integer
+            exerciseText:
+                type: string
+            categoryID:
+                type: string
+        required:
+        - id
+        - exerciseText
+        - categoryID
+    User:
+        title: User
+        type: object
+        properties:
+            id:
+                type: integer
+            studentNumber:
+                type: integer
+            name:
+                type: string
+            surname:
+                type: string
+            groupID:
+                type: string
+        required:
+        - id
+        - studentNumber
+    Group:
+        title: Group
+        description: Group of users
+        type: object
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+            users:
+                type: array
+                items:
+                    $ref: '#/definitions/User'
+        required:
+        - id
+        - name
+    Course:
+        title: Course
+        description: Specific courses where exams are templated
+        type: object
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+            academicYear:
+                type: string
+                format: date
+        required:
+        - id
+        - name
+    ExamEvent:
+        title: Exam
+        description: Describes the exam as an event  with deadlines, templates and statistics related to all marks
+        type: object
+        properties:
+            id:
+                type: integer
+            avgMark:
+                type: integer
+            defaultDeadlineStart:
+                type: string
+                format: date-time
+            defaultDeadlineEnd:
+                type: string
+                format: date-time
+            examTemplateID:
+                type: string
+        required:
+        - id
+        - defaultDeadlineEnd
+        - examTemplateID
+    ExamTemplate:
+        title: Exam Template
+        description: Template of an exam, with information such as number of questions for TaskCategory and name.
+        type: object
+        properties:
+            id:
+                type: integer
+            name:
+                type: string
+            questions:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        taskCategoryID:
+                            type: integer
+                        numberOfQuestions:
+                            type: integer
+                            minimum: 1
+        required:
+        - id
+        - name
+        - questions
+    AtomicExam:
+        title: Atomic Exam
+        description: The instance of an Exam Event, where tasks from a certain task category are given to the user (or user group) to submit.
+        type: object
+        properties:
+            id:
+                type: integer
+            userOrGroupID:
+                type: string
+            tasks:
+                type: array
+                items:
+                    $ref: '#/definitions/Task'
+            examEventID:
+                type: string
+        required:
+        - id
+        - userOrGroupID
+        - tasks
+        - examEventID
+    Submission:
+        title: Submission
+        type: object
+        properties:
+            id:
+                type: integer
+            taskID:
+                type: string
+            mark:
+                type: integer
+            comment:
+                type: integer
+            date:
+                type: string
+                format: date-time
+        required:
+        - id
+        - taskID
+        - mark
+        - date
