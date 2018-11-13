@@ -1,323 +1,370 @@
 # REST endpoints
 - /tasks
-    - **GET** *retrieve all tasks*
+    - **GET** _retrieve all tasks_
          - id
          - exerciseText
          - rightAnswer
+         - categoryId
 
-         /tasks/{id}
-
-    - **POST** *create new task*
+    - **POST** _create new task_
          - exerciseText
          - rightAnswer
-         - punteggio tot // TODO: è giusto metterlo? il punteggio potrebbe dipendere dall'esame
-         - average // TODO: togliamola ??? è un casino con gli standard
-    - **PUT** *create or update some tasks*
-        - tasks[] -> list of (id, exerciseText, rightAnswer)
+         - punteggio tot // TODO-MINOR: il punteggio potrebbe dipendere dall'esame
+         - average // TODO-MINOR: related with punteggio tot ↑
+         - categoryId
 
-    - **DELETE** *delete all tasks*
-        - _empty body_
+    - **PUT** _update some tasks (one or more)_
+        - tasks[ ] -> list of (id, exerciseText, rightAnswer, categoryId)
 
-- tasks/{id}
-    - **GET** *retrieve specific task*
+    - **DELETE** _delete all tasks in the list_
+        - taskIds[ ]
+
+- /tasks/{id}
+    - **GET** _retrieve specific task_
+        - id
+        - exerciseText
+        - (rightAnswer)
+        - (punteggio tot) //TODO: vedi sopra
+        - (average) // TODO-MINOR: related with punteggio tot ↑
+        - categoryId
+
+    - **POST** _method not allowed (error: 405)_
+
+    - **PUT** *update task*
         - exerciseText
         - rightAnswer
+        - punteggio tot //TODO: vedi sopra
+        - ~~average (va modificata a backend, magari azzerandola)~~
+        - categoryId
 
-    - **POST** *method not allowed (405)*
-
-    - **PUT** *create or update task*
-         - exerciseText
-         - rightAnswer
-
-    - **DELETE** *delete the task*
+    - **DELETE** _delete the task_
          - _empty body_
 
 - /taskCategories
-    - **GET** *retrieve existing task categories*
+    - **GET** _retrieve existing task categories_
         - id
         - name
 
-    - **POST** *create new task category*
+    - **POST** _create new task category_
         -  name
 
-    - **PUT** *create or update some task categories*
-         - taskCategory[] -> list of (id, name)
+    - **PUT** _update some task categories_
+         - taskCategory[ ] -> list of (id, name)
 
-    - **DELETE** *delete all tasks category*
-        - _empty body_
+    - **DELETE** _delete all tasks category in a list_
+        - taskCategoryId[ ]
 
 - /taskCategories/{id}
-    - **GET** *retrieve existing task category*
+    - **GET** _retrieve existing task category_
+        - id
         - name
 
-    - **POST** *method not allowed*
+    - **POST** _method not allowed (error: 405)_
 
-    - **PUT** *create or update a task category*
-         - id
+    - **PUT** _update a task category_
          - name
 
-    - **DELETE** *delete a task category*
+    - **DELETE** _delete a task category_
         - _empty body_
 
 - /users
-    - **GET** *retrieve all users*
+    - **GET** _retrieve all users_
         - id
         - (studentNumber) //_matricola_
         - name
         - surname
         - average // NB: non si può settare la media, infatti in post e put non c'è
 
-    - **POST** *create new user*
+    - **POST** _create new user_
         - (studentNumber) //_matricola_
         - name
         - surname
 
-    - **PUT** *create or update some users*
-        - users[] -> list of (id, studentNumber, name, surname)
+    - **PUT** _update some users_
+        - users[ ] -> list of {id, studentNumber, name, surname}
 
-    - **DELETE** *delete all users* // TODO: LO METTIAMO VERAMENTE? CHI HA I PERMESSI PER FARLO?
+    - **DELETE** _delete all users in the list_
+        - userIds[ ]
 
 - /users/{id}
-    - **GET** *retrieve a user*
+    - **GET** _retrieve a user_
+        - id
         - (studentNumber) //_matricola_
         - name
         - surname
         - average // NB: non si può settare la media, infatti in post e put non c'è
 
-    - **POST** *method not allowed*
+    - **POST** _method not allowed (error: 405)_
 
-    - **PUT** *create or update user*
+    - **PUT** _update user_
         - (studentNumber) //_matricola_
         - name
         - surname
 
-    - **DELETE** *delete user*
-
-- /groups
-    - **GET** *retrieve all groups*
-        - id
-        - name
-        - usersId[ ]
-
-    - **POST** *create new group*
-        - name
-        - userId[]
-
-    - **PUT** *create or update some grups*
-        - group [] -> lis of (id , name, userId[])
-
-    - **DELETE** *delete all groups*
+    - **DELETE** _delete user_
         - _empty body_
 
+- /groups
+    - **GET** _retrieve all groups_
+        - id
+        - name
+        - usersIds[ ]
+
+    - **POST** _create new group_
+        - name
+        - userId[ ]
+
+    - **PUT** _update some grups_
+        - group[ ] -> list of { id, name, userId[ ] }
+
+    - **DELETE** _delete all groups in the list_
+        - groupIds[ ]
+
 - /groups/{id}
-    - **GET** *retrieve a group*
+    - **GET** _retrieve a group_
         - id
         - name
-        - usersId[ ]
+        - usersIds[ ]
 
-    - **POST** *method not allowed*
+    - **POST** _method not allowed (error: 405)_
 
-    - **PUT** *create or update a grup*
+    - **PUT** _update a group-
         - id
         - name
-        - userId[]
+        - userId[ ]
 
-    - **DELETE** *delete a group*
+    - **DELETE** _delete a group_
         - _empty body_
 
 - /courses //TODO: nome più specifico
-    - **GET** *retrieve all courses*
+    - **GET** _retrieve all courses_
         - id
         - name
         - annoAccademico // type = string (es "2018/2019")
 
-    - **POST** *create a course*
+    - **POST** _create a course_
         - name
         - annoAccademico
 
     - **PUT**
-        - course[] -> list of (id, name, annoAccademico)
+        - course[ ] -> list of { id, name, annoAccademico }
 
-    - **DELETE**
-        - empty body
+    - **DELETE** _delete all groups in the list_
+        - coursesId[ ]
 
 - /courses/{id} //TODO: nome più specifico
-    - **GET** *retrieve a course*
+    - **GET** _retrieve a course_
+        - id
         - name
         - annoAccademico // type = string (es "2018/2019")
 
-    - **POST** *method not allowed*
+    - **POST** _method not allowed (error: 405)_
 
-    - **PUT** *create or update a course*
+    - **PUT** _update a course_
         - name
         - annoAccademico
 
-    - **DELETE** *delete a course*
-        - empty body
-
-
-- /exams //_ExamEvent_
-    - **GET** *retrieve a list of exams*
-        - id
-        - examTemplateId
-        - (avg mark)
-        - defaultDeadline
-            - start
-            - end
-
-    - **POST** *create an exam*
-        - examTemplateId
-        - (avg mark)
-        - defaultDeadline
-            - start
-            - end
-    - **PUT** *create or update a list of courses*
-        - id
-        - examTemplateId
-        - (avg mark)
-        - defaultDeadline
-            - start
-            - end
-
-    - **DELETE** *delete all exams*
-        - empty body
-
-- /exams/{id}
-    - **GET** *retrieve an exam*
-        - examTemplateId
-        - (avg mark)
-        - defaultDeadline
-            - start
-            - end
-
-    - **POST** *method not allowed*
-
-    - **PUT** *create or update a course*
-        - examTemplateId
-        - (avg mark)
-        - defaultDeadline
-            - start
-            - end
-
-    - **DELETE** *delete an exam*
+    - **DELETE** _delete a course_
         - empty body
 
 - /examTemplates
-    - **GET** *retrieve all exam templates*
+    - **GET** _retrieve all exam templates_
         - id
         - name
-        - domandeCerte[ ] // TODO: discutere se va bene (qui o su /exams/{id} ?)
         - idCategorie[ ]
         - quantità[ ]
 
-    - **POST** *create new exam template*
+    - **POST** _create new exam template_
         - name
-        - domandeCerte[ ] // TODO: discutere
-        - idCategorie[ ]
-        - quantità[ ]
+        - categoryIds[ ]
+        - quantity[ ]
 
-    - **PUT** *create or update exam templates*
-        - list of -> (id, name, domandeCerte[ ], idCategorie[], quantità[ ])
+    - **PUT** _update exam templates_
+        - list of -> {id, name, idCategorie[ ], quantità[ ]}
 
-    - **DELETE** *delete all exam templates*
+    - **DELETE** _delete exam templates of a list_
+        - examTemplateIds[ ]
 
 - /examTemplates/{id}
-    - **GET** *retrieve an exam template*
-        - id //TODO: mettiamo l'id in tutti i get anche se già in URI?
-        - name
-        - domandeCerte[ ] // TODO: discutere se va bene (qui o su /exams/{id} ?)
-        - idCategorie[ ]
-        - quantità[ ]
-
-    - **POST** *method not allowed*
-
-    - **PUT** *create or update single exam template*
+    - **GET** _retrieve an exam template_
         - id
         - name
-        - domandeCerte[ ]
-        - idCategorie[ ]
-        - quantità[ ]
+        - categoryIds[ ]
+        - quantity[ ]
 
-    - **DELETE** *delete an exam template*
+    - **POST** _method not allowed (error: 405)_
 
+    - **PUT** _update single exam template_
+        - id
+        - name
+        - categoryIds[ ]
+        - quantity[ ]
 
+    - **DELETE** _delete an exam template_
 
+- /exams //_ExamEvent_
+    - **GET** _retrieve a list of exams_
+        - id
+        - examTemplateId
+        - (avg mark)
+        - defaultDeadline
+            - start
+            - end
 
+    - **POST** _create an exam_
+        - examTemplateId
+        - (avg mark)
+        - defaultDeadline
+            - start
+            - end
 
-- /exams/{id}/tasks //specifica tutte le sub di tutti i task di un exam event
-    - **GET** *retrieve all submissions of an exam of all students*
-        - subId[]
-        - tasksId[ ]
-        - submissions[ ]
+    - **PUT** _update a list of courses_
+        - id
+        - examTemplateId
+        - (avg mark)
+        - defaultDeadline
+            - start
+            - end
 
-    - **POST** *method not allowed* //TODO: discuterne
+    - **DELETE** _delete all exams in the list
+        - examsIds[ ]
 
-    - **PUT** *method not allowed* //TODO: discuterne
+- /exams/{id}
+    - **GET** _retrieve an exam_
+        - id
+        - examTemplateId
+        - (avg mark)
+        - defaultDeadline
+            - start
+            - end
 
-    - **DELETE** *method not allowed* //TODO: discuterne
+    - **POST** _method not allowed (error: 405)_
 
-- /exams/{id}/tasks/{id} //specifica task di un exam event
+    - **PUT** _update a course_
+        - examTemplateId
+        - (avg mark)
+        - defaultDeadline
+            - start
+            - end
+
+    - **DELETE** _delete an exam_
+        - empty body
+
+- /exams/{id}/tasks/{id} //tutte le sub di tutti gli utenti di una specifica task di un exam event
     - submissions[ ]
+        - answerText
 
-    - **GET** *retrieve all submissions of a specific task of an exam event*
+    - **GET** _retrieve all submissions of a specific task of an exam event_
         - submissions[ ]
 
-    - **POST** *method not allowed* //TODO: discuterne
+    - **POST** _method not allowed (error: 405)_ //TODO: discuterne
 
-    - **PUT** *method not allowed* //TODO: discuterne
+    - **PUT** _method not allowed (error: 405)_ //TODO: discuterne
 
-    - **DELETE** *method not allowed* //TODO: discuterne
+    - **DELETE** _method not allowed (error: 405)_ //TODO: discuterne
 
-- /exams/{id}/users/{id} //_Atomic exam, collection of submissions per user_
+//TODO-QUESTION: decidere se è meglio fare su "/submissions" o come sotto
+
+- /exams/{id}/task-submissions?user={id}
+- /exams/{id}/task-submissions/{id}
+
+
+
+- /exams/{id}/task-submissions //_Single task submission_
     - **GET**
-        - final evaluation
-            - evaluator
-            - final mark
-            - comment
-        - submissions[ ] -> list of//_Tutte quelle consegnate_
+        - list of:
             - subId
+            - userId
             - taskId
             - answer
-            - definitive mark
+            - finalCorrectionId
+
+    - **POST** _submit a single task_
+        - userId
+        - taskId
+        - answer
+        - ~~finalCorrectionId = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+
+    - **PATCH** _submit again (student)_
+        - subId
+        - taskId
+        - answer
+
+    - **PATCH** _correction (professor)_
+        - subId
+        - finalCorrectionId
+
+- /exams/{id}/task-corrections
+    - **GET** _retrieve all the correction proposals for an exam_
+        - listof:
+            - id
+            - mark
             - comment
-            - proposers ids[ ] //_participants che hanno valutato la sub_
-            - proposed mark[ ] //_voti da parte dei participants che hanno valutato la sub_
+            - proposerUserId
 
-    - **POST** *method not allowed* //TODO: really?
+    - **POST** _create a correction proposal_
+        - subId
+        - mark
+        - comment
+        - proposerUserId
 
-    - **PUT** *method not allowed* //TODO: really?
+    - **PUT** _update a list of correction proposals_
+        - list of:
+            - id
+            - mark
+            - comment
+            - proposerUserId
 
-    - **DELETE** *delete an atomic exam*
+    - **DELETE** _delete list of correction proposals_
+        - correctionsIds[ ]
 
-- /exams/{id}/users/{id}?task={id} //_Single task submission_
+- /exams/{id}/task-corrections/{id}
+    - **GET** _retrieve a proposal corrections for an exam_
+        - id
+        - mark
+        - comment
+        - proposerUserId
+
+    - **POST** _method not allowed (error: 405)_
+
+    - **PUT** _update single correction proposal_
+        - mark
+        - comment
+        - proposerUserId
+
+    - **DELETE** _delete a correction proposal_
+        - empty body
+
+- /exams/{id}/participants _Assign atomic exam to a list of users_
     - **GET**
-        - subId
-        - taskId
-        - answer
-        - definitive mark
-        - comment
-        - proposersIds[ ] //_participants che hanno valutato la sub_
-        - proposedMarks[ ] //_voti da parte dei participants che hanno valutato la sub_
+        - atomicExamId
+        - participantId[ ]
+        - examId
+        - final evaluation
+            - evaluatorUserId
+            - final mark
+            - comment
+        - taskIds[ ]
 
-    - **POST** *submit a single task*
-        - taskId
-        - answer
-        - definitive mark = null
-        - comment = null
-        - proposersIds[ ] = null
-        - proposedMarks[ ] = null
+    - **POST** _create an Atomic Exam for a user_
+        - userId
+        - examId
+        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+        - taskIds[ ]
 
-    - **PATCH** *submit again (student)*
-        - subId
-        - taskId
-        - answer
+    - **PATCH** (professor)
+        - final evaluation
+            - evaluatorUserId
+            - final mark
+            - comment
 
-    - **PATCH** *correction (professor)*
-        - subId
-        - definitive mark
-        - comment
+    - **DELETE** _delete an atomic exam_
+        -    empty body
 
-    - **PATCH** *peer review (student)*
-        - subId
-        - proposersIds[ ] //TODO: come fare per non sovrascrivere?
-        - proposedMarks[ ]
+~~- /exams/{id}/course/{id} _Assign atomic exam to a course_
+    - **POST** _create an Atomic Exam for a course_
+        - courseId
+        - examId~~
+
+- /users/{id}/exams
+
