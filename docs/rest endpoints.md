@@ -335,21 +335,41 @@
     - **DELETE** _delete a correction proposal_
         - empty body
 
-- /exams/{id}/participants _Assign atomic exam to a list of users_
+- /exams/{id}/participants
     - **GET**
-        - atomicExamId
-        - participantId[ ]
+        - participantIds[ ]
+        - examId
+        - final evaluation[ ]
+            - evaluatorUserId
+            - final mark
+            - comment
+
+    - **POST** _assign an exam to a user_
+        - participantIds[ ]
+        - examId
+        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+        - taskIds[ ]
+
+    - **PUT** _assign an exam to a user_
+
+        - list of:
+            - participantIds[ ]
+            - examId
+            - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+            - taskIds[ ]
+
+
+    - **DELETE** _delete an atomic exam_
+        - empty body
+
+- /exams/{id}/participants/{id} _retrieve an atomic exam_
+    - **GET**
+        - participantIds[ ]
         - examId
         - final evaluation
             - evaluatorUserId
             - final mark
             - comment
-        - taskIds[ ]
-
-    - **POST** _create an Atomic Exam for a user_
-        - userId
-        - examId
-        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
         - taskIds[ ]
 
     - **PATCH** (professor)
@@ -358,8 +378,8 @@
             - final mark
             - comment
 
-    - **DELETE** _delete an atomic exam_
-        -    empty body
+
+
 
 ~~- /exams/{id}/course/{id} _Assign atomic exam to a course_
     - **POST** _create an Atomic Exam for a course_
@@ -367,4 +387,3 @@
         - examId~~
 
 - /users/{id}/exams
-
