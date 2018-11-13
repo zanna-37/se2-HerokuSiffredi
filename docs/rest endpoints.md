@@ -12,12 +12,12 @@
          - punteggio tot // TODO-MINOR: il punteggio potrebbe dipendere dall'esame
          - average // TODO-MINOR: related with punteggio tot ↑
          - categoryId
-
+        
     - **PUT** _update some tasks (one or more)_
         - tasks[ ] -> list of (id, exerciseText, rightAnswer, categoryId)
 
-    - **DELETE** _delete all tasks in the list_
-        - taskIds[ ]
+    - **DELETE** _delete all tasks in the list_ 
+        - taskIds[ ] 
 
 - /tasks/{id}
     - **GET** _retrieve specific task_
@@ -27,20 +27,20 @@
         - (punteggio tot) //TODO: vedi sopra
         - (average) // TODO-MINOR: related with punteggio tot ↑
         - categoryId
-
+    
     - **POST** _method not allowed (error: 405)_
-
+    
     - **PUT** *update task*
-        - exerciseText
+        - exerciseText 
         - rightAnswer
         - punteggio tot //TODO: vedi sopra
         - ~~average (va modificata a backend, magari azzerandola)~~
         - categoryId
-
+        
     - **DELETE** _delete the task_
          - _empty body_
 
-- /taskCategories
+- /task-categories
     - **GET** _retrieve existing task categories_
         - id
         - name
@@ -54,7 +54,7 @@
     - **DELETE** _delete all tasks category in a list_
         - taskCategoryId[ ]
 
-- /taskCategories/{id}
+- /task-categories/{id}
     - **GET** _retrieve existing task category_
         - id
         - name
@@ -74,7 +74,7 @@
         - name
         - surname
         - average // NB: non si può settare la media, infatti in post e put non c'è
-
+    
     - **POST** _create new user_
         - (studentNumber) //_matricola_
         - name
@@ -85,7 +85,7 @@
 
     - **DELETE** _delete all users in the list_
         - userIds[ ]
-
+    
 - /users/{id}
     - **GET** _retrieve a user_
         - id
@@ -93,9 +93,9 @@
         - name
         - surname
         - average // NB: non si può settare la media, infatti in post e put non c'è
-
+    
     - **POST** _method not allowed (error: 405)_
-
+    
     - **PUT** _update user_
         - (studentNumber) //_matricola_
         - name
@@ -111,9 +111,9 @@
         - usersIds[ ]
 
     - **POST** _create new group_
-        - name
+        - name 
         - userId[ ]
-
+   
     - **PUT** _update some grups_
         - group[ ] -> list of { id, name, userId[ ] }
 
@@ -148,7 +148,7 @@
 
     - **PUT**
         - course[ ] -> list of { id, name, annoAccademico }
-
+    
     - **DELETE** _delete all groups in the list_
         - coursesId[ ]
 
@@ -163,13 +163,13 @@
     - **PUT** _update a course_
         - name
         - annoAccademico
-
+    
     - **DELETE** _delete a course_
         - empty body
 
-- /examTemplates
+- /exam-templates
     - **GET** _retrieve all exam templates_
-        - id
+        - id 
         - name
         - idCategorie[ ]
         - quantità[ ]
@@ -178,7 +178,7 @@
         - name
         - categoryIds[ ]
         - quantity[ ]
-
+        
     - **PUT** _update exam templates_
         - list of -> {id, name, idCategorie[ ], quantità[ ]}
 
@@ -195,17 +195,18 @@
     - **POST** _method not allowed (error: 405)_
 
     - **PUT** _update single exam template_
-        - id
+        - id 
         - name
         - categoryIds[ ]
         - quantity[ ]
 
     - **DELETE** _delete an exam template_
-
+    
 - /exams //_ExamEvent_
     - **GET** _retrieve a list of exams_
         - id
         - examTemplateId
+        - ownersIds[ ]
         - (avg mark)
         - defaultDeadline
             - start
@@ -213,19 +214,21 @@
 
     - **POST** _create an exam_
         - examTemplateId
+        - ownersIds[ ]
         - (avg mark)
         - defaultDeadline
             - start
             - end
-
+        
     - **PUT** _update a list of courses_
         - id
         - examTemplateId
+        - ownersIds[ ]
         - (avg mark)
         - defaultDeadline
             - start
             - end
-
+    
     - **DELETE** _delete all exams in the list
         - examsIds[ ]
 
@@ -233,20 +236,22 @@
     - **GET** _retrieve an exam_
         - id
         - examTemplateId
+        - ownersIds[ ]
         - (avg mark)
         - defaultDeadline
             - start
             - end
 
     - **POST** _method not allowed (error: 405)_
-
+    
     - **PUT** _update a course_
         - examTemplateId
+        - ownersIds[ ]
         - (avg mark)
         - defaultDeadline
             - start
             - end
-
+    
     - **DELETE** _delete an exam_
         - empty body
 
@@ -256,9 +261,9 @@
 
     - **GET** _retrieve all submissions of a specific task of an exam event_
         - submissions[ ]
-
+    
     - **POST** _method not allowed (error: 405)_ //TODO: discuterne
-
+    
     - **PUT** _method not allowed (error: 405)_ //TODO: discuterne
 
     - **DELETE** _method not allowed (error: 405)_ //TODO: discuterne
@@ -278,7 +283,7 @@
             - taskId
             - answer
             - finalCorrectionId
-
+    
     - **POST** _submit a single task_
         - userId
         - taskId
@@ -314,9 +319,9 @@
             - mark
             - comment
             - proposerUserId
-
+    
     - **DELETE** _delete list of correction proposals_
-        - correctionsIds[ ]
+        - correctionsIds[ ] 
 
 - /exams/{id}/task-corrections/{id}
     - **GET** _retrieve a proposal corrections for an exam_
@@ -331,25 +336,45 @@
         - mark
         - comment
         - proposerUserId
-
+    
     - **DELETE** _delete a correction proposal_
+        - empty body 
+
+- /exams/{id}/participants
+    - **GET**
+        - participantIds[ ]
+        - examId
+        - final evaluation[ ]
+            - evaluatorUserId
+            - final mark
+            - comment
+    
+    - **POST** _assign an exam to a user_
+        - participantIds[ ]
+        - examId
+        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+        - taskIds[ ]
+
+    - **PUT** _assign an exam to a user_
+
+        - list of:
+            - participantIds[ ]
+            - examId
+            - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+            - taskIds[ ]
+
+    
+    - **DELETE** _delete an atomic exam_
         - empty body
 
-- /exams/{id}/participants _Assign atomic exam to a list of users_
+- /exams/{id}/participants/{id} _retrieve an atomic exam_
     - **GET**
-        - atomicExamId
-        - participantId[ ]
+        - participantIds[ ]
         - examId
         - final evaluation
             - evaluatorUserId
             - final mark
             - comment
-        - taskIds[ ]
-
-    - **POST** _create an Atomic Exam for a user_
-        - userId
-        - examId
-        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
         - taskIds[ ]
 
     - **PATCH** (professor)
@@ -358,13 +383,5 @@
             - final mark
             - comment
 
-    - **DELETE** _delete an atomic exam_
-        -    empty body
-
-~~- /exams/{id}/course/{id} _Assign atomic exam to a course_
-    - **POST** _create an Atomic Exam for a course_
-        - courseId
-        - examId~~
 
 - /users/{id}/exams
-
