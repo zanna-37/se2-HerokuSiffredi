@@ -1,42 +1,47 @@
 # REST endpoints
 - /tasks
     - **GET** _retrieve all tasks_
-         - id
-         - exerciseText
-         - rightAnswer
-         - categoryId
+        - tasks[ ]
 
     - **POST** _create new task_
          - exerciseText
-         - rightAnswer
-         - punteggio tot // TODO-MINOR: il punteggio potrebbe dipendere dall'esame
-         - average // TODO-MINOR: related with punteggio tot ↑
+         - answers[ ]
+             - answer
+             - isRight
+         - ~~spiegazione~~
          - categoryId
-        
+         - punteggio tot // TODO-MINOR: il punteggio potrebbe dipendere dall'esame
+         - ultima modifica
+                 
     - **PUT** _update some tasks (one or more)_
-        - tasks[ ] -> list of (id, exerciseText, rightAnswer, categoryId)
+        - tasks[ ]
 
     - **DELETE** _delete all tasks in the list_ 
-        - taskIds[ ] 
+        - taskIds[ ] -> list of id
 
 - /tasks/{id}
     - **GET** _retrieve specific task_
         - id
-        - exerciseText
-        - (rightAnswer)
-        - (punteggio tot) //TODO: vedi sopra
-        - (average) // TODO-MINOR: related with punteggio tot ↑
-        - categoryId
+         - exerciseText
+         - answers[ ]
+             - answer
+             - isRight
+         - ~~spiegazione~~
+         - categoryId
+         - punteggio tot
+         - ultima modifica
     
     - **POST** _method not allowed (error: 405)_
     
     - **PUT** *update task*
-        - exerciseText 
-        - rightAnswer
-        - punteggio tot //TODO: vedi sopra
-        - ~~average (va modificata a backend, magari azzerandola)~~
-        - categoryId
-        
+         - exerciseText
+         - answers[ ]
+             - answer
+             - isRight
+         - ~~spiegazione~~
+         - categoryId
+         - punteggio tot // TODO-MINOR: il punteggio potrebbe dipendere dall'esame
+ 
     - **DELETE** _delete the task_
          - _empty body_
 
@@ -102,38 +107,6 @@
         - surname
 
     - **DELETE** _delete user_
-        - _empty body_
-
-- /groups
-    - **GET** _retrieve all groups_
-        - id
-        - name
-        - usersIds[ ]
-
-    - **POST** _create new group_
-        - name 
-        - userId[ ]
-   
-    - **PUT** _update some grups_
-        - group[ ] -> list of { id, name, userId[ ] }
-
-    - **DELETE** _delete all groups in the list_
-        - groupIds[ ]
-
-- /groups/{id}
-    - **GET** _retrieve a group_
-        - id
-        - name
-        - usersIds[ ]
-
-    - **POST** _method not allowed (error: 405)_
-
-    - **PUT** _update a group-
-        - id
-        - name
-        - userId[ ]
-
-    - **DELETE** _delete a group_
         - _empty body_
 
 - /courses //TODO: nome più specifico
@@ -254,41 +227,42 @@
     
     - **DELETE** _delete an exam_
         - empty body
-
-- /exams/{id}/tasks/{id} //tutte le sub di tutti gli utenti di una specifica task di un exam event
-    - submissions[ ]
-        - answerText
-
-    - **GET** _retrieve all submissions of a specific task of an exam event_
-        - submissions[ ]
-    
-    - **POST** _method not allowed (error: 405)_ //TODO: discuterne
-    
-    - **PUT** _method not allowed (error: 405)_ //TODO: discuterne
-
-    - **DELETE** _method not allowed (error: 405)_ //TODO: discuterne
-
-//TODO-QUESTION: decidere se è meglio fare su "/submissions" o come sotto
-
-- /exams/{id}/task-submissions?user={id}
-- /exams/{id}/task-submissions/{id}
-
-
-
-- /exams/{id}/task-submissions //_Single task submission_
-    - **GET**
-        - list of:
-            - subId
-            - userId
-            - taskId
-            - answer
-            - finalCorrectionId
-    
-    - **POST** _submit a single task_
+        
+- /submissions
+    - **POST** __
+        - examId
+        - subId
         - userId
-        - taskId
-        - answer
-        - ~~finalCorrectionId = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
+        - assignedTaskId
+        - userAnswer
+        - (finalCorrectionId) // quando è a null, non si mette proprio
+
+    - **PUT** __
+    
+    - **DELETE** __
+
+
+- /submissions/{id}
+    - **GET** _retrieve a submission_
+        - examId
+        - subId
+        - userId
+        - assignedTaskId
+        - userAnswer
+        - finalCorrectionId
+
+    - **POST** _method not allowed_
+         
+    - **PUT** __ // studente e professore passano campi diversi 
+        - examId
+        - subId
+        - userId
+        - assignedTaskId
+        - userAnswer
+        - (finalCorrectionId) // quando è a null, non si mette proprio
+    
+    - **DELETE** delete a submission_
+        - empty body
 
     - **PATCH** _submit again (student)_
         - subId
@@ -299,33 +273,28 @@
         - subId
         - finalCorrectionId
 
-- /exams/{id}/task-corrections
+- /task-corrections
     - **GET** _retrieve all the correction proposals for an exam_
-        - listof:
-            - id
-            - mark
-            - comment
-            - proposerUserId
+        - taskCorrections[ ]
 
     - **POST** _create a correction proposal_
         - subId
+        - examId
         - mark
         - comment
         - proposerUserId
 
     - **PUT** _update a list of correction proposals_
-        - list of:
-            - id
-            - mark
-            - comment
-            - proposerUserId
+        - taskCorrections[ ]
     
     - **DELETE** _delete list of correction proposals_
         - correctionsIds[ ] 
 
-- /exams/{id}/task-corrections/{id}
+- /task-corrections/{id}
     - **GET** _retrieve a proposal corrections for an exam_
         - id
+        - subId
+        - examId
         - mark
         - comment
         - proposerUserId
@@ -333,55 +302,61 @@
     - **POST** _method not allowed (error: 405)_
 
     - **PUT** _update single correction proposal_
+        - subId
+        - examId
         - mark
         - comment
         - proposerUserId
     
     - **DELETE** _delete a correction proposal_
-        - empty body 
+        - empty body
 
-- /exams/{id}/participants
+- /exam-instances
     - **GET**
-        - participantIds[ ]
+        - userIds[ ]
         - examId
+        - assignedTaskIds[ ]
         - final evaluation[ ]
             - evaluatorUserId
             - final mark
             - comment
     
     - **POST** _assign an exam to a user_
-        - participantIds[ ]
+        - userIds[ ]
         - examId
-        - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
-        - taskIds[ ]
+        - assignedTaskIds[ ] // In realtà si passano le taskIds che verranno copiate in assigned task
 
     - **PUT** _assign an exam to a user_
 
         - list of:
-            - participantIds[ ]
+            - userIds[ ]
             - examId
-            - ~~final evaluation = null~~ //TODO-QUESTION: possiamo non passarla e metterla a null da server?
             - taskIds[ ]
 
-    
     - **DELETE** _delete an atomic exam_
         - empty body
 
-- /exams/{id}/participants/{id} _retrieve an atomic exam_
+- /exam-instances/{id} _retrieve an atomic exam_
     - **GET**
-        - participantIds[ ]
+        - userIds[ ]
         - examId
         - final evaluation
             - evaluatorUserId
             - final mark
             - comment
-        - taskIds[ ]
-
+        - assignedTaskIds[ ]
+    
+    - **PUT** _si fa sulla sub_
+    
     - **PATCH** (professor)
         - final evaluation
             - evaluatorUserId
             - final mark
             - comment
 
+- /users/{id}/exams _carriera dell'utente_
 
-- /users/{id}/exams
+- /assigned-tasks/{id}
+    - **GET**
+        - assignedTaskId
+        - task (copia spaccata immodificabile)

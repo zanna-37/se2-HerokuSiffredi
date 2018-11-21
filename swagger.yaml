@@ -39,16 +39,24 @@ paths:
                 properties:
                     exerciseText:
                         type: string
-                    rightAnswer:
-                        type: string
+                    answers:
+                        type: array
+                        items:
+                            type: object
+                            properties: 
+                                answer:
+                                    type: string
+                                isRight:
+                                    type: boolean
                     totalPoints:
-                        type: number
-                    average:
                         type: number
                     categoryID:
                         type: integer
+                    latestChange:
+                        type: string
+                        format: date-time
                 required:
-                - exerciseText        
+                - exerciseText
                 - totalPoints
                 - categoryID
             responses:
@@ -150,19 +158,7 @@ paths:
             - in: body
               name: task
               schema:
-                  properties:
-                      exerciseText:
-                          type: string
-                      rightAnswer:
-                          type: string
-                      totalPoints:
-                          type: number
-                      categoryID:
-                          type: integer
-                  required:
-                  - exerciseText
-                  - totalPoints
-                  - categoryID
+                  $ref: '#/definitions/Task'
             responses:
                 204:
                     description: Updated Task
@@ -192,11 +188,186 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /taskCategories:
+    /task-corrections:
+        get:
+            summary: Returns a list of all task corrections for an exam. 
+            tags:
+                - task corrections
+            parameters:
+              - in: body
+                name: examID
+                schema:
+                    type: object
+                    properties:
+                        examID:
+                            type: integer
+            responses:
+                200:
+                    description: Array of task corrections
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/TaskCorrection'
+        post:
+            summary: Create a new task correction
+            tags:
+                - task corrections
+            parameters:
+            - in: body
+              name: task
+              description: The new task correction
+              schema:
+                type: object
+                properties:
+                    subID:
+                        type: integer
+                    examID:
+                        type: integer
+                    mark:
+                        type: number
+                    comment:
+                        type: string
+                    userProposerID:
+                        type: integer
+                required:
+                - subID
+                - examID
+                - mark
+                - userProposerID
+            responses:
+                201:
+                    description: Task corrected
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                                description: TaskCorrection ID
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+        put:
+            summary: Update some task corrections
+            tags:
+                - task corrections
+            parameters:
+            - in: body
+              name: task-correcitons 
+              description: Batch of task corrections to be updated
+              schema:
+                  type: array
+                  items:
+                      $ref: '#/definitions/TaskCorrection'
+            responses:
+                204:
+                    description: Updated Task corrections
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            summary: Delete a batch of task corrections
+            tags:
+                - task corrections
+            parameters:
+            - in: body
+              name: taskCorrectionIDs
+              schema:
+                  type: array
+                  items:
+                      type: integer
+            responses:
+                204:
+                    description: Deleted task corrections
+                404:
+                    description: Task corrections not found
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+    /task-corrections/{id}:
+        get:
+            summary: Returns a specific task correction
+            tags:
+                - task corrections
+            parameters:
+            - in: path
+              name: id
+              description: ID of task correction
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: Task correction with given ID
+                    schema:
+                        $ref: '#/definitions/TaskCorrection'
+                404:
+                    description: No task correction for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        post:
+            summary: Not supported
+            deprecated: true
+            tags:
+                - task corrections
+            parameters:
+            - in: path
+              name: id
+              required: true
+              type: integer
+            responses:
+                405:
+                    description: Method not allowed
+                    schema:
+                        $ref: '#/definitions/Error'
+        put:
+            summary: Updates a specific task correction
+            tags:
+                - task corrections
+            parameters:
+            - in: path
+              name: id
+              description: ID of task correction
+              required: true
+              type: integer
+            - in: body
+              name: task correction
+              schema:
+                  $ref: '#/definitions/TaskCorrection'
+            responses:
+                204:
+                    description: Updated task correction
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+                404:
+                    description: No task correction for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            summary: Delete specific task correction
+            tags:
+                - task corrections
+            parameters: 
+            - in: path
+              name: id
+              description: ID of task correction
+              required: true
+              type: integer
+            responses:
+                204:
+                    description: Deleted task correction
+                404:
+                    description: No task correction for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+
+    /task-categories:
         get:
             summary: Returns a list of all task categories
             tags:
-                - tasks 
+                - task templates 
             responses:
                 200:
                     description: Array of TaskCategory objects
@@ -207,7 +378,7 @@ paths:
         post:
             summary: Create a new task category
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: body
               name: task-category
@@ -235,7 +406,7 @@ paths:
         put:
             summary: Update some task categories
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: body
               name: task-categories 
@@ -254,7 +425,7 @@ paths:
         delete:
             summary: Delete a batch of tasks
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: body
               name: task-categoryIDs
@@ -270,11 +441,11 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /taskCategories/{id}:
+    /task-categories/{id}:
         get:
             summary: Returns a specific task category
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: path
               name: id
@@ -294,7 +465,7 @@ paths:
             summary: Not supported
             deprecated: true
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: path
               name: id
@@ -308,7 +479,7 @@ paths:
         put:
             summary: Updates a specific task category
             tags:
-                - tasks
+                - task templates
             parameters:
             - in: path
               name: id
@@ -318,12 +489,7 @@ paths:
             - in: body
               name: task-category
               schema:
-                  type: object
-                  properties:
-                      name:
-                          type: string
-                  required:
-                  - name
+                  $ref: '#/definitions/TaskCategory'
             responses:
                 204:
                     description: Updated TaskCategory
@@ -338,7 +504,7 @@ paths:
         delete:
             summary: Delete specific task category
             tags:
-                - tasks
+                - task templates
             parameters: 
             - in: path
               name: id
@@ -352,13 +518,12 @@ paths:
                     description: No Task for that ID
                     schema:
                         $ref: '#/definitions/Error'
- 
-     
+
     /users:
         get:
             summary: Returns a list of all users
             tags:
-                - participants
+                - users
             responses:
                 200:
                     description: Array of User objects
@@ -369,7 +534,7 @@ paths:
         post:
             summary: Create a new User
             tags:
-                - participants
+                - users
             parameters:
             - in: body
               name: user
@@ -382,8 +547,6 @@ paths:
                     name:
                         type: string
                     surname:
-                        type: string
-                    groupID:
                         type: string
                 required:
                 - studentNumber
@@ -406,7 +569,7 @@ paths:
         put:
             summary: Update some tasks
             tags:
-                - participants
+                - users
             parameters:
             - in: body
               name: tasks 
@@ -425,7 +588,7 @@ paths:
         delete:
             summary: Delete a batch of tasks
             tags:
-                - participants
+                - users
             parameters:
             - in: body
               name: taskIDs
@@ -440,13 +603,12 @@ paths:
                     description: Users not found
                     schema:
                         $ref: '#/definitions/Error'
-        
 
     /users/{id}:
         get:
             summary: Returns a specific user
             tags:
-                - participants
+                - users
             parameters:
             - in: path
               name: id
@@ -466,7 +628,7 @@ paths:
             summary: Not supported
             deprecated: true
             tags:
-                - participants
+                - users
             parameters:
             - in: path
               name: id
@@ -480,7 +642,7 @@ paths:
         put:
             summary: Updates a specific user
             tags:
-                - participants
+                - users
             parameters:
             - in: path
               name: id
@@ -490,18 +652,7 @@ paths:
             - in: body
               name: user
               schema:
-                  properties:
-                      studentNumber:
-                          type: integer
-                      name:
-                          type: string
-                      surname:
-                          type: string
-                      groupID:
-                          type: string
-                  required:
-                  - id
-                  - studentNumber
+                  $ref: '#/definitions/User'
             responses:
               204:
                   description: Updated User
@@ -516,7 +667,7 @@ paths:
         delete:
             summary: Delete specific user
             tags:
-                - participants
+                - users
             parameters: 
             - in: path
               name: id
@@ -530,172 +681,7 @@ paths:
                     description: No User for that ID
                     schema:
                         $ref: '#/definitions/Error'
-    /groups:
-        get:
-            summary: Returns a list of all groups
-            tags:
-                - participants
-            responses:
-                200:
-                    description: Array of Group objects
-                    schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/Group'
-        post:
-            summary: Create a new Group
-            tags:
-                - participants
-            parameters:
-            - in: body
-              name: group
-              description: The Group that needs to be created
-              schema:
-                type: object
-                properties:
-                    name:
-                        type: string
-                    usersIDs:
-                        type: array
-                        items:
-                            type: integer
-            responses:
-                201:
-                    description: Group created
-                    schema:
-                        type: object
-                        properties:
-                            id:
-                                type: integer
-                                description: Group ID
-                400:
-                    description: Bad request
-                    schema:
-                        $ref: '#/definitions/Error'
-        put:
-            summary: Update some groups
-            tags:
-                - participants
-            parameters:
-            - in: body
-              name: groups 
-              description: Batch of Groups to be updated
-              schema:
-                  type: array
-                  items:
-                      $ref: '#/definitions/Group'
-            responses:
-                204:
-                    description: Updated Groups
-                400:
-                    description: Bad request
-                    schema:
-                        $ref: '#/definitions/Error'
-        delete:
-            summary: Delete a batch of groups
-            tags:
-                - participants
-            parameters:
-            - in: body
-              name: groupIDs
-              schema:
-                  type: array
-                  items:
-                      type: integer
-            responses:
-                204:
-                    description: Deleted Groups
-                404:
-                    description: Groups not found
-                    schema:
-                        $ref: '#/definitions/Error'
-        
 
-        
-    /groups/{id}:
-        get:
-            summary: Returns a specific Group
-            tags:
-                - participants
-            parameters:
-            - in: path
-              name: id
-              description: ID of Group
-              required: true
-              type: integer
-            responses:
-                200:
-                    description: Group object with given ID
-                    schema:
-                        $ref: '#/definitions/Group'
-                400:
-                    description: Specified ID is not valid
-                404:
-                    description: No Group for that ID
-        post:
-            summary: Not supported
-            deprecated: true
-            tags:
-                - participants
-            parameters:
-            - in: path
-              name: id
-              required: true
-              type: integer
-            responses:
-                405:
-                    description: Method not allowed
-                    schema:
-                        $ref: '#/definitions/Error'
-        put:
-            summary: Updates a specific group
-            tags:
-                - participants
-            parameters:
-            - in: path
-              name: id
-              description: ID of group
-              required: true
-              type: integer
-            - in: body
-              name: group
-              schema:
-                  properties:
-                      name:
-                          type: string
-                      usersIDs:
-                          type: array
-                          items:
-                              type: integer
-            responses:
-                204:
-                    description: Updated Group
-                400:
-                    description: Bad request
-                    schema:
-                        $ref: '#/definitions/Error'
-                404:
-                    description: No Group for that ID
-                    schema:
-                        $ref: '#/definitions/Error'
-        delete:
-            summary: Delete specific group
-            tags:
-                - participants
-            parameters: 
-            - in: path
-              name: id
-              description: ID of group
-              required: true
-              type: integer
-            responses:
-                204:
-                    description: Deleted Group
-                404:
-                    description: No Group for that ID
-                    schema:
-                        $ref: '#/definitions/Error'
-     
     /courses:
         get:
             summary: Returns a list of all courses
@@ -776,8 +762,7 @@ paths:
                 404:
                     description: Courses not found
                     schema:
-                        $ref: '#/definitions/Error'
-        
+                        $ref: '#/definitions/Error'       
 
     /courses/{id}:
         get:
@@ -827,15 +812,7 @@ paths:
             - in: body
               name: course
               schema:
-                  properties:
-                      name:
-                          type: string
-                      academicYear:
-                          type: string
-                          format: date
-                  required:
-                  - name
-                  - academicYear
+                  $ref: '#/definitions/Course'
             responses:
                 204:
                     description: Updated Course
@@ -867,16 +844,18 @@ paths:
     
     /exams:
         get:
-            summary: Returns all ExamEvents
+            summary: Returns all Exam events
             tags:
                 - exams
             responses:
                 200:
-                    description: Array of ExamEvents objects
+                    description: Array of Exam events
                     schema:
-                        $ref: '#/definitions/ExamEvent'
+                        type: array
+                        items:
+                            $ref: '#/definitions/ExamEvent'
         post:
-            summary: Create a new ExamEvent
+            summary: Create a new Exam event
             tags:
                 - exams
             parameters:
@@ -886,6 +865,12 @@ paths:
               schema:
                 type: object
                 properties:
+                    examTemplateID:
+                        type: string
+                    ownersIDs:
+                        type: array
+                        items:
+                            type: integer
                     avgMark:
                         type: integer
                     defaultDeadlineStart:
@@ -894,45 +879,44 @@ paths:
                     defaultDeadlineEnd:
                         type: string
                         format: date-time
-                    examTemplateID:
-                        type: string
                 required:
-                - defaultDeadlineEnd
+                - ownersIDs
                 - examTemplateID
+                - defaultDeadlineEnd
             responses:
                 201:
-                    description: ExamEvent created
+                    description: Exam event created
                     schema:
                         type: object
                         properties:
                             id:
                                 type: integer
-                                description: ExamEvent ID
+                                description: Exam event ID
                 400:
                     description: Bad request
                     schema:
                         $ref: '#/definitions/Error'
         put:
-            summary: Update some exams
+            summary: Update some exam events
             tags:
                 - exams
             parameters:
             - in: body
               name: exam-events 
-              description: Batch of exam-events to be updated
+              description: Batch of Exam events to be updated
               schema:
                   type: array
                   items:
                       $ref: '#/definitions/ExamEvent'
             responses:
                 204:
-                    description: Updated ExamEvent
+                    description: Updated Exam event
                 400:
                     description: Bad request
                     schema:
                         $ref: '#/definitions/Error'
         delete:
-            summary: Delete a batch of exams
+            summary: Delete a batch of exam events
             tags:
                 - exams
             parameters:
@@ -944,32 +928,32 @@ paths:
                       type: integer
             responses:
                 204:
-                    description: Deleted Exams
+                    description: Deleted Exam events
                 404:
-                    description: Exams not found
+                    description: Exam events not found
                     schema:
                         $ref: '#/definitions/Error'
 
     /exams/{id}:
         get:
-            summary: Returns a specific ExamEvent
+            summary: Returns a specific Exam event
             tags:
                 - exams
             parameters:
             - in: path
               name: id
-              description: ID of ExamEvent
+              description: ID of Exam event
               required: true
               type: integer
             responses:
                 200:
-                    description: ExamEvent object with given ID
+                    description: Exam event object with given ID
                     schema:
                         $ref: '#/definitions/ExamEvent'
                 400:
                     description: Specified ID is not valid
                 404:
-                    description: No ExamEvent for that ID
+                    description: No Exam event for that ID
         post:
             summary: Not supported
             deprecated: true
@@ -992,69 +976,56 @@ paths:
             parameters:
             - in: path
               name: id
-              description: ID of exam
+              description: ID of exam event
               required: true
               type: integer
             - in: body
               name: exam
               schema:
-                  properties:
-                    avgMark:
-                        type: integer
-                    defaultDeadlineStart:
-                        type: string
-                        format: date-time
-                    defaultDeadlineEnd:
-                        type: string
-                        format: date-time
-                    examTemplateID:
-                        type: string
-                  required:
-                  - id
-                  - defaultDeadlineEnd
-                  - examTemplateID
+                $ref: '#/definitions/ExamEvent'
             responses:
                 204:
-                    description: Updated Exam
+                    description: Updated Exam event
                 400:
                     description: Bad request
                     schema:
                         $ref: '#/definitions/Error'
                 404:
-                    description: No Exam for that ID
+                    description: No Exam event for that ID
                     schema:
                         $ref: '#/definitions/Error'
         delete:
-            summary: Delete specific exam
+            summary: Delete specific Exam event
             tags:
                 - exams
             parameters: 
               - in: path
                 name: id
-                description: ID of exam
+                description: ID of Exam event
                 required: true
                 type: integer
             responses:
                 204:
-                    description: Deleted Exam
+                    description: Deleted Exam event
                 404:
-                    description: No Exam for that ID
+                    description: No Exam event for that ID
                     schema:
                         $ref: '#/definitions/Error'
-    /examTemplates:
+
+    /exam-templates:
         get:
-            summary: Returns all ExamTemplates
+            summary: Returns all Exam templates
             tags:
-                - exams
+                - exam templates
             responses:
                 200:
-                    description: Array of ExamTemplate
+                    description: Array of Exam templates
                     schema:
                         $ref: '#/definitions/ExamTemplate'
         post:
-            summary: Create a new ExamTemplate
+            summary: Create a new Exam template
             tags:
-                - exams
+                - exam templates
             parameters:
             - in: body
               name: exam-template
@@ -1079,13 +1050,13 @@ paths:
                 - questions
             responses:
                 201:
-                    description: ExamTemplate created
+                    description: Exam template created
                     schema:
                         type: object
                         properties:
                             id:
                                 type: integer
-                                description: ExamTemplate ID
+                                description: Exam template ID
                 400:
                     description: Bad request
                     schema:
@@ -1093,7 +1064,7 @@ paths:
         put:
             summary: Update some exam templates
             tags:
-                - exams
+                - exam templates
             parameters:
               - in: body
                 name: exam-templates
@@ -1104,7 +1075,7 @@ paths:
                         $ref: '#/definitions/ExamTemplate'
             responses:
                 204:
-                    description: Updated ExamTemplate
+                    description: Updated Exam template
                 400:
                     description: Bad request
                     schema:
@@ -1112,7 +1083,7 @@ paths:
         delete:
             summary: Delete a batch of exam templates
             tags:
-                - exams
+                - exam templates
             parameters:
               - in: body
                 name: examtemplatesIDs
@@ -1122,37 +1093,37 @@ paths:
                         type: integer
             responses:
                 204:
-                    description: Deleted ExamTemplates
+                    description: Deleted Exam templates
                 404:
-                    description: ExamTemplates not found
+                    description: Exam templates not found
                     schema:
                         $ref: '#/definitions/Error'
     
-    /examTemplates/{id}:
+    /exam-templates/{id}:
         get:
-            summary: Returns a specific ExamTemplate
+            summary: Returns a specific Exam template
             tags:
-                - exams
+                - exam templates
             parameters:
               - in: path
                 name: id
-                description: ID of ExamTemplate
+                description: ID of Exam template
                 required: true
                 type: integer
             responses:
                 200:
-                    description: ExamTemplate object with given ID
+                    description: Exam template object with given ID
                     schema:
                         $ref: '#/definitions/ExamTemplate'
                 400:
                     description: Specified ID is not valid
                 404:
-                    description: No ExamTemplate for that ID
+                    description: No Exam template for that ID
         post:
             summary: Not supported
             deprecated: true
             tags:
-                - exams
+                - exam templates
             parameters:
               - in: path
                 name: id
@@ -1166,7 +1137,7 @@ paths:
         put:
             summary: Updates a specific exam template
             tags:
-                - exams
+                - exam templates
             parameters:
               - in: path
                 name: id
@@ -1176,22 +1147,7 @@ paths:
               - in: body
                 name: exam-template
                 schema:
-                    properties:
-                        name:
-                            type: string
-                        questions:
-                            type: array
-                            items:
-                                type: object
-                                properties:
-                                    taskCategoryID:
-                                        type: integer
-                                    numberOfQuestions:
-                                        type: integer
-                                        minimum: 1
-                    required:
-                    - name
-                    - questions
+                    $ref: '#/definitions/ExamTemplate'
             responses:
                 204:
                     description: Updated Exam Template
@@ -1206,7 +1162,7 @@ paths:
         delete:
             summary: Delete specific exam template
             tags:
-                - exams
+                - exam templates
             parameters: 
               - in: path
                 name: id
@@ -1219,150 +1175,38 @@ paths:
                 404:
                     description: No Exam Template for that ID
                     schema:
-                        $ref: '#/definitions/Error'       
-    
-
-    /exams/{examID}/tasks/{taskID}:
-        get:
-            summary: Returns all Submissions
-            tags:
-                - exams
-            description: Returns all the instances of Submission corresponding to the specified _examID_ and _taskID_
-            parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: taskID
-                description: ID of the Task
-                required: true
-                type: integer
-            responses:
-                200:
-                    description: Specific Submission object
-                    schema:
-                        $ref: '#/definitions/Submission'
-                400:
-                    description: Specified IDs are not valid
-                404:
-                    description: No Submission found for that examID and taskID
-        post:
-            summary: Method not allowed
-            deprecated: true
-            tags:
-                - exams
-            parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: taskID
-                description: ID of the Task
-                required: true
-                type: integer
-            responses:
-                405:
-                    description: Method not allowed
-                    schema:
-                        $ref: '#/definitions/Error'
-        put:
-            summary: Method not allowed
-            deprecated: true
-            tags:
-                - exams
-            parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: taskID
-                description: ID of the Task
-                required: true
-                type: integer
-            responses:
-                405:
-                    description: Method not allowed
-                    schema:
-                        $ref: '#/definitions/Error'
-        delete:
-            summary: Method not allowed
-            deprecated: true
-            tags:
-                - exams
-            parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: taskID
-                description: ID of the Task
-                required: true
-                type: integer
-            responses:
-                405:
-                    description: Method not allowed
-                    schema:
                         $ref: '#/definitions/Error'
 
-    /exams/{examID}/users/{userID}:
+    /exam-instances:
         get:
-            summary: Returns an AtomicExam
+            summary: Returns all instances of an exam
             tags:
-                - exams
-            description: Returns the instance of AtomicExam corresponding to the specified _examID_ and _userID_
-            parameters:
-            - in: path
-              name: examID
-              description: ID of the ExamEvent
-              required: true
-              type: integer 
-            - in: path
-              name: userID
-              description: ID of the User
-              required: true
-              type: integer
+                - exam instances
+            description: Returns all instances of a exam
             responses:
                 200:
-                    description: Specific AtomicExam object
+                    description: All exam instances
                     schema:
-                        $ref: '#/definitions/AtomicExam'
-                400:
-                    description: Specified IDs are not valid
-                404:
-                    description: No AtomicExam found for that examID and userID
+                        type: array
+                        items:
+                            $ref: '#/definitions/ExamInstance'
         post:
             summary: Create an exam instance for a user
             tags:
-                - exams
-            description: Given an exam and a user, it creates an instance of that exam for that user
+                - exam instances
+            description: Creates an instance of that exam for that user
             parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: userID
-                description: ID of the User
-                required: true
-                type: integer
               - in: body
                 name: atomic-exam
                 schema:
                     properties:
-                        userID:
-                            type: integer
+                        usersID:
+                            type: array
+                            items:
+                                type: integer
                         examID:
                             type: integer
-                        taskIDs:
+                        assignedTaskIDs:
                             type: array
                             items:
                                 type: integer
@@ -1372,33 +1216,134 @@ paths:
                     schema:
                         type: object
                         properties:
-                            atomicExamID: 
+                            examInstanceID: 
                                 type: integer
                 400:
                     description: Bad request
                     schema:
                         $ref: '#/definitions/Error'
+        put:
+            summary: Update some exam instances
+            tags:
+                - exam instances
+            parameters:
+              - in: body
+                name: exam-instances
+                description: Batch of exam instances to be updated
+                schema:
+                    type: array
+                    items:
+                        $ref: '#/definitions/ExamInstance'
+            responses:
+                204:
+                    description: Updated exam instances
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            summary: Delete a batch of exam instances
+            tags:
+                - exam instances
+            parameters:
+              - in: body
+                name: examInstanceIDs
+                schema:
+                    type: array
+                    items:
+                        type: integer
+            responses:
+                204:
+                    description: Deleted Exam instances
                 404:
-                    description: Exam not found
+                    description: Exam instances not found
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+    /exam-instances/{id}:
+        get:
+            summary: Returns a specific exam instance
+            tags:
+                - exam instances
+            parameters:
+            - in: path
+              name: id
+              description: ID of exam instance
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: exam instance with given ID
+                    schema:
+                        $ref: '#/definitions/ExamInstance'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No exam instance for that ID
+        post:
+            summary: Not supported
+            deprecated: true
+            tags:
+                - exam instances
+            parameters:
+            - in: path
+              name: id
+              required: true
+              type: integer
+            responses:
+                405:
+                    description: Method not allowed
+                    schema:
+                        $ref: '#/definitions/Error'
+        put:
+            summary: Updates a specific exam instance
+            tags:
+                - exam instances
+            parameters:
+            - in: path
+              name: id
+              description: ID of exam instance
+              required: true
+              type: integer
+            - in: body
+              name: examInstance
+              schema:
+                $ref: '#/definitions/ExamInstance'
+            responses:
+                204:
+                    description: Updated exam instance
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+                404:
+                    description: No exam instance for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            summary: Delete specific exam instance
+            tags:
+                - exam instances
+            parameters: 
+              - in: path
+                name: id
+                description: ID of exams instance
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: Deleted exam instance
+                404:
+                    description: No exam instance for that ID
                     schema:
                         $ref: '#/definitions/Error'
         patch:
             summary: Final evaluation of exam instance
             tags:
-                - exams
+                - exam instances
             parameters:
-              - in: path
-                name: examID
-                description: ID of the ExamEvent
-                required: true
-                type: integer 
-              - in: path
-                name: userID
-                description: ID of the User
-                required: true
-                type: integer
               - in: body
-                name: atomic-exam
+                name: examInstance
                 schema:
                     properties:
                         finalEvaluation:
@@ -1422,7 +1367,264 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
+    /submissions:
+        get:
+            summary: Not supported
+            deprecated: true
+            tags:
+                - submissions
+            parameters:
+              - in: path
+                name: id
+                required: true
+                type: integer
+            responses:
+                405:
+                    description: Method not allowed
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+        post:
+            summary: New Submission
+            tags:
+                - submissions
+            parameters:
+            - in: body
+              name: submission
+              description: The submission that must be created
+              schema:
+                type: object
+                properties:
+                    examID:
+                        type: integer
+                    userID:
+                        type: integer
+                    assignedTaskID:
+                        type: integer
+                    userAnswer:
+                        type: string
+                    finalCorrectionID:
+                        type: integer
+                required:
+                - examID
+                - userID
+                - assignedTaskID
+                - userAnswer
+            responses:
+                201:
+                    description: Submission created
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                                description: Submission ID
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+
+        put:
+            summary: Update some submissions
+            tags:
+                - submissions
+            parameters:
+              - in: body
+                name: submissions
+                description: Batch of submissions to be updated
+                schema:
+                    type: array
+                    items:
+                        $ref: '#/definitions/Submission'
+            responses:
+                204:
+                    description: Updated Submission
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+        delete:
+            summary: Delete some submissions
+            tags:
+                - submissions 
+            parameters: 
+              - in: path
+                name: id
+                description: ID of submission
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: Deleted Submission
+                404:
+                    description: No Submission for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+    /submissions/{id}:
+        get:
+            summary: Returns a specific submission
+            tags:
+                - submissions
+            parameters:
+            - in: path
+              name: id
+              description: ID of submission
+              required: true
+              type: integer
+            responses:
+                200:
+                    description: submission with given ID
+                    schema:
+                        $ref: '#/definitions/Submission'
+                400:
+                    description: Specified ID is not valid
+                404:
+                    description: No submission for that ID
+        post:
+            summary: Not supported
+            deprecated: true
+            tags:
+                - submissions
+            parameters:
+            - in: path
+              name: id
+              required: true
+              type: integer
+            responses:
+                405:
+                    description: Method not allowed
+                    schema:
+                        $ref: '#/definitions/Error'
+        put:
+            summary: Updates a specific submission
+            tags:
+                - submissions
+            parameters:
+            - in: path
+              name: id
+              description: ID of submission
+              required: true
+              type: integer
+            - in: body
+              name: submission
+              schema:
+                $ref: '#/definitions/Submission'
+            responses:
+                204:
+                    description: Updated Submission
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+                404:
+                    description: No Submission for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            summary: Delete specific Submission
+            tags:
+                - submissions
+            parameters: 
+              - in: path
+                name: id
+                description: ID of submission
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: Deleted submission
+                404:
+                    description: No submission for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+        
+        patch:
+            summary: Correction submitted by the professor
+            tags:
+                - submissions
+            parameters:
+              - in: path
+                name: id
+                description: ID of submission
+                required: true
+                type: integer
+              - in: body
+                name: correction
+                schema:
+                    properties: 
+                        subID:
+                            type: integer
+                        finalCorrectionID:
+                            type: integer
+                    required:
+                    - subID
+                    - finalCorrectionID
+            responses:
+                204:
+                    description: Sumbission corrected
+                400:
+                    description: Bad request
+                    schema:
+                        $ref: '#/definitions/Error'
+                404:
+                    description: No submission for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
+
 definitions:
+    Task:        
+        title: Task
+        type: object
+        properties:
+            taskID:
+                type: string
+            exerciseText:
+                type: string
+            answers:
+                type: array
+                items:
+                    type: object
+                    properties: 
+                        answer:
+                            type: string
+                        isRight:
+                            type: boolean
+            totalPoints:
+                type: number
+            categoryID:
+                type: integer
+            latestChange:
+                type: string
+                format: date-time
+        required:
+        - taskID
+        - exerciseText
+        - totalPoints
+        - categoryID
+    TaskCorrection:
+        title: Task Correction
+        type: object
+        properties:
+            taskCorrectionID:
+                type: integer
+            subID:
+                type: integer
+            examID:
+                type: integer
+            mark:
+                type: number
+            comment:
+                type: string
+            userProposerID:
+                type: integer
+        required:
+        - taskCorrectionID
+        - subID
+        - examID
+        - mark
+        - userProposerID
     TaskCategory:
         title: Task Category
         type: object
@@ -1434,26 +1636,6 @@ definitions:
         required:
         - id
         - name
-    Task:        
-        title: Task
-        type: object
-        properties:
-            taskID:
-                type: string
-            exerciseText:
-                type: string
-            rightAnswer:
-                type: string
-            totalPoints:
-                type: number
-            average:
-                type: number
-            categoryID:
-                type: integer
-        required:
-        - exerciseText        
-        - totalPoints
-        - categoryID
     User:
         title: User
         type: object
@@ -1466,27 +1648,11 @@ definitions:
                 type: string
             surname:
                 type: string
-            groupID:
-                type: string
+            average:
+                type: number        
         required:
         - id
         - studentNumber
-    Group:
-        title: Group
-        description: Group of users
-        type: object
-        properties:
-            id:
-                type: integer
-            name:
-                type: string
-            usersIDs:
-                type: array
-                items:
-                    type: integer
-        required:
-        - id
-        - name
     Course:
         title: Course
         description: Specific courses where exams are templated
@@ -1509,6 +1675,12 @@ definitions:
         properties:
             id:
                 type: integer
+            examTemplateID:
+                        type: string
+            ownersIDs:
+                type: array
+                items:
+                    type: integer
             avgMark:
                 type: integer
             defaultDeadlineStart:
@@ -1517,8 +1689,6 @@ definitions:
             defaultDeadlineEnd:
                 type: string
                 format: date-time
-            examTemplateID:
-                type: string
         required:
         - id
         - defaultDeadlineEnd
@@ -1546,16 +1716,18 @@ definitions:
         - id
         - name
         - questions
-    AtomicExam:
-        title: Atomic Exam
-        description: The instance of an Exam Event, where tasks from a certain task category are given to the user (or user group) to submit.
+    ExamInstance:
+        title: Exam instance
+        description: The instance of an Exam Event, where tasks from a certain task category are given to the user to submit.
         type: object
         properties:
             id:
                 type: integer
-            userOrGroupID:
-                type: string
-            taskIDs:
+            userIDs:
+                type: array
+                items:
+                    type: integer
+            assignedTaskIDs:
                 type: array
                 items:
                     type: integer
@@ -1579,21 +1751,24 @@ definitions:
         title: Submission
         type: object
         properties:
-            id:
+            subID:
                 type: integer
-            taskID:
+            examID:
                 type: integer
             userID:
                 type: integer
-            answer:
+            assignedTaskID:
+                type: integer
+            userAnswer:
                 type: string
             finalCorrectionID:
                 type: integer
         required:
-        - id
-        - taskID
+        - subID
+        - examID
         - userID
-        - answer
+        - assignedTaskID
+        - userAnswer
     Error:
         title: Error
         type: object
