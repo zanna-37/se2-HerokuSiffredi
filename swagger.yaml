@@ -1,11 +1,11 @@
 swagger: "2.0"
 info:
-  version: '1.0'
-  title: 'SE2-HerokuSiffredi'
-  description: '' 
-  license:
-    name: MIT
-    url: https://github.com/zanna-37/se2-HerokuSiffredi
+    version: '1.0'
+    title: 'SE2-HerokuSiffredi'
+    description: '' 
+    license:
+        name: MIT
+        url: https://github.com/zanna-37/se2-HerokuSiffredi
 basePath: /
 schemes:
 - http
@@ -52,6 +52,7 @@ paths:
                         type: number
                     categoryID:
                         type: integer
+                        minimum: 0
                     latestChange:
                         type: string
                         format: date-time
@@ -67,6 +68,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: Task ID
                 400:
                     description: Bad request
@@ -121,6 +123,7 @@ paths:
               description: ID of task
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: Task object with given ID
@@ -140,6 +143,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -155,6 +159,7 @@ paths:
               description: ID of task
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: task
               schema:
@@ -180,6 +185,7 @@ paths:
               description: ID of task
               required: true
               type: integer
+              minimum: 0
             responses:
                 204:
                     description: Deleted Task
@@ -201,6 +207,7 @@ paths:
                     properties:
                         examID:
                             type: integer
+                            minimum: 0
             responses:
                 200:
                     description: Array of task corrections
@@ -221,14 +228,17 @@ paths:
                 properties:
                     submissionID:
                         type: integer
+                        minimum: 0
                     examID:
                         type: integer
+                        minimum: 0
                     mark:
                         type: number
                     comment:
                         type: string
                     userProposerID:
                         type: integer
+                        minimum: 0
                 required:
                 - submissionID
                 - examID
@@ -242,6 +252,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: TaskCorrection ID
                 400:
                     description: Bad request
@@ -277,6 +288,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted task corrections
@@ -296,6 +308,7 @@ paths:
               description: ID of task correction
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: Task correction with given ID
@@ -315,6 +328,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -330,6 +344,7 @@ paths:
               description: ID of task correction
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: task correction
               schema:
@@ -355,6 +370,7 @@ paths:
               description: ID of task correction
               required: true
               type: integer
+              minimum: 0
             responses:
                 204:
                     description: Deleted task correction
@@ -398,6 +414,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: TaskCategory ID
                 400:
                     description: Bad request
@@ -433,6 +450,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted Task Categories
@@ -452,6 +470,7 @@ paths:
               description: ID of task category
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: TaskCategory object with given ID
@@ -471,6 +490,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -486,6 +506,7 @@ paths:
               description: ID of task category
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: task-category
               schema:
@@ -511,6 +532,7 @@ paths:
               description: ID of task category
               required: true
               type: integer
+              minimum: 0
             responses:
                 204:
                     description: Deleted Task
@@ -560,6 +582,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: User ID
                 400:
                     description: Bad request
@@ -595,6 +618,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted Users
@@ -614,6 +638,7 @@ paths:
               description: ID of user
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: User object with given ID
@@ -633,6 +658,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -648,6 +674,7 @@ paths:
               description: ID of user
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: user
               schema:
@@ -673,6 +700,7 @@ paths:
               description: ID of user
               required: true
               type: integer
+              minimum: 0
             responses:
                 204:
                     description: Deleted User
@@ -710,7 +738,6 @@ paths:
                         type: string
                         format: date
                 required:
-                - id
                 - name
             responses:
                 201:
@@ -720,6 +747,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: Course ID
                 400:
                     description: Bad request
@@ -755,6 +783,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted Courses
@@ -774,6 +803,7 @@ paths:
               description: ID of course
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: Course object with given ID
@@ -793,6 +823,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -808,6 +839,7 @@ paths:
               description: ID of course
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: course
               schema:
@@ -833,6 +865,7 @@ paths:
               description: ID of course
               required: true
               type: integer
+              minimum: 0
             responses:
                 204:
                     description: Deleted Course
@@ -865,13 +898,15 @@ paths:
                 type: object
                 properties:
                     examTemplateID:
-                        type: string
+                        type: integer
+                        minimum: 0
                     ownersIDs:
                         type: array
                         items:
                             type: integer
+                            minimum: 0
                     avgMark:
-                        type: integer
+                        type: number
                     defaultDeadlineStart:
                         type: string
                         format: date-time
@@ -890,6 +925,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: Exam event ID
                 400:
                     description: Bad request
@@ -925,6 +961,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted Exam events
@@ -944,6 +981,7 @@ paths:
               description: ID of Exam event
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: Exam event object with given ID
@@ -963,6 +1001,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -978,6 +1017,7 @@ paths:
               description: ID of exam event
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: exam
               schema:
@@ -1003,6 +1043,7 @@ paths:
                 description: ID of Exam event
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 204:
                     description: Deleted Exam event
@@ -1041,6 +1082,7 @@ paths:
                             properties:
                                 taskCategoryID:
                                     type: integer
+                                    minimum: 0
                                 numberOfQuestions:
                                     type: integer
                                     minimum: 1
@@ -1055,6 +1097,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: Exam template ID
                 400:
                     description: Bad request
@@ -1090,6 +1133,7 @@ paths:
                     type: array
                     items:
                         type: integer
+                        minimum: 0
             responses:
                 204:
                     description: Deleted Exam templates
@@ -1109,6 +1153,7 @@ paths:
                 description: ID of Exam template
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 200:
                     description: Exam template object with given ID
@@ -1128,6 +1173,7 @@ paths:
                 name: id
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -1143,6 +1189,7 @@ paths:
                 description: ID of exam template
                 required: true
                 type: integer
+                minimum: 0
               - in: body
                 name: exam-template
                 schema:
@@ -1168,6 +1215,7 @@ paths:
                 description: ID of course
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 204:
                     description: Deleted Exam Template
@@ -1203,12 +1251,15 @@ paths:
                             type: array
                             items:
                                 type: integer
+                                minimum: 0
                         examID:
                             type: integer
+                            minimum: 0
                         assignedTaskIDs:
                             type: array
                             items:
                                 type: integer
+                                minimum: 0
             responses:
                 201:
                     description: Created exam instance
@@ -1217,6 +1268,7 @@ paths:
                         properties:
                             examInstanceID: 
                                 type: integer
+                                minimum: 0
                 400:
                     description: Bad request
                     schema:
@@ -1251,6 +1303,7 @@ paths:
                     type: array
                     items:
                         type: integer
+                        minimum: 0
             responses:
                 204:
                     description: Deleted Exam instances
@@ -1270,6 +1323,7 @@ paths:
               description: ID of exam instance
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: exam instance with given ID
@@ -1289,6 +1343,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -1304,6 +1359,7 @@ paths:
               description: ID of exam instance
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: examInstance
               schema:
@@ -1329,6 +1385,7 @@ paths:
                 description: ID of exams instance
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 204:
                     description: Deleted exam instance
@@ -1346,6 +1403,7 @@ paths:
                 description: ID of exam instance
                 required: true
                 type: integer
+                minimum: 0
               - in: body
                 name: examInstance
                 schema:
@@ -1355,6 +1413,7 @@ paths:
                             properties:
                                 evaluatorUserID:
                                     type: integer
+                                    minimum: 0
                                 finalMark:
                                     type: number
                                 comment:
@@ -1377,11 +1436,6 @@ paths:
             deprecated: true
             tags:
                 - submissions
-            parameters:
-              - in: path
-                name: id
-                required: true
-                type: integer
             responses:
                 405:
                     description: Method not allowed
@@ -1401,14 +1455,18 @@ paths:
                 properties:
                     examID:
                         type: integer
+                        minimum: 0
                     userID:
                         type: integer
+                        minimum: 0
                     assignedTaskID:
                         type: integer
+                        minimum: 0
                     userAnswer:
                         type: string
                     finalCorrectionID:
                         type: integer
+                        minimum: 0
                 required:
                 - examID
                 - userID
@@ -1422,6 +1480,7 @@ paths:
                         properties:
                             id:
                                 type: integer
+                                minimum: 0
                                 description: Submission ID
                 400:
                     description: Bad request
@@ -1452,12 +1511,6 @@ paths:
             summary: Delete some submissions
             tags:
                 - submissions 
-            parameters: 
-              - in: path
-                name: id
-                description: ID of submission
-                required: true
-                type: integer
             responses:
                 204:
                     description: Deleted Submission
@@ -1477,6 +1530,7 @@ paths:
               description: ID of submission
               required: true
               type: integer
+              minimum: 0
             responses:
                 200:
                     description: submission with given ID
@@ -1496,6 +1550,7 @@ paths:
               name: id
               required: true
               type: integer
+              minimum: 0
             responses:
                 405:
                     description: Method not allowed
@@ -1511,6 +1566,7 @@ paths:
               description: ID of submission
               required: true
               type: integer
+              minimum: 0
             - in: body
               name: submission
               schema:
@@ -1536,6 +1592,7 @@ paths:
                 description: ID of submission
                 required: true
                 type: integer
+                minimum: 0
             responses:
                 204:
                     description: Deleted submission
@@ -1554,14 +1611,17 @@ paths:
                 description: ID of submission
                 required: true
                 type: integer
+                minimum: 0
               - in: body
                 name: correction
                 schema:
                     properties: 
                         submissionID:
                             type: integer
+                            minimum: 0
                         finalCorrectionID:
                             type: integer
+                            minimum: 0
                     required:
                     - submissionID
                     - finalCorrectionID
@@ -1599,6 +1659,7 @@ definitions:
                 type: number
             categoryID:
                 type: integer
+                minimum: 0
             latestChange:
                 type: string
                 format: date-time
@@ -1613,16 +1674,20 @@ definitions:
         properties:
             taskCorrectionID:
                 type: integer
+                minimum: 0
             submissionID:
                 type: integer
+                minimum: 0
             examID:
                 type: integer
+                minimum: 0
             mark:
                 type: number
             comment:
                 type: string
             userProposerID:
                 type: integer
+                minimum: 0
         required:
         - taskCorrectionID
         - submissionID
@@ -1635,6 +1700,7 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             name:
                 type: string
         required:
@@ -1646,8 +1712,10 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             studentNumber:
                 type: integer
+                minimum: 0
             name:
                 type: string
             surname:
@@ -1664,6 +1732,7 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             name:
                 type: string
             academicYear:
@@ -1679,14 +1748,17 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             examTemplateID:
-                        type: string
+                        type: integer
+                        minimum: 0
             ownersIDs:
                 type: array
                 items:
                     type: integer
+                    minimum: 0
             avgMark:
-                type: integer
+                type: number
             defaultDeadlineStart:
                 type: string
                 format: date-time
@@ -1704,6 +1776,7 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             name:
                 type: string
             questions:
@@ -1713,6 +1786,7 @@ definitions:
                     properties:
                         taskCategoryID:
                             type: integer
+                            minimum: 0
                         numberOfQuestions:
                             type: integer
                             minimum: 1
@@ -1727,14 +1801,17 @@ definitions:
         properties:
             id:
                 type: integer
+                minimum: 0
             userIDs:
                 type: array
                 items:
                     type: integer
+                    minimum: 0
             assignedTaskIDs:
                 type: array
                 items:
                     type: integer
+                    minimum: 0
             examEventID:
                 type: string
             finalEvaluation:
@@ -1742,14 +1819,15 @@ definitions:
                 properties:
                     evaluatorUserID:
                         type: integer
+                        minimum: 0
                     finalMark:
                         type: number
                     comment:
                         type: string
         required:
         - id
-        - userOrGroupID
-        - taskIDs
+        - userIDs
+        - assignedTaskIDs
         - examEventID
     Submission:
         title: Submission
@@ -1757,16 +1835,21 @@ definitions:
         properties:
             submissionID:
                 type: integer
+                minimum: 0
             examID:
                 type: integer
+                minimum: 0
             userID:
                 type: integer
+                minimum: 0
             assignedTaskID:
                 type: integer
+                minimum: 0
             userAnswer:
                 type: string
             finalCorrectionID:
                 type: integer
+                minimum: 0
         required:
         - submissionID
         - examID
@@ -1778,9 +1861,9 @@ definitions:
         type: object
         properties:
             code:
-                type: string
+                type: integer
             message:
                 type: string
         required:
         - code
-        - type
+        - message
