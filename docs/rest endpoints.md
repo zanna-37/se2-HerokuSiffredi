@@ -231,7 +231,7 @@
 - /submissions
     - **POST** __
         - examId
-        - subId
+        - submissionId
         - userId
         - assignedTaskId
         - userAnswer
@@ -245,7 +245,7 @@
 - /submissions/{id}
     - **GET** _retrieve a submission_
         - examId
-        - subId
+        - submissionId
         - userId
         - assignedTaskId
         - userAnswer
@@ -255,7 +255,7 @@
          
     - **PUT** __ // studente e professore passano campi diversi 
         - examId
-        - subId
+        - submissionId
         - userId
         - assignedTaskId
         - userAnswer
@@ -265,12 +265,12 @@
         - empty body
 
     - **PATCH** _submit again (student)_
-        - subId
+        - submissionId
         - taskId
         - answer
 
     - **PATCH** _correction (professor)_
-        - subId
+        - submissionId
         - finalCorrectionId
 
 - /task-corrections
@@ -278,7 +278,7 @@
         - taskCorrections[ ]
 
     - **POST** _create a correction proposal_
-        - subId
+        - submissionId
         - examId
         - mark
         - comment
@@ -293,7 +293,7 @@
 - /task-corrections/{id}
     - **GET** _retrieve a proposal corrections for an exam_
         - id
-        - subId
+        - submissionId
         - examId
         - mark
         - comment
@@ -302,7 +302,7 @@
     - **POST** _method not allowed (error: 405)_
 
     - **PUT** _update single correction proposal_
-        - subId
+        - submissionId
         - examId
         - mark
         - comment

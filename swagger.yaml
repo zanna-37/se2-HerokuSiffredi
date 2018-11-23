@@ -219,7 +219,7 @@ paths:
               schema:
                 type: object
                 properties:
-                    subID:
+                    submissionID:
                         type: integer
                     examID:
                         type: integer
@@ -230,7 +230,7 @@ paths:
                     userProposerID:
                         type: integer
                 required:
-                - subID
+                - submissionID
                 - examID
                 - mark
                 - userProposerID
@@ -367,7 +367,7 @@ paths:
         get:
             summary: Returns a list of all task categories
             tags:
-                - task templates 
+                - task categories 
             responses:
                 200:
                     description: Array of TaskCategory objects
@@ -378,7 +378,7 @@ paths:
         post:
             summary: Create a new task category
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: body
               name: task-category
@@ -406,7 +406,7 @@ paths:
         put:
             summary: Update some task categories
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: body
               name: task-categories 
@@ -425,7 +425,7 @@ paths:
         delete:
             summary: Delete a batch of tasks
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: body
               name: task-categoryIDs
@@ -445,7 +445,7 @@ paths:
         get:
             summary: Returns a specific task category
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: path
               name: id
@@ -465,7 +465,7 @@ paths:
             summary: Not supported
             deprecated: true
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: path
               name: id
@@ -479,7 +479,7 @@ paths:
         put:
             summary: Updates a specific task category
             tags:
-                - task templates
+                - task categories
             parameters:
             - in: path
               name: id
@@ -504,7 +504,7 @@ paths:
         delete:
             summary: Delete specific task category
             tags:
-                - task templates
+                - task categories
             parameters: 
             - in: path
               name: id
@@ -552,7 +552,6 @@ paths:
                 - studentNumber
                 - name
                 - surname
-                - groupID
             responses:
                 201:
                     description: User created
@@ -1342,6 +1341,11 @@ paths:
             tags:
                 - exam instances
             parameters:
+              - in: path
+                name: id
+                description: ID of exam instance
+                required: true
+                type: integer
               - in: body
                 name: examInstance
                 schema:
@@ -1554,12 +1558,12 @@ paths:
                 name: correction
                 schema:
                     properties: 
-                        subID:
+                        submissionID:
                             type: integer
                         finalCorrectionID:
                             type: integer
                     required:
-                    - subID
+                    - submissionID
                     - finalCorrectionID
             responses:
                 204:
@@ -1609,7 +1613,7 @@ definitions:
         properties:
             taskCorrectionID:
                 type: integer
-            subID:
+            submissionID:
                 type: integer
             examID:
                 type: integer
@@ -1621,7 +1625,7 @@ definitions:
                 type: integer
         required:
         - taskCorrectionID
-        - subID
+        - submissionID
         - examID
         - mark
         - userProposerID
@@ -1751,7 +1755,7 @@ definitions:
         title: Submission
         type: object
         properties:
-            subID:
+            submissionID:
                 type: integer
             examID:
                 type: integer
@@ -1764,7 +1768,7 @@ definitions:
             finalCorrectionID:
                 type: integer
         required:
-        - subID
+        - submissionID
         - examID
         - userID
         - assignedTaskID
