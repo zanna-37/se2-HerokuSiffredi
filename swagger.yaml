@@ -1341,6 +1341,11 @@ paths:
             tags:
                 - exam instances
             parameters:
+              - in: path
+                name: id
+                description: ID of exam instance
+                required: true
+                type: integer
               - in: body
                 name: examInstance
                 schema:
