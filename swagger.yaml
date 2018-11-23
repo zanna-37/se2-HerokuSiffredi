@@ -50,6 +50,7 @@ paths:
                                     type: boolean
                     totalPoints:
                         type: number
+                        minimum: 0
                     categoryID:
                         type: integer
                         minimum: 0
@@ -104,6 +105,7 @@ paths:
                   type: array
                   items:
                       type: integer
+                      minimum: 0
             responses:
                 204:
                     description: Deleted Tasks
@@ -566,6 +568,7 @@ paths:
                 properties:
                     studentNumber:
                         type: integer
+                        minimum: 0
                     name:
                         type: string
                     surname:
@@ -736,7 +739,7 @@ paths:
                         type: string
                     academicYear:
                         type: string
-                        format: date
+                        pattern: '^\d{4}\/\d{4}$'
                 required:
                 - name
             responses:
@@ -1416,6 +1419,7 @@ paths:
                                     minimum: 0
                                 finalMark:
                                     type: number
+                                    minimum: 0
                                 comment:
                                     type: string
             responses:
@@ -1657,6 +1661,7 @@ definitions:
                             type: boolean
             totalPoints:
                 type: number
+                minimum: 0
             categoryID:
                 type: integer
                 minimum: 0
@@ -1737,7 +1742,7 @@ definitions:
                 type: string
             academicYear:
                 type: string
-                format: date
+                pattern: '^\d{4}\/\d{4}$'
         required:
         - id
         - name
