@@ -10,4 +10,4 @@ app.get('/', (req, res) => res.send(
 ));
 app.use('/v1/task-categories', task_categories_v1);
 
-app.listen(PORT, HOST, () => console.log('App is started. Listening at %s, on port %s', HOST, PORT));
+app.listen(PORT, HOST, () => console.log(`App is started. Listening at ${HOST}, on port ${PORT}`));
