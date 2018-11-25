@@ -4,6 +4,9 @@ const CONNECTION_URI = process.env.DATABASE_URL || require('./db-connection-uri'
 
 const sequelize = new Sequelize(CONNECTION_URI, {
     operatorsAliases: false,
+    define: {
+        timestamps: false
+    }
 });
 
 sequelize
