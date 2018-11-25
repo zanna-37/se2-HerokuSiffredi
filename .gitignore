@@ -1,3 +1,7 @@
+# DB credentials
+db-connection-uri.js
+
+
 # Webstorm
 .idea
 .DS_Store
