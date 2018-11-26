@@ -1,7 +1,8 @@
-const express = require('express');
-const app = express();
+const app = require('./app');
+
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => res.send('Hello World! [' + Math.round(Math.random() * 100) + ']'));
+const db = require('./db');
+app.on('close', () => db.close()); //TODO <-- not sure
 
-app.listen(PORT, () => console.log('App is listening on port ' + PORT));
+app.listen(PORT, () => console.log(`App is started. Listening on port ${PORT}`));
