@@ -1,25 +1,22 @@
-const task_categories_v1 = require('./task-categories');
+let db;
 
-test('v1_get existence', () => {
-    let fun = task_categories_v1.get;
-    expect(fun).toBeDefined();
-    expect(fun).toBeInstanceOf(Function);
+beforeAll(() => {
+    db = require('../../db');
 });
 
-test('v1_post existence', () => {
-    let fun = task_categories_v1.post;
-    expect(fun).toBeDefined();
-    expect(fun).toBeInstanceOf(Function);
+afterAll(() => {
+    // noinspection JSIgnoredPromiseFromCall
+    db.close();
 });
 
-test('v1_put existence', () => {
-    let fun = task_categories_v1.put;
-    expect(fun).toBeDefined();
-    expect(fun).toBeInstanceOf(Function);
-});
-
-test('v1_delete existence', () => {
-    let fun = task_categories_v1.delete;
-    expect(fun).toBeDefined();
-    expect(fun).toBeInstanceOf(Function);
+test('v1_get response to have id and name', () => {
+    const request = require('supertest');
+    const app = require('../../app');
+    return request(app).get('/v1/task-categories').then(response => {
+        expect(response.statusCode).toBe(200);
+        response.body.forEach(function (task_category) {
+            expect(task_category).toHaveProperty('id');
+            expect(task_category).toHaveProperty('name');
+        });
+    });
 });

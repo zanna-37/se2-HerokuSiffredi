@@ -4,16 +4,13 @@ const CONNECTION_URI = process.env.DATABASE_URL || require('./db-connection-uri'
 
 const sequelize = new Sequelize(CONNECTION_URI, {
     operatorsAliases: false,
+    logging: false,
     define: {
         timestamps: false
-    }
+    },
 });
 
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
+sequelize.authenticate()
     .catch(err => {
         console.error('Unable to connect to the database:', err);
     });

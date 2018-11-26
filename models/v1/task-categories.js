@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 const db = require('../../db');
 
-const Task_category = db.define('task_category', {
+const Task_categories = db.define('task_categories', {
     name: {
         type: Sequelize.STRING
     },
 });
 
-Task_category.sync({force: false}).then(() => {
-});
+// noinspection JSIgnoredPromiseFromCall
+Task_categories.sync({force: false});
 
-module.exports = Task_category;
+module.exports = Task_categories;
