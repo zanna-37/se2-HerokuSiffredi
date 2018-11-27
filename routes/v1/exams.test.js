@@ -20,8 +20,7 @@ test(`GET ${route}`, () => {
 // Three required inputs: examTemplateID:integer, ownerIDs:[integer], defaultDeadlineEnd:date
 // Inputs are passed as json in body
 describe(`POST ${route}`, () => {
-    const expectPostError = obj => {
-        const body = JSON.stringify(obj);
+    const expectPostError = body => {
         return request(app)
             .post(route)
             .send(body)
@@ -34,7 +33,7 @@ describe(`POST ${route}`, () => {
     const defaultBody = {
         examTemplateID: 23,
         ownerIDs: [5, 10, 70],
-        defaultDeadlineEnd: '20019-10-19 10:23:54+02'
+        defaultDeadlineEnd: '2019-10-19 10:23:54+02'
     };
 
     test('no body', () =>

@@ -7,7 +7,7 @@ const exams = sequelize.define(
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            allowNull: false
+            autoIncrement: true
         },
         examTemplateID: {
             type: Sequelize.INTEGER,
@@ -24,5 +24,4 @@ const exams = sequelize.define(
 );
 
 exams.sync({ force: false });
-
 module.exports = exams;
