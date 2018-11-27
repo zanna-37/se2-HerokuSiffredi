@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const task_categories_v1 = require('./routes/v1/task-categories');
-
+const submissions_v1 = require('./routes/v1/submissions');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(function(req, res, next) {
@@ -19,4 +19,5 @@ app.get('/', (req, res) => res.send(
 ));
 app.use('/v1/task-categories', task_categories_v1);
 
+app.use('/v1/submissions',submissions_v1 );
 module.exports = app;
