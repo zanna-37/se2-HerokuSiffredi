@@ -9,4 +9,23 @@ router.get('/', function(req,res) {
     });
 });
 
+router.post('/' , function (req,res) {
+    const sub = model_submissions.build({
+        examId : 2,
+        userId : 2,
+        assignedTaskId : 5,
+        userAnswer : 'dfg',
+        finalCorrectionId : 6
+    });
+    sub.save().then( () => {
+        res.send('helo');
+    })
+        .catch(error => {
+            console.error('Unable to connect to the database:', error);
+            res.send('no helo');
+        });
+
+});
+
+
 module.exports = router;

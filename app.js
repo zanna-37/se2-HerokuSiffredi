@@ -15,7 +15,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => res.send(
     'Hello ' + Math.round(Math.random() * 100) + '° World!<br>' +
-    '<a href="/v1/task-categories">task-categories</a>'
+    '<a href="/v1/task-categories">task-categories</a> <br>' +
+    '<form action="/v1/submissions/" method="post" content=""> ' +
+    '  <label>Search:</label>\n' +
+    '  <button>Search</button>\n' +
+    '</form>'
 ));
 app.use('/v1/task-categories', task_categories_v1);
 
