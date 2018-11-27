@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const task_categories_v1 = require('./routes/v1/task-categories');
-const users_v1 = require('./routes/v1/users')
+const users_v1 = require('./routes/v1/users');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
