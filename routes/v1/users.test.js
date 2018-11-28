@@ -1,12 +1,10 @@
-let db;
+const db = require('../../db');
 
 beforeAll(() => {
-    db = require('../../db');
 });
 
 afterAll(() => {
-    // noinspection JSIgnoredPromiseFromCall
-    db.close();
+    return db.close();
 });
 
 test('v1_get response to have id, name, surname, student number and average', () => {

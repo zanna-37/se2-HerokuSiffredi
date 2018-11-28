@@ -1,9 +1,14 @@
+const db = require('../../db');
 const request = require('supertest');
 const app = require('../../app');
 
-let db;
-beforeAll(() => { db = require('../../db'); });
-afterAll(() => { db.close(); });
+
+beforeAll(() => {
+});
+
+afterAll(() => {
+    return db.close();
+});
 
 const route = '/v1/exams';
 
@@ -56,15 +61,24 @@ describe(`POST ${route}`, () => {
         eee: 'fff',
         ggg: 'hhh'
     }));
-    test('examTemplateID is null', () => expectPostError({ ...defaultBody, examTemplateID: null }));
-    test('ownerIDs is null', () => expectPostError({ ...defaultBody, ownerIDs: null }));
-    test('defaultDeadlineEnd is null', () => expectPostError({ ...defaultBody, defaultDeadlineEnd: null }));
-    test('examTemplateID is undefined', () => expectPostError({ ...defaultBody, examTemplateID: undefined }));
-    test('ownerIDs is undefined', () => expectPostError({ ...defaultBody, ownerIDs: undefined }));
-    test('defaultDeadlineEnd is undefined', () => expectPostError({ ...defaultBody, defaultDeadlineEnd: undefined }));
-    test('examTemplateID string instead of integer', () => expectPostError({ ...defaultBody, examTemplateID: defaultBody.examTemplateID.toString() }));
-    test('ownerIDs string instead of integer', () => expectPostError({ ...defaultBody, ownerIDs: defaultBody.ownerIDs.map(toString) }));
-    test('examTemplateID integer instead of string', () => expectPostError({ ...defaultBody, defaultDeadlineEnd: parseInt(defaultBody.defaultDeadlineEnd) }));
+    test('examTemplateID is null', () => expectPostError({...defaultBody, examTemplateID: null}));
+    test('ownerIDs is null', () => expectPostError({...defaultBody, ownerIDs: null}));
+    test('defaultDeadlineEnd is null', () => expectPostError({...defaultBody, defaultDeadlineEnd: null}));
+    test('examTemplateID is undefined', () => expectPostError({...defaultBody, examTemplateID: undefined}));
+    test('ownerIDs is undefined', () => expectPostError({...defaultBody, ownerIDs: undefined}));
+    test('defaultDeadlineEnd is undefined', () => expectPostError({...defaultBody, defaultDeadlineEnd: undefined}));
+    test('examTemplateID string instead of integer', () => expectPostError({
+        ...defaultBody,
+        examTemplateID: defaultBody.examTemplateID.toString()
+    }));
+    test('ownerIDs string instead of integer', () => expectPostError({
+        ...defaultBody,
+        ownerIDs: defaultBody.ownerIDs.map(toString)
+    }));
+    test('examTemplateID integer instead of string', () => expectPostError({
+        ...defaultBody,
+        defaultDeadlineEnd: parseInt(defaultBody.defaultDeadlineEnd)
+    }));
 
     test('using arbitrary body', () =>
         request(app)

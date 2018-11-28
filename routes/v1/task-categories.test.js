@@ -1,5 +1,4 @@
 const db = require('../../db');
-require('supertest');
 const request = require('supertest');
 const app = require('../../app');
 

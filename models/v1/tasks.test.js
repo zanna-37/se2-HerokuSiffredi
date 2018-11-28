@@ -1,11 +1,10 @@
-let db;
+const db = require('../../db');
 
 beforeAll(() => {
-    db = require('../../db');
 });
 
 afterAll(() => {
-    db.close();
+    return db.close();
 });
 
 const model_tasks_v1 = require('./tasks');
