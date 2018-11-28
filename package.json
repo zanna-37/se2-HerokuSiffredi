@@ -1,40 +1,40 @@
 {
-  "name": "se2-herokusiffredi",
-  "version": "1.0.0",
-  "description": "Software engineering 2 - Project API",
-  "main": "index.js",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "pg": "^7.6.1",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.41.2"
-  },
-  "devDependencies": {
-    "eslint": "^5.8.0",
-    "jest": "^23.6.0",
-    "supertest": "^3.3.0"
-  },
-  "scripts": {
-    "start": "node index.js",
-    "pretest": "eslint --ignore-path .gitignore .",
-    "test": "jest"
-  },
-  "jest": {
-    "verbose": true,
-    "collectCoverage": true
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zanna-37/se2-HerokuSiffredi.git"
-  },
-  "keywords": [
-    "api"
-  ],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zanna-37/se2-HerokuSiffredi/issues"
-  },
-  "homepage": "https://github.com/zanna-37/se2-HerokuSiffredi#readme"
+    "name": "se2-herokusiffredi",
+    "version": "1.0.0",
+    "description": "Software engineering 2 - Project API",
+    "main": "index.js",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "pg": "^7.6.1",
+        "pg-hstore": "^2.3.2",
+        "sequelize": "^4.41.2"
+    },
+    "devDependencies": {
+        "eslint": "^5.8.0",
+        "jest": "^23.6.0",
+        "supertest": "^3.3.0"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "pretest": "eslint --ignore-path .gitignore .",
+        "test": "jest"
+    },
+    "jest": {
+        "verbose": true,
+        "collectCoverage": true
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zanna-37/se2-HerokuSiffredi.git"
+    },
+    "keywords": [
+        "api"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/zanna-37/se2-HerokuSiffredi/issues"
+    },
+    "homepage": "https://github.com/zanna-37/se2-HerokuSiffredi#readme"
 }

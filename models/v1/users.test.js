@@ -1,13 +1,6 @@
-let db;
+const db = require('../../db');
 
-beforeAll(() => {
-    db = require('../../db');
-});
-
-afterAll(() => {
-    // noinspection JSIgnoredPromiseFromCall
-    db.close();
-});
+afterAll(() => db.close());
 
 const model_users_v1 = require('./users');
 

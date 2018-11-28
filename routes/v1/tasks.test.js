@@ -1,12 +1,6 @@
-let db;
+const db = require('../../db');
 
-beforeAll(() => {
-    db = require('../../db');
-});
-
-afterAll(() => {
-    db.close();
-});
+afterAll(() => db.close());
 
 test('tasks_v1 get response must have:\n' +
     '\t- id\n' +

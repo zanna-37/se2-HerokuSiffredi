@@ -1,11 +1,6 @@
 const db = require('../../db');
 
-beforeAll(() => {
-});
-
-afterAll(() => {
-    return db.close();
-});
+afterAll(() => db.close());
 
 const model_task_categories_v1 = require('./task-categories');
 
