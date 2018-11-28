@@ -2,6 +2,11 @@ const Sequelize = require('sequelize');
 const db = require('../../db');
 
 const Submissions = db.define('submissions', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     examId: {
         type: Sequelize.INTEGER
     },

@@ -19,7 +19,7 @@ test('submissions_v1 check if the table submission has all the right attributes'
             expect(item).toMatchObject({userId : expect.any(Number)});
             expect(item).toMatchObject({assignedTaskId : expect.any(Number)});
             expect(item).toMatchObject({userAnswer : expect.any(String)});
-            expect(item).toMatchObject({finalCorrectionId : expect.any(Number)});
+            expect(item).toHaveProperty('finalCorrectionId');
         });
     });
 });
