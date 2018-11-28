@@ -9,4 +9,21 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/', function (req, res) {
+    const params = req.body;
+    if (params == null || params === {}) {
+        res.status(400).send({code: 1, message: 'Missing parameters'}); //TODO define a code
+    } else if (!params.hasOwnProperty('name') || params.name == null) {
+        res.status(400);
+        res.send({code: 1, message: 'Wrong/missing parameters'}); //TODO define a code
+    } else {
+        model_task_categories.create({
+            name: params.name,
+        }).then((new_task_category) => {
+            res.status(201);
+            res.send({id: new_task_category.id});
+        });
+    }
+});
+
 module.exports = router;

@@ -1,12 +1,10 @@
-let db;
+const db = require('../../db');
 
 beforeAll(() => {
-    db = require('../../db');
 });
 
 afterAll(() => {
-    // noinspection JSIgnoredPromiseFromCall
-    db.close();
+    return db.close();
 });
 
 const model_task_categories_v1 = require('./task-categories');
