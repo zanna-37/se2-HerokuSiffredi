@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const task_categories_v1 = require('./routes/v1/task-categories');
+const users_v1 = require('./routes/v1/users');
 const tasks_v1 = require('./routes/v1/tasks');
 const exams_v1 = require('./routes/v1/exams');
 
@@ -17,12 +18,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => res.send(
     'Hello ' + Math.round(Math.random() * 100) + '° World!<br>' +
-    '<a href="/v1/task-categories">task-categories</a>' +
-    '<br>' +
+    '<a href="/v1/task-categories">task-categories</a><br>' +
+    '<a href="/v1/users">users</a><br>' +
+    '<a href="/v1/task-categories">task-categories</a><br>' +
     '<a href="/v1/tasks">tasks</a>'
 ));
 
 app.use('/v1/task-categories', task_categories_v1);
+app.use('/v1/users', users_v1);
 app.use('/v1/tasks', tasks_v1);
 app.use('/v1/exams', exams_v1);
 
