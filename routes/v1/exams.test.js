@@ -1,6 +1,10 @@
 const request = require('supertest');
 const app = require('../../app');
 
+let db;
+beforeAll(() => { db = require('../../db'); });
+afterAll(() => { db.close(); });
+
 const route = '/v1/exams';
 
 test(`GET ${route}`, () => {
