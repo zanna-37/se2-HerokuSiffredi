@@ -2,12 +2,7 @@ const db = require('../../db');
 const request = require('supertest');
 const app = require('../../app');
 
-beforeAll(() => {
-});
-
-afterAll(() => {
-    return db.close();
-});
+afterAll(() => db.close());
 
 describe('v1_get', () => {
     test('response to have id and name', async () => {

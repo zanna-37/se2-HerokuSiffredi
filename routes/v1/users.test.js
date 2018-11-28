@@ -1,11 +1,6 @@
 const db = require('../../db');
 
-beforeAll(() => {
-});
-
-afterAll(() => {
-    return db.close();
-});
+afterAll(() => db.close());
 
 test('v1_get response to have id, name, surname, student number and average', () => {
     const request = require('supertest');
