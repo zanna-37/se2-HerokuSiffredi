@@ -36,6 +36,8 @@ test('v1_get response to have all attributes ',  () => {
 
 
 describe('POST', () => {
+    let idCompleteObject;
+    let idUncompleteObject;
     const wrongPostRequest = body => {
         return tester(app)
             .post(route)
@@ -46,11 +48,23 @@ describe('POST', () => {
                 expect(resp.body).toHaveProperty('code');
             });
     };
+    const defaultFinalCorrectionId = 5;
     const defaultBody = {
         examId : 2,
         userId : 2,
         assignedTaskId : 5,
         userAnswer : 'user answer',
+    };
+
+    const checkTheCorrectPostInsertion = (body,id) => {
+        return tester(app)
+            .get(route+'/'+id)
+            .then( resp => {
+                expect(resp.statusCode).toBe(200);
+                for(let key in body.k){
+                    expect(resp.body).toHaveProperty(''+ key);
+                }
+            });
     };
 
     test('no body', () => {
@@ -97,17 +111,22 @@ describe('POST', () => {
             .then(resp => {
                 expect(resp.statusCode).toBe(200);
                 expect(resp.body).toHaveProperty('id');
+                idUncompleteObject = resp.body.id;
             });
     });
 
     test('right POST request with all attributes', () => {
         return tester(app)
             .post(route)
-            .send({...defaultBody,finalCorrectionId : 5})
+            .send({...defaultBody,finalCorrectionId : defaultFinalCorrectionId})
             .then(resp => {
                 expect(resp.statusCode).toBe(200);
                 expect(resp.body).toHaveProperty('id');
+                idCompleteObject = resp.body.id;
             });
     });
+
+    test('check if the previous values have been insert correctly with uncomplete object', () => checkTheCorrectPostInsertion({...defaultBody},idUncompleteObject));
+    test('check if the previous values have been insert correctly with complete object', () => checkTheCorrectPostInsertion({...defaultBody,finalCorrectionId: defaultFinalCorrectionId},idCompleteObject));
 });
 

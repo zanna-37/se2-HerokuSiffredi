@@ -14,7 +14,6 @@ router.get('/', (req,res) => {
 
 router.post('/' , function (req,res) {
     const params = req.body;
-    const items = Object.values(params);
     const keys = Object.keys(params);
     if(params == null || params === {}){    //TODO: typeof params == undefined ?
         res.status(400)
@@ -26,13 +25,7 @@ router.post('/' , function (req,res) {
         params.hasOwnProperty('assignedTaskId'))) {
         res.status(400).send({ code: 400, message: 'Bad request' });
     }
-    /*else if(params.assignedTaskId == null ||
-    params.examId == null ||
-    params.userAnswer == null ||
-    params.userId == null){
-        res.status(400).send({ code: 400, message: 'Bad request' });
-    }*/
-    else if(items.some((items) => {
+    else if(Object.values(params).some((items) => {
         return items == null; })) {
         res.status(400)
             .send({code: 400, message: 'Bad request'});
@@ -64,8 +57,13 @@ router.post('/' , function (req,res) {
     /*else if(params.finalCorrectionId === undefined){ //TODO: verificare che sia undefined?
         res.status(400).send({code: 400, message: 'Bad request'});
     }*/
-
-
+});
+router.get('/:id', (req,res) => {
+    model_submissions.find({where: {id : req.params.id}})
+        .then(submission => {
+            res.send(submission.get({plain: true}));
+        });
+    res.statusCode = 200;
 });
 
 
