@@ -2,7 +2,7 @@
     "name": "se2-herokusiffredi",
     "version": "1.0.0",
     "description": "Software engineering 2 - Project API",
-    "main": "index.js",
+    "main": "src/index.js",
     "dependencies": {
         "body-parser": "^1.18.3",
         "express": "^4.16.4",
@@ -16,7 +16,7 @@
         "supertest": "^3.3.0"
     },
     "scripts": {
-        "start": "node index.js",
+        "start": "node src/index.js",
         "pretest": "eslint --ignore-path .gitignore .",
         "test": "jest"
     },

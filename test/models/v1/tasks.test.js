@@ -1,8 +1,8 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 
 afterAll(() => db.close());
 
-const model_tasks_v1 = require('./tasks');
+const model_tasks_v1 = require('../../../src/models/v1/tasks');
 
 test('tasks_v1.findAll() must have:\n' +
     '\t- id\n' +

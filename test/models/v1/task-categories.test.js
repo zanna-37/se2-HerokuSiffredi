@@ -1,8 +1,8 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 
 afterAll(() => db.close());
 
-const model_task_categories_v1 = require('./task-categories');
+const model_task_categories_v1 = require('../../../src/models/v1/task-categories');
 
 test('task_categories_v1.findAll() to have id and name', async () => {
     await model_task_categories_v1.findAll().then(task_categories => {
