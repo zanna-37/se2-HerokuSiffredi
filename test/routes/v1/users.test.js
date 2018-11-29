@@ -1,10 +1,10 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 
 afterAll(() => db.close());
 
 test('v1_get response to have id, name, surname, student number and average', () => {
     const request = require('supertest');
-    const app = require('../../app');
+    const app = require('../../../src/app');
     return request(app).get('/v1/users').then(response => {
         expect(response.statusCode).toBe(200);
         response.body.forEach(function (user) {

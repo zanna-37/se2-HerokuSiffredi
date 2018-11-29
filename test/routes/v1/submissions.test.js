@@ -5,9 +5,9 @@ let app;
 const route = '/v1/submissions/';
 
 beforeAll(() => {
-    db = require('../../db');
+    db = require('../../../src/db');
     tester = require('supertest');
-    app = require('../../app');
+    app = require('../../../src/app');
 });
 
 afterAll(() => {

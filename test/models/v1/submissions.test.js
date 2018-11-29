@@ -1,7 +1,7 @@
 let db;
 
 beforeAll(() => {
-    db = require('../../db');
+    db = require('../../../src/db');
 });
 
 afterAll(() => {
@@ -9,7 +9,7 @@ afterAll(() => {
     db.close();
 });
 
-const model_submissions_v1 = require('./submissions');
+const model_submissions_v1 = require('../../../src/models/v1/submissions');
 
 test('submissions_v1 check if the table submission has all the right attributes', async () => {
     await model_submissions_v1.findAll().then(submissions => {

@@ -1,8 +1,8 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 
 afterAll(() => db.close());
 
-const model_users_v1 = require('./users');
+const model_users_v1 = require('../../../src/models/v1/users');
 
 test('model_users_v1.findAll() to have id, name, surname, student number and average', async () => {
     await model_users_v1.findAll().then(users => {

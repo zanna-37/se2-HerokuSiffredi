@@ -1,6 +1,6 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 const request = require('supertest');
-const app = require('../../app');
+const app = require('../../../src/app');
 
 afterAll(() => db.close());
 

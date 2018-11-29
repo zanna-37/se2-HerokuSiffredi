@@ -1,4 +1,4 @@
-const db = require('../../db');
+const db = require('../../../src/db');
 
 afterAll(() => db.close());
 
@@ -11,7 +11,7 @@ test('tasks_v1 get response must have:\n' +
     '\t- totalPoints\n' +
     '\t- lastEdit', () => {
     const request = require('supertest');
-    const app = require('../../app');
+    const app = require('../../../src/app');
     return request(app).get('/v1/tasks').then(response => {
         expect(response.statusCode).toBe(200);
         response.body.forEach(function (task) {
