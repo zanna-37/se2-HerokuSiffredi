@@ -2,7 +2,7 @@ let db;
 let tester;
 let app;
 
-const route = '/v1/submissions/';
+const route = '/v1/submissions';
 
 beforeAll(() => {
     db = require('../../../src/db');
@@ -14,8 +14,8 @@ afterAll(() => {
     // noinspection JSIgnoredPromiseFromCall
     db.close();
 });
-describe('GET', () => {
-    test('check the existence of all attributes',() => {
+describe('GET /v1/submissions/', () => {
+    test('check the existence of all attributes and the status code',() => {
         return tester(app)
             .get(route)
             .then( resp => {
@@ -23,11 +23,11 @@ describe('GET', () => {
                 expect(resp.body).toBeInstanceOf(Array);
                 resp.body.forEach(item => {
                     expect(item).toBeInstanceOf(Object);
-                    expect(item).toHaveProperty('id');
-                    expect(item).toHaveProperty('userId');
-                    expect(item).toHaveProperty('assignedTaskId');
-                    expect(item).toHaveProperty('userAnswer');
-                    expect(item).toHaveProperty('finalCorrectionId');
+                    expect(item.hasOwnProperty('id') &&
+                        item.hasOwnProperty('userId') &&
+                        item.hasOwnProperty('assignedTaskId') &&
+                        item.hasOwnProperty( 'userAnswer') &&
+                        item.hasOwnProperty('finalCorrectionId')).toBeTruthy();
                 });
             });
     });
@@ -36,7 +36,7 @@ describe('GET', () => {
         tester(app)
             .get(route)
             .then( resp => {
-                resp.body.forEach(item  => {
+                resp.body.forEach(item => {
                     expect(typeof item.id).toBe('number');
                     expect(typeof item.userId).toBe('number');
                     expect(typeof item.assignedTaskId).toBe('number');
@@ -49,24 +49,49 @@ describe('GET', () => {
     });
 });
 
-/*test('GET',  () => {
-    return tester(app)
-        .get('/v1/submissions')
-        .then(response => {
-            expect(response.statusCode).toBe(200);
-            expect(response.body).toBeInstanceOf(Array);
-
-            response.body.forEach( (item) => {
-                expect(item).toBeInstanceOf(Object);
-                expect(item).toMatchObject({id : expect.any(Number)});
-                expect(item).toMatchObject({userId : expect.any(Number)});
-                expect(item).toMatchObject({assignedTaskId : expect.any(Number)});
-                expect(item).toMatchObject({userAnswer : expect.any(String)});
-                expect(item).toHaveProperty('finalCorrectionId');
+describe('GET /v1/submissions/id', () =>{//TODO: fare prima la POST e poi verificare quei valori
+    test('check the existence of all attributes and the status code', () => {
+        return tester(app)
+            .get(route)
+            .then(resp => {
+                return resp.body[0].id;
+            })
+            .then(id => {
+                tester(app)
+                    .get(route+'/'+id)
+                    .then(resp => {
+                        expect(resp.statusCode).toBe(200);
+                        expect(resp.body).toBeInstanceOf(Object);
+                        expect(resp.body.hasOwnProperty('id') &&
+                                resp.body.hasOwnProperty('userId') &&
+                                resp.body.hasOwnProperty('assignedTaskId') &&
+                                resp.body.hasOwnProperty( 'userAnswer') &&
+                                resp.body.hasOwnProperty('finalCorrectionId')).toBeTruthy();
+                    });
             });
-        });
-});*/
+    });
+    test('check the type of the attributes', () => {
+        return tester(app)
+            .get(route)
+            .then(resp => {
+                return resp.body[0].id;
+            })
+            .then(id => {
+                tester(app)
+                    .get(route+'/'+id)
+                    .then(resp => {
+                        expect(typeof resp.body.id).toBe('number');
+                        expect(typeof resp.body.userId).toBe('number');
 
+                        expect(typeof resp.body.assignedTaskId).toBe('number');
+                        expect(typeof resp.body.userAnswer).toBe('string');
+                        expect(typeof resp.body.finalCorrectionId == 'number' ||
+                            (resp.body.finalCorrectionId == null && typeof resp.body.finalCorrectionId == 'object'))
+                            .toBeTruthy(); //TODO: è brutto?
+                    });
+            });
+    });
+});
 
 
 
@@ -137,7 +162,7 @@ describe('POST', () => {
     test('assignedTaskId not a Integer', () => wrongPostRequest({...defaultBody, assignedTaskId: 'string'}));
     test('userAnswer not a String', () => wrongPostRequest({...defaultBody, userAnswer: 9}));
     test('finalCorrectionId not a Integer', () => wrongPostRequest({...defaultBody, finalCorrectionId: 'string'}));
-    test('not enought attributes', () => wrongPostRequest({ examId : 2, userId : 2}));
+    test('not enough attributes', () => wrongPostRequest({ examId : 2, userId : 2}));
 
 
     test('right POST request without finalCorrectionId', () =>{
