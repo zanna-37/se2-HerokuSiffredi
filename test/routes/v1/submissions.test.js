@@ -14,8 +14,42 @@ afterAll(() => {
     // noinspection JSIgnoredPromiseFromCall
     db.close();
 });
+describe('GET', () => {
+    test('check the existence of all attributes',() => {
+        return tester(app)
+            .get(route)
+            .then( resp => {
+                expect(resp.statusCode).toBe(200);
+                expect(resp.body).toBeInstanceOf(Array);
+                resp.body.forEach(item => {
+                    expect(item).toBeInstanceOf(Object);
+                    expect(item).toHaveProperty('id');
+                    expect(item).toHaveProperty('userId');
+                    expect(item).toHaveProperty('assignedTaskId');
+                    expect(item).toHaveProperty('userAnswer');
+                    expect(item).toHaveProperty('finalCorrectionId');
+                });
+            });
+    });
 
-test('v1_get response to have all attributes ',  () => {
+    test('check the type of the attributes', () => {
+        tester(app)
+            .get(route)
+            .then( resp => {
+                resp.body.forEach(item  => {
+                    expect(typeof item.id).toBe('number');
+                    expect(typeof item.userId).toBe('number');
+                    expect(typeof item.assignedTaskId).toBe('number');
+                    expect(typeof item.userAnswer).toBe('string');
+                    expect(typeof item.finalCorrectionId == 'number' ||
+                        (item.finalCorrectionId == null && typeof item.finalCorrectionId == 'object'))
+                        .toBeTruthy(); //TODO: è brutto?
+                });
+            });
+    });
+});
+
+/*test('GET',  () => {
     return tester(app)
         .get('/v1/submissions')
         .then(response => {
@@ -31,7 +65,9 @@ test('v1_get response to have all attributes ',  () => {
                 expect(item).toHaveProperty('finalCorrectionId');
             });
         });
-});
+});*/
+
+
 
 
 
