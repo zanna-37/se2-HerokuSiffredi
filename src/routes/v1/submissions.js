@@ -8,6 +8,7 @@ router.get('/', (req,res) => {
     model_submissions
         .findAll()
         .then((submissions) => {
+
             res.send(submissions);
         });
 });
