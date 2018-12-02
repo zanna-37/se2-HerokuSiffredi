@@ -10,17 +10,42 @@ router.get('/', function (req, res) {
         .then(task_categories => res.send(task_categories));
 });
 
+////////////////////////////////////////////
+
+let getId_params_correctType = function (params) {
+    return Number.isInteger(Number.parseInt(params.id));
+};
+
+router.get('/:id', function (req, res) {
+    const params = req.params;
+    res.set('Accept', 'application/json');
+    if (!getId_params_correctType(params)) {
+        res.status(400).send({code: 400, message: 'Specified ID is not valid'});
+    } else {
+        model_task_categories
+            .findByPk(params.id)
+            .then(task_categories => {
+                if (task_categories == null) {
+                    res.status(404).send({code: 404, message: 'No TaskCategory for that ID'});
+                } else {
+                    res.send(task_categories);
+                }
+            });
+    }
+});
+
+////////////////////////////////////////////
+
 let post_params_present = function (params) {
-    if (params == null) throw 'params not defined';
     return params.hasOwnProperty('name');
 };
 let post_params_set = function (params) {
-    if (params == null) throw 'params not defined';
     return params.name != null;
 };
 
 router.post('/', function (req, res) {
     const params = req.body;
+    res.set('Accept', 'application/json');
     if (!post_params_present(params)) {
         res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
     } else if (!post_params_set(params)) {
