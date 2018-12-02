@@ -4,9 +4,11 @@ const app = require('../../../src/app');
 
 afterAll(() => db.close());
 
-describe('v1_get', () => {
-    test('response to have id and name', async () => {
-        await request(app).get('/v1/task-categories').then(response => {
+const route = '/v1/task-categories';
+
+describe(`GET ${route}`, () => {
+    test('plain', async () => {
+        await request(app).get(route).then(response => {
             expect(response.statusCode).toBe(200);
             response.body.forEach(function (task_category) {
                 expect(task_category).toHaveProperty('id');
@@ -16,30 +18,57 @@ describe('v1_get', () => {
     });
 });
 
-describe('v1_post', () => {
-    test('empty body', async () => {
-        expect.assertions(3);
-        await request(app).post('/v1/task-categories').then(response => {
-            expect(response.statusCode).toBe(400);
-            expect(response.body).toHaveProperty('code');
-            expect(response.body).toHaveProperty('message');
-        });
-    });
+describe(`POST ${route}`, () => {
+    const correct_body = {
+        name: 'testCategory'
+    };
+    const wrong_body_empty = {};
+    const wrong_body_undefined = undefined;
+    const wrong_body_param_null = {
+        name: null
+    };
 
-    test('wrong parameters', async () => {
-        expect.assertions(3);
-        await request(app).post('/v1/task-categories').send({foo: 'bla bla bla'}).then(response => {
-            expect(response.statusCode).toBe(400);
-            expect(response.body).toHaveProperty('code');
-            expect(response.body).toHaveProperty('message');
-        });
-    });
-
-    test('right parameter', async () => {
+    const expectPostError = body => {
         expect.assertions(2);
-        await request(app).post('/v1/task-categories').send({name: 'testCategory'}).then(response => {
-            expect(response.statusCode).toBe(201);
-            expect(response.body).toHaveProperty('id');
-        });
+        return request(app)
+            .post(route)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(400);
+                expect(res.body).toEqual(expect.objectContaining(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                ));
+            });
+    };
+
+    const expectPostOk = body => {
+        expect.assertions(2);
+        return request(app)
+            .post(route)
+            .send(body)
+            .then(res => {
+                expect(res.statusCode).toBe(201);
+                expect(res.body).toEqual(expect.objectContaining({id: expect.any(Number)}));
+            });
+    };
+
+    test('correct parameter', () => {
+        return expectPostOk(correct_body);
+    });
+
+    test('no body', () => {
+        return expectPostError();
+    });
+    test('empty body', () => {
+        return expectPostError(wrong_body_empty);
+    });
+    test('undefined body', () => {
+        return expectPostError(wrong_body_undefined);
+    });
+    test('name=null', () => {
+        return expectPostError(wrong_body_param_null);
     });
 });
