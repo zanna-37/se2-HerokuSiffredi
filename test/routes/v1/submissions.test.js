@@ -14,6 +14,14 @@ afterAll(() => {
     // noinspection JSIgnoredPromiseFromCall
     db.close();
 });
+
+const defaultBody = {
+    examId : 2,
+    userId : 2,
+    assignedTaskId : 5,
+    userAnswer : 'user answer',
+};
+
 describe('GET /v1/submissions/', () => {
     test('check the existence of all attributes and the status code',() => {
         return tester(app)
@@ -49,12 +57,20 @@ describe('GET /v1/submissions/', () => {
     });
 });
 
-describe('GET /v1/submissions/id', () =>{//TODO: fare prima la POST e poi verificare quei valori
+
+
+
+
+
+describe('GET /v1/submissions/id', () =>{
+    let idPost;
     test('check the existence of all attributes and the status code', () => {
         return tester(app)
-            .get(route)
+            .post(route)
+            .send({...defaultBody,userAnswer: 'new'})
             .then(resp => {
-                return resp.body[0].id;
+                idPost = resp.body.id;
+                return resp.body.id;
             })
             .then(id => {
                 tester(app)
@@ -73,12 +89,9 @@ describe('GET /v1/submissions/id', () =>{//TODO: fare prima la POST e poi verifi
     test('check the type of the attributes', () => {
         return tester(app)
             .get(route)
-            .then(resp => {
-                return resp.body[0].id;
-            })
-            .then(id => {
+            .then(() => {
                 tester(app)
-                    .get(route+'/'+id)
+                    .get(route+'/'+idPost)
                     .then(resp => {
                         expect(typeof resp.body.id).toBe('number');
                         expect(typeof resp.body.userId).toBe('number');
@@ -87,11 +100,14 @@ describe('GET /v1/submissions/id', () =>{//TODO: fare prima la POST e poi verifi
                         expect(typeof resp.body.userAnswer).toBe('string');
                         expect(typeof resp.body.finalCorrectionId == 'number' ||
                             (resp.body.finalCorrectionId == null && typeof resp.body.finalCorrectionId == 'object'))
-                            .toBeTruthy(); //TODO: è brutto?
+                            .toBeTruthy();
                     });
             });
     });
 });
+
+
+
 
 
 
@@ -110,21 +126,17 @@ describe('POST', () => {
             });
     };
     const defaultFinalCorrectionId = 5;
-    const defaultBody = {
-        examId : 2,
-        userId : 2,
-        assignedTaskId : 5,
-        userAnswer : 'user answer',
-    };
 
-    const checkTheCorrectPostInsertion = (body,id) => {
+    const checkTheCorrectPostInsertion = (bodyToCheck,id) => {
         return tester(app)
             .get(route+'/'+id)
             .then( resp => {
                 expect(resp.statusCode).toBe(200);
-                for(let key in body.k){
-                    expect(resp.body).toHaveProperty(''+ key);
-                }
+                const keys = Object.getOwnPropertyNames(bodyToCheck);
+                keys.forEach(key => {
+                    expect(resp.body).toHaveProperty(key);
+                    expect(resp.body[key]).toBe(bodyToCheck[key]);
+                });
             });
     };
 
@@ -170,7 +182,7 @@ describe('POST', () => {
             .post(route)
             .send({...defaultBody})
             .then(resp => {
-                expect(resp.statusCode).toBe(200);
+                expect(resp.statusCode).toBe(201);
                 expect(resp.body).toHaveProperty('id');
                 idUncompleteObject = resp.body.id;
             });
@@ -181,7 +193,7 @@ describe('POST', () => {
             .post(route)
             .send({...defaultBody,finalCorrectionId : defaultFinalCorrectionId})
             .then(resp => {
-                expect(resp.statusCode).toBe(200);
+                expect(resp.statusCode).toBe(201);
                 expect(resp.body).toHaveProperty('id');
                 idCompleteObject = resp.body.id;
             });
@@ -190,4 +202,33 @@ describe('POST', () => {
     test('check if the previous values have been insert correctly with uncomplete object', () => checkTheCorrectPostInsertion({...defaultBody},idUncompleteObject));
     test('check if the previous values have been insert correctly with complete object', () => checkTheCorrectPostInsertion({...defaultBody,finalCorrectionId: defaultFinalCorrectionId},idCompleteObject));
 });
+
+
+
+
+/*
+describe('DELETE /v1/submissions' , () => {
+
+    const wrongDeleteRequest = body => {
+        return tester(app)
+            .delete(route)
+            .send(body)
+            .then(resp => {
+                expect(resp.statusCode).toBe(400);
+            });
+    };
+
+    test('no body', () => wrongDeleteRequest());
+    test('empty body' , () => wrongDeleteRequest([]));
+    test('sent an object instead array', () => wrongDeleteRequest({firstId : 1, secondoId : 2}));
+    test('sent an array with at least a string as element' ,() => wrongDeleteRequest([1,'2',3]));
+    test('sent an array with at least a non-integer element' , () => wrongDeleteRequest([1,1.2,3]));
+    test('sent negative number as id', () => wrongDeleteRequest([-1,-3]));
+
+});*/
+
+
+
+
+
 

@@ -51,7 +51,7 @@ router.post('/' , function (req,res) {
         }else {
             model_submissions.create({...params})
                 .then(model => model.get('id'))
-                .then(id => res.status(200).send({id}));
+                .then(id => res.status(201).send({id}));
         }
     }
 
