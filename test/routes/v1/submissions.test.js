@@ -45,13 +45,13 @@ describe('GET /v1/submissions/', () => {
             .get(route)
             .then( resp => {
                 resp.body.forEach(item => {
-                    expect(typeof item.id).toBe('number');
-                    expect(typeof item.userId).toBe('number');
-                    expect(typeof item.assignedTaskId).toBe('number');
+                    expect(Number.isInteger(item.id)).toBeTruthy();
+                    expect(Number.isInteger(item.userId)).toBeTruthy();
+                    expect(Number.isInteger(item.assignedTaskId)).toBeTruthy();
                     expect(typeof item.userAnswer).toBe('string');
-                    expect(typeof item.finalCorrectionId == 'number' ||
+                    expect(Number.isInteger(item.finalCorrectionId) ||
                         (item.finalCorrectionId == null && typeof item.finalCorrectionId == 'object'))
-                        .toBeTruthy(); //TODO: è brutto?
+                        .toBeTruthy();
                 });
             });
     });
@@ -62,7 +62,7 @@ describe('GET /v1/submissions/', () => {
 
 
 
-describe('GET /v1/submissions/id', () =>{
+describe('GET /v1/submissions/id', () =>{ //TODO: aggiungi get con id non esistente
     let idPost;
     test('check the existence of all attributes and the status code', () => {
         return tester(app)
@@ -206,26 +206,54 @@ describe('POST', () => {
 
 
 
-/*
+
 describe('DELETE /v1/submissions' , () => {
 
     const wrongDeleteRequest = body => {
         return tester(app)
-            .delete(route)
+            .del(route)
             .send(body)
-            .then(resp => {
-                expect(resp.statusCode).toBe(400);
-            });
+            .expect(400);
     };
 
+    const correctDeleteRequest = ids => {
+        return tester(app)
+            .del(route)
+            .send(ids)
+            .expect(200);
+    };
+
+    test('sent an object instead array', () => wrongDeleteRequest({firstId : 1, secondoId : 2}));
     test('no body', () => wrongDeleteRequest());
     test('empty body' , () => wrongDeleteRequest([]));
-    test('sent an object instead array', () => wrongDeleteRequest({firstId : 1, secondoId : 2}));
+
     test('sent an array with at least a string as element' ,() => wrongDeleteRequest([1,'2',3]));
     test('sent an array with at least a non-integer element' , () => wrongDeleteRequest([1,1.2,3]));
     test('sent negative number as id', () => wrongDeleteRequest([-1,-3]));
+    test('sent a correct delete request with only one id' ,() =>{
+        return tester(app)
+            .post(route)
+            .send(defaultBody)
+            .then(async res => {
+                await correctDeleteRequest([res.body.id]);
+            });
 
-});*/
+    });
+
+    test('sent a correct delete request with a list of id' , () => {
+        let ids = [];
+        return tester(app)
+            .get(route)
+            .then(resp => {
+                resp.body.forEach(item => {
+                    ids.push(item.id);
+                });
+            })
+            .then(  async () => {
+                await correctDeleteRequest(ids);
+            });
+    });
+});
 
 
 
