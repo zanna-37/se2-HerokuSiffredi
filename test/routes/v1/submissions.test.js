@@ -156,6 +156,8 @@ describe('POST', () => {
         bar: 'bar'
     }));
 
+    //TODO: post di un elemento che esiste già
+
     test('examId null', () => wrongPostRequest({...defaultBody, examId : null}));
     test('userId null', () => wrongPostRequest({...defaultBody, userId : null}));
     test('assignedTaskId null', () => wrongPostRequest({...defaultBody, assignedTaskId : null}));
@@ -166,16 +168,17 @@ describe('POST', () => {
     test('assignedTaskId undefined', () => wrongPostRequest({...defaultBody, assignedTaskId : undefined}));
     test('userAnswer undefined', () => wrongPostRequest({...defaultBody, userAnswer : undefined}));
     // test('finalCorrectionId undefined', () => wrongPostRequest({...defaultBody, finalCorrectionId : undefined}));
+    //TODO: anche finalCorrectionId undefined?
 
-    test('to many arguments',() =>  wrongPostRequest({...defaultBody, foo: 'foo', bar: 'bar'}));
+    test('too many arguments',() =>  wrongPostRequest({...defaultBody, foo: 'foo', bar: 'bar'}));
 
     test('examId not a Integer', () => wrongPostRequest({...defaultBody, examId: 'string'}));
     test('userId not a Integer', () => wrongPostRequest({...defaultBody, userId: 'string'}));
     test('assignedTaskId not a Integer', () => wrongPostRequest({...defaultBody, assignedTaskId: 'string'}));
     test('userAnswer not a String', () => wrongPostRequest({...defaultBody, userAnswer: 9}));
     test('finalCorrectionId not a Integer', () => wrongPostRequest({...defaultBody, finalCorrectionId: 'string'}));
-    test('not enough attributes', () => wrongPostRequest({ examId : 2, userId : 2}));
-
+    test('not enough arguments', () => wrongPostRequest({ examId : 2, userId : 2}));
+    //TODO: controlla per ogni argomento
 
     test('right POST request without finalCorrectionId', () =>{
         return tester(app)
@@ -203,7 +206,126 @@ describe('POST', () => {
     test('check if the previous values have been insert correctly with complete object', () => checkTheCorrectPostInsertion({...defaultBody,finalCorrectionId: defaultFinalCorrectionId},idCompleteObject));
 });
 
+describe('PUT /v1/submissions', () => {
 
+    const defaultPutBody = {
+        id: 934,
+        examId : 6,
+        userId : 4,
+        assignedTaskId : 9,
+        userAnswer : 'user answer',
+    };
+
+    const wrongPutRequest = body => {
+        return tester(app)
+            .put(route)
+            .send({body})
+            .then(resp => {
+                expect(resp.statusCode).toBe(409);
+                expect(resp.body).toHaveProperty('code');
+                expect(resp.body).toHaveProperty('message');
+            });
+    };
+
+    const correctPutRequest = body => {
+        return tester(app)
+            .put(route)
+            .send({body})
+            .then(resp => {
+                expect(resp.statusCode).toBe(204);
+            });
+    };
+
+
+    test('put with a id that does not exist',() => {});
+
+    test('inserire foreign key che non esistono', () => {});//TODO: da fare
+
+    test('examId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, examId: '6'}));
+    test('examId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, examId: 6.4}));
+
+    test('userId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, userId: '4'}));
+    test('userId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, userId: 4.6}));
+
+    test('assignedTaskId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, assignedTaskId: '9'}));
+    test('assignedTaskId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, assignedTaskId: 9.6}));
+
+    test('finalCorrrectionId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, finalCorrectionId: '9'}));
+    test('finalCorrectionId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, finalCorrectionId: 9.6}));
+
+    test('id as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, id: '9'}));
+    test('id as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, id: 9.6}));
+
+    test('userAnswer as a integer instead of string', () =>  wrongPutRequest({...defaultPutBody, userAnswer: 9}));
+
+    test('empty body', () => wrongPutRequest({}));
+    test('empty null', () => wrongPutRequest());
+
+
+    test('examId null', () => wrongPutRequest({...defaultBody, examId : null}));
+    test('userId null', () => wrongPutRequest({...defaultBody, userId : null}));
+    test('assignedTaskId null', () => wrongPutRequest({...defaultBody, assignedTaskId : null}));
+    test('userAnswer null', () => wrongPutRequest({...defaultBody, userAnswer : null}));
+
+    test('examId null', () => wrongPutRequest({...defaultBody, examId : undefined}));
+    test('userId null', () => wrongPutRequest({...defaultBody, userId : undefined}));
+    test('assignedTaskId null', () => wrongPutRequest({...defaultBody, assignedTaskId : undefined}));
+    test('userAnswer null', () => wrongPutRequest({...defaultBody, userAnswer : undefined}));
+    //TODO: anche finalCorrectionId undefined?
+
+    test('too many arguments ', () =>  wrongPutRequest({...defaultPutBody, foo:'foo', bar: 5}));
+
+    test('not enough arguments (no id)', () => {
+        return wrongPutRequest({
+            examId : 6,
+            userId : 4,
+            assignedTaskId : 9,
+            userAnswer : 'user answer'
+        });
+    });
+
+    test('not enough arguments (no examId)', () => {
+        return wrongPutRequest({
+            id: 934,
+            userId : 4,
+            assignedTaskId : 9,
+            userAnswer : 'user answer'
+        });
+    });
+
+    test('not enough arguments (no userId)', () => {
+        return wrongPutRequest({
+            id: 934,
+            examId : 6,
+            assignedTaskId : 9,
+            userAnswer : 'user answer'
+        });
+    });
+
+    test('not enough arguments (no assignedTaskId )', () => {
+        return wrongPutRequest({
+            id: 934,
+            examId : 6,
+            userId : 4,
+            userAnswer : 'user answer'
+        });
+    });
+
+    test('not enough arguments (no userAnswer )', () => {
+        return wrongPutRequest({
+            id: 934,
+            examId : 6,
+            userId : 4,
+            assignedTaskId : 9,
+        });
+    });
+
+
+    test('corretto inserimento di tutti gli attributi', () => correctPutRequest({...defaultPutBody, finalCorrectionId: 5}) );
+
+    test('corretto inserimento con solo gli attributi obbligatori', () => correctPutRequest({...defaultPutBody} ));
+
+});
 
 
 
@@ -253,7 +375,11 @@ describe('DELETE /v1/submissions' , () => {
                 await correctDeleteRequest(ids);
             });
     });
+
 });
+
+
+
 
 
 
