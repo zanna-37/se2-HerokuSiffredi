@@ -13,9 +13,7 @@ router.post('/', function (req, res) {
     const req_body = req.body;
     const keys = Object.keys(req_body);
 
-    if (req_body == null || req_body === {})
-        res.status(400).send({code: 400, message: 'Bad Request: empty body'});
-    else if (!(req_body.hasOwnProperty('name') && req_body.hasOwnProperty('surname') && req_body.hasOwnProperty('student_number')))
+    if (!(req_body.hasOwnProperty('name') && req_body.hasOwnProperty('surname') && req_body.hasOwnProperty('student_number')))
         res.status(400).send({code: 400, message: 'Bad Request: missing parameters'});
     else if (req_body.name == null || req_body.surname == null || req_body.student_number == null)
         res.status(400).send({code: 400, message: 'Bad Request: missing values of parameters'});

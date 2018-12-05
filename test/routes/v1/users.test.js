@@ -57,10 +57,6 @@ describe('POST /v1/users', () => {
     // Tests right body
     test('Test right body', () => exceptPostOK(rightBody));
 
-    // Test wrong body
-    test('Test empty body', () => expectPostError(null));
-    test('Test body without json', () => expectPostError({}));
-
     // Test body missing parameters
     test('Test name undefined', () => expectPostError({...rightBody, name: undefined}));
     test('Test surname undefined', () => expectPostError({...rightBody, surname: undefined}));

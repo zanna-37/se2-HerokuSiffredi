@@ -24,5 +24,6 @@ const Users = db.define('users', {
     },
 });
 
+// noinspection JSIgnoredPromiseFromCall
 Users.sync({force: false});
 module.exports = Users;
