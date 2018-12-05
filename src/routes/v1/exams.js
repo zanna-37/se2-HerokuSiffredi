@@ -4,7 +4,7 @@ const router = express.Router();
 const examsModel = require('../../models/v1/exams');
 
 router.get('/', (req, res) => {
-    res.set('Accept', 'appliation/json');
+    res.set('Accept', 'application/json');
     examsModel
         .findAll()
         .then(exams => res.send(exams));
