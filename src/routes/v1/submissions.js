@@ -8,11 +8,8 @@ const model_submissions = require('../../models/v1/submissions');
 router.post('/' , function (req,res) {
     const params = req.body;
     const keys = Object.keys(params);
-    if(params == null || params === {}){    //TODO: typeof params == undefined ?
-        res.status(400)
-            .send({code: 400, message: 'Bad request'});
-    }
-    else if(!(params.hasOwnProperty('examId') &&
+
+    if(!(params.hasOwnProperty('examId') &&
         params.hasOwnProperty('userId') &&
         params.hasOwnProperty('userAnswer') &&
         params.hasOwnProperty('assignedTaskId'))) {
@@ -73,12 +70,6 @@ router.get('/:id', (req,res) => { //TODO: se non esiste un qualcosa con quell'id
 router.delete('/',  async (req,res) => {
     const params = req.body;
     if(!Array.isArray(params)){
-        res.sendStatus(400);
-    }
-    else if(params.isEmpty){
-        res.sendStatus(400);
-    }
-    else if(params === undefined){
         res.sendStatus(400);
     }
     else if(params.length <= 0){

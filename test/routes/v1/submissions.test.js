@@ -205,7 +205,7 @@ describe('POST', () => {
     test('check if the previous values have been insert correctly with uncomplete object', () => checkTheCorrectPostInsertion({...defaultBody},idUncompleteObject));
     test('check if the previous values have been insert correctly with complete object', () => checkTheCorrectPostInsertion({...defaultBody,finalCorrectionId: defaultFinalCorrectionId},idCompleteObject));
 });
-
+/*
 describe('PUT /v1/submissions', () => {
 
     const defaultPutBody = {
@@ -327,7 +327,7 @@ describe('PUT /v1/submissions', () => {
 
 });
 
-
+*/
 
 describe('DELETE /v1/submissions' , () => {
 
