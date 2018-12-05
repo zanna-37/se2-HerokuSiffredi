@@ -480,8 +480,12 @@ paths:
                         $ref: '#/definitions/TaskCategory'
                 400:
                     description: Specified ID is not valid
+                    schema:
+                        $ref: '#/definitions/Error'
                 404:
                     description: No TaskCategory for that ID
+                    schema:
+                        $ref: '#/definitions/Error'
         post:
             summary: Not supported
             deprecated: true
