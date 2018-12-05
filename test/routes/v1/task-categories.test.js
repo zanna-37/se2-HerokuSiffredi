@@ -11,8 +11,12 @@ describe(`GET ${route}`, () => {
         await request(app).get(route).then(response => {
             expect(response.statusCode).toBe(200);
             response.body.forEach(function (task_category) {
-                expect(task_category).toHaveProperty('id');
-                expect(task_category).toHaveProperty('name');
+                expect(task_category).toEqual(
+                    {
+                        id: expect.any(Number),
+                        name: expect.any(String)
+                    }
+                );
             });
         });
     });
@@ -25,10 +29,14 @@ describe(`GET ${route}/:id`, () => {
         return request(app)
             .get(route + '/' + id)
             .then(res => {
-                expect.assertions(3);
+                expect.assertions(2);
                 expect(res.statusCode).toBe(200);
-                expect(res.body).toHaveProperty('id');
-                expect(res.body).toHaveProperty('name');
+                expect(res.body).toEqual(
+                    {
+                        id: expect.any(Number),
+                        name: expect.any(String)
+                    }
+                );
             });
     };
 
@@ -37,22 +45,29 @@ describe(`GET ${route}/:id`, () => {
         return request(app)
             .get(route + '/' + id)
             .then(res => {
-                expect.assertions(3);
+                expect.assertions(2);
                 expect(res.statusCode).toBe(400);
-                expect(res.body).toHaveProperty('code');
-                expect(res.body).toHaveProperty('message');
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
             });
     };
 
-    const expectGetIdNotFuond = id => {
+    const expectGetIdNotFound = id => {
         expect.assertions(2);
         return request(app)
             .get(route + '/' + id)
             .then(res => {
-                expect.assertions(3);
                 expect(res.statusCode).toBe(404);
-                expect(res.body).toHaveProperty('code');
-                expect(res.body).toHaveProperty('message');
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
             });
     };
 
@@ -71,7 +86,7 @@ describe(`GET ${route}/:id`, () => {
     });
 
     test('id not present', () => {
-        return expectGetIdNotFuond('-1');
+        return expectGetIdNotFound('-1');
     });
 });
 
@@ -92,12 +107,12 @@ describe(`POST ${route}`, () => {
             .send(body)
             .then(res => {
                 expect(res.status).toBe(400);
-                expect(res.body).toEqual(expect.objectContaining(
+                expect(res.body).toEqual(
                     {
                         code: expect.any(Number),
                         message: expect.any(String)
                     }
-                ));
+                );
             });
     };
 
@@ -108,7 +123,7 @@ describe(`POST ${route}`, () => {
             .send(body)
             .then(res => {
                 expect(res.statusCode).toBe(201);
-                expect(res.body).toEqual(expect.objectContaining({id: expect.any(Number)}));
+                expect(res.body).toEqual({id: expect.any(Number)});
             });
     };
 
