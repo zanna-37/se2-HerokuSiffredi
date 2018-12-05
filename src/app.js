@@ -17,14 +17,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     next();
 // });
 
-app.get('/', (req, res) => res.send(
-    'Hello ' + Math.round(Math.random() * 100) + '° World!<br>' +
-    '<a href="/v1/task-categories">task-categories</a><br>' +
-    '<a href="/v1/task-categories">task-categories</a><br>' +
-    '<a href="/v1/users">users</a><br>' +
-    '<a href="/v1/task-categories">task-categories</a><br>' +
-    '<a href="/v1/tasks">tasks</a>'
-));
+app.get('/', (req, res) => {
+
+    res.send(
+        'Hello ' + Math.round(Math.random() * 100) + '° World!<br>' +
+        '<a href="/v1/task-categories">task-categories</a><br>' +
+        '<a href="/v1/task-categories">task-categories</a><br>' +
+        '<a href="/v1/users">users</a><br>' +
+        '<a href="/v1/task-categories">task-categories</a><br>' +
+        '<a href="/v1/tasks">tasks</a>'
+    );
+});
 
 app.use('/v1/task-categories', task_categories_v1);
 app.use('/v1/users', users_v1);
