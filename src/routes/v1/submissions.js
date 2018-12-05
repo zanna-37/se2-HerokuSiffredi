@@ -4,7 +4,7 @@ const router = express.Router();
 const model_submissions = require('../../models/v1/submissions');
 
 router.get('/', (req,res) => {
-    res.set('Accept', 'appliation/json');
+    res.set('Accept', 'application/json');
     model_submissions
         .findAll()
         .then((submissions) => {
