@@ -3,7 +3,7 @@ let tester;
 let app;
 
 const route = '/v1/submissions';
-
+const model_submissions = require('./../../../src/models/v1/submissions');
 beforeAll(() => {
     db = require('../../../src/db');
     tester = require('supertest');
@@ -63,13 +63,11 @@ describe('GET /v1/submissions/', () => {
 
 
 describe('GET /v1/submissions/id', () =>{ //TODO: aggiungi get con id non esistente
-    let idPost;
     test('check the existence of all attributes and the status code', () => {
         return tester(app)
             .post(route)
-            .send({...defaultBody,userAnswer: 'new'})
+            .send({...defaultBody, userAnswer: 'new'})
             .then(resp => {
-                idPost = resp.body.id;
                 return resp.body.id;
             })
             .then(id => {
@@ -88,14 +86,17 @@ describe('GET /v1/submissions/id', () =>{ //TODO: aggiungi get con id non esiste
     });
     test('check the type of the attributes', () => {
         return tester(app)
-            .get(route)
-            .then(() => {
-                tester(app)
-                    .get(route+'/'+idPost)
+            .post(route)
+            .send({...defaultBody, userAnswer: 'new'})
+            .then( resp => {
+                return resp.body.id;
+            }).then(async id => {
+                await console.log(id);
+                return tester(app)
+                    .get(route + '/' + id)
                     .then(resp => {
                         expect(typeof resp.body.id).toBe('number');
                         expect(typeof resp.body.userId).toBe('number');
-
                         expect(typeof resp.body.assignedTaskId).toBe('number');
                         expect(typeof resp.body.userAnswer).toBe('string');
                         expect(typeof resp.body.finalCorrectionId == 'number' ||
@@ -103,6 +104,32 @@ describe('GET /v1/submissions/id', () =>{ //TODO: aggiungi get con id non esiste
                             .toBeTruthy();
                     });
             });
+    });
+
+    test('get with id that does not exist' , () => {
+        return tester(app)
+            .post(route)
+            .send({...defaultBody, userAnswer: 'new'})
+            .then(resp => {
+                return resp.body.id;
+            })
+            .then(id => {
+                return tester(app)
+                    .delete(route)
+                    .send([id])
+                    .then(() => {
+                        return tester(app)
+                            .get(route + '/' + id)
+                            .then(resp => {
+                                expect(resp.statusCode).toBe(404);
+                                expect(resp.body).toHaveProperty('code');
+                                expect(resp.body).toHaveProperty('message');
+                            });
+
+                    });
+            });
+
+
     });
 });
 
@@ -205,8 +232,8 @@ describe('POST', () => {
     test('check if the previous values have been insert correctly with uncomplete object', () => checkTheCorrectPostInsertion({...defaultBody},idUncompleteObject));
     test('check if the previous values have been insert correctly with complete object', () => checkTheCorrectPostInsertion({...defaultBody,finalCorrectionId: defaultFinalCorrectionId},idCompleteObject));
 });
-/*
-describe('PUT /v1/submissions', () => {
+
+describe('PUT /v1/submissions/id', () => {
 
     const defaultPutBody = {
         id: 934,
@@ -218,28 +245,67 @@ describe('PUT /v1/submissions', () => {
 
     const wrongPutRequest = body => {
         return tester(app)
-            .put(route)
-            .send({body})
+            .put(route+'/'+body.id)
+            .send(body)
             .then(resp => {
-                expect(resp.statusCode).toBe(409);
+                expect(resp.statusCode).toBe(400);
+
                 expect(resp.body).toHaveProperty('code');
                 expect(resp.body).toHaveProperty('message');
             });
     };
 
-    const correctPutRequest = body => {
-        return tester(app)
-            .put(route)
-            .send({body})
-            .then(resp => {
-                expect(resp.statusCode).toBe(204);
+
+
+    const correctPutRequest = async body => {
+        const firstId = await model_submissions.create({...defaultBody})
+            .then(model => {
+                return model.get('id');
             });
+        const secondId = await model_submissions.create({...defaultBody})
+            .then(model => {
+                return model.get('id');
+            });
+        return tester(app)
+            .put(route+'/'+firstId)
+            .send({...body})
+            .then(async resp => {
+                await model_submissions.destroy({where: {id: [firstId,secondId]}});
+                expect(resp.statusCode).toBe(204);
+
+            });
+
+    };
+
+    /*  const postRequest = (body) => {
+        return tester(app)
+            .post(route)
+            .send(body)
+            .then( resp => {
+                return resp.id;
+            });
+    };*/
+
+    /*const deleteRequest = ids => {
+        return tester(app)
+            .del(route)
+            .send(ids);
     };
 
 
-    test('put with a id that does not exist',() => {});
+    test('put with a id that does not exist', async () =>  {
+        await postRequest(defaultBody)
+            .then(id => {
+                deleteRequest([id]);
+                return id;
+            })
+            .then(id => {
+                wrongPutRequest({...defaultPutBody, id: id});
+            });
 
-    test('inserire foreign key che non esistono', () => {});//TODO: da fare
+    });*/
+
+    //test('inserire foreign key che non esistono', () => expect(0).toBe(1));//TODO: da fare
 
     test('examId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, examId: '6'}));
     test('examId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, examId: 6.4}));
@@ -250,7 +316,7 @@ describe('PUT /v1/submissions', () => {
     test('assignedTaskId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, assignedTaskId: '9'}));
     test('assignedTaskId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, assignedTaskId: 9.6}));
 
-    test('finalCorrrectionId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, finalCorrectionId: '9'}));
+    test('finalCorrectionId as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, finalCorrectionId: '9'}));
     test('finalCorrectionId as a a float instead of integer', () =>  wrongPutRequest({...defaultPutBody, finalCorrectionId: 9.6}));
 
     test('id as a string instead of integer', () =>  wrongPutRequest({...defaultPutBody, id: '9'}));
@@ -259,18 +325,16 @@ describe('PUT /v1/submissions', () => {
     test('userAnswer as a integer instead of string', () =>  wrongPutRequest({...defaultPutBody, userAnswer: 9}));
 
     test('empty body', () => wrongPutRequest({}));
-    test('empty null', () => wrongPutRequest());
 
+    test('examId null', () => wrongPutRequest({...defaultPutBody, examId : null}));
+    test('userId null', () => wrongPutRequest({...defaultPutBody, userId : null}));
+    test('assignedTaskId null', () => wrongPutRequest({...defaultPutBody, assignedTaskId : null}));
+    test('userAnswer null', () => wrongPutRequest({...defaultPutBody, userAnswer : null}));
 
-    test('examId null', () => wrongPutRequest({...defaultBody, examId : null}));
-    test('userId null', () => wrongPutRequest({...defaultBody, userId : null}));
-    test('assignedTaskId null', () => wrongPutRequest({...defaultBody, assignedTaskId : null}));
-    test('userAnswer null', () => wrongPutRequest({...defaultBody, userAnswer : null}));
-
-    test('examId null', () => wrongPutRequest({...defaultBody, examId : undefined}));
-    test('userId null', () => wrongPutRequest({...defaultBody, userId : undefined}));
-    test('assignedTaskId null', () => wrongPutRequest({...defaultBody, assignedTaskId : undefined}));
-    test('userAnswer null', () => wrongPutRequest({...defaultBody, userAnswer : undefined}));
+    test('examId undefined', () => wrongPutRequest({...defaultPutBody, examId : undefined}));
+    test('userId undefined', () => wrongPutRequest({...defaultPutBody, userId : undefined}));
+    test('assignedTaskId undefined', () => wrongPutRequest({...defaultPutBody, assignedTaskId : undefined}));
+    test('userAnswer undefined', () => wrongPutRequest({...defaultPutBody, userAnswer : undefined}));
     //TODO: anche finalCorrectionId undefined?
 
     test('too many arguments ', () =>  wrongPutRequest({...defaultPutBody, foo:'foo', bar: 5}));
@@ -321,36 +385,43 @@ describe('PUT /v1/submissions', () => {
     });
 
 
-    test('corretto inserimento di tutti gli attributi', () => correctPutRequest({...defaultPutBody, finalCorrectionId: 5}) );
+    test('corretto inserimento di tutti gli attributi', () =>{
+        correctPutRequest({...defaultPutBody, finalCorrectionId: 5});
+    });
 
-    test('corretto inserimento con solo gli attributi obbligatori', () => correctPutRequest({...defaultPutBody} ));
-
+    test('corretto inserimento con solo gli attributi obbligatori', () => {
+        return correctPutRequest({...defaultPutBody, id : 5});
+    });
 });
 
-*/
 
 describe('DELETE /v1/submissions' , () => {
 
     const wrongDeleteRequest = body => {
         return tester(app)
-            .del(route)
+            .delete(route)
             .send(body)
             .expect(400);
     };
 
     const correctDeleteRequest = ids => {
         return tester(app)
-            .del(route)
+            .delete(route)
             .send(ids)
             .expect(200);
     };
 
-    test('sent an object instead array', () => wrongDeleteRequest({firstId : 1, secondoId : 2}));
+    test('sent an object instead array', () => wrongDeleteRequest({firstId : 1, secondId : 2}));
     test('no body', () => wrongDeleteRequest());
     test('empty body' , () => wrongDeleteRequest([]));
 
-    test('sent an array with at least a string as element' ,() => wrongDeleteRequest([1,'2',3]));
-    test('sent an array with at least a non-integer element' , () => wrongDeleteRequest([1,1.2,3]));
+    test('sent an array with at least a string as element' ,() => {
+        return wrongDeleteRequest([1,'2',3]);
+    });
+
+    test('sent an array with at least a non-integer element' , async () => {
+        return wrongDeleteRequest([1,1.2,3]);
+    });
     test('sent negative number as id', () => wrongDeleteRequest([-1,-3]));
     test('sent a correct delete request with only one id' ,() =>{
         return tester(app)
@@ -377,7 +448,6 @@ describe('DELETE /v1/submissions' , () => {
     });
 
 });
-
 
 
 
