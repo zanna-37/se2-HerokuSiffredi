@@ -107,6 +107,9 @@ describe(`POST ${route}`, () => {
     const wrong_body_param_null = {
         name: null
     };
+    const wrong_body_param = {
+        wrong_parameter: 'im wrong'
+    };
 
     const expectPostError = body => {
         expect.assertions(2);
@@ -126,7 +129,7 @@ describe(`POST ${route}`, () => {
 
     const expectPostOk = async body => {
         expect.assertions(2);
-        return await request(app)
+        return request(app)
             .post(route)
             .send(body)
             .then(async res => {
@@ -156,5 +159,125 @@ describe(`POST ${route}`, () => {
     });
     test('name=null', () => {
         return expectPostError(wrong_body_param_null);
+    });
+    test('wrong param', async () => {
+        await expectPostError(wrong_body_param);
+    });
+});
+
+describe(`PUT ${route}/:id`, () => {
+
+    const expectPutIdOkWithUpdatedId = async (body, id) => {
+        expect.assertions(2);
+        return await request(app)
+            .put(route + '/' + id)
+            .send(body)
+            .then(async res => {
+                await expect(res.statusCode).toBe(204);
+                await expect(res.body).toEqual({});
+            });
+    };
+
+    const expectPutIdNotFound = (body, id) => {
+        expect.assertions(2);
+        return request(app)
+            .put(route + '/' + id)
+            .send(body)
+            .then(res => {
+                expect(res.statusCode).toBe(404);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    const expectPutIdError = (body, id) => {
+        expect.assertions(2);
+        return request(app)
+            .put(route + '/' + id)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(400);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    test('correct update', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_1_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_1_NEW'};
+        await expectPutIdOkWithUpdatedId(elementNEW, elementOLD.id);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('not existing id', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_2_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_2_NEW'};
+        await expectPutIdNotFound(elementNEW, -1);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('not valid id', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_3_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_3_NEW'};
+        await expectPutIdError(elementNEW, 'not a valid id');
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('too much params', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_4_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_4_NEW', excidingParam: 'too much'};
+        await expectPutIdError(elementNEW, elementOLD.id);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('too few params', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {id: elementOLD.id};
+        await expectPutIdError(elementNEW, elementOLD.id);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('null param', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {...elementOLD.dataValues, name: null};
+        await expectPutIdError(elementNEW, elementOLD.id);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
+    });
+    test('wrong param', async () => {
+        const elementOLD = await model_task_categories.create({name: 'test_putId_6_OLD'}).then((new_task_category) => new_task_category);
+        const elementNEW = {id: elementOLD.id, wrongParameterName: 'test_putId_6_NEW'};
+        await expectPutIdError(elementNEW, elementOLD.id);
+        await model_task_categories.destroy({
+            where: {
+                id: elementOLD.id
+            }
+        });
     });
 });
