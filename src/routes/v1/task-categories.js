@@ -3,6 +3,28 @@ const router = express.Router();
 
 const model_task_categories = require('../../models/v1/task-categories');
 
+const all_right_numberOf_params = function (actualParams, rightParams) {
+    return Object.keys(actualParams).length === rightParams.length;
+};
+
+const all_params_set = function (params) {
+    const items = Object.values(params);
+    return items.every((item) => {
+        return item != null;
+    });
+};
+
+const all_params_present = function (actualParams, rightParams) {
+    const keys = Object.keys(actualParams);
+    return rightParams.every((rightParam) => {
+        return keys.some((key) => {
+            return key === rightParam;
+        });
+    });
+};
+
+////////////////////////////////////////////
+
 router.get('/', function (req, res) {
     res.set('Accept', 'application/json');
     model_task_categories
@@ -36,41 +58,60 @@ router.get('/:id', function (req, res) {
 
 ////////////////////////////////////////////
 
-const rightInputParams = ['name'];
-
-const post_right_numberOf_params = function (params) {
-    return Object.keys(params).length === rightInputParams.length;
-};
-
-const post_params_present = function (params) {
-    const keys = Object.keys(params);
-    return keys.some((key) => {
-        return rightInputParams.some((rightParam) => {
-            return key === rightParam;
-        });
-    });
-};
-const post_params_set = function (params) {
-    const items = Object.values(params);
-    return items.every((item) => {
-        return item !== null;
-    });
-};
+const post_rightInputParams = ['name'];
 
 router.post('/', function (req, res) {
     const params = req.body;
     res.set('Accept', 'application/json');
-    if (!post_right_numberOf_params(params)) {
+    if (!all_right_numberOf_params(params, post_rightInputParams)) {
         res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
-    } else if (!post_params_present(params)) {
+    } else if (!all_params_present(params, post_rightInputParams)) {
         res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
-    } else if (!post_params_set(params)) {
+    } else if (!all_params_set(params)) {
         res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
     } else {
         model_task_categories
             .create(params)
             .then((new_task_category) => {
                 res.status(201).send({id: new_task_category.id});
+            });
+    }
+});
+
+////////////////////////////////////////////
+
+const put_rightInputParams = ['id', 'name'];
+
+let putId_param_correctType = function (id) {
+    return Number.isInteger(id);
+};
+
+
+router.put('/:id', function (req, res) {
+    const params = req.body;
+    const reqId = Number.parseInt(req.params.id);
+
+    if (!putId_param_correctType(reqId)) {
+        res.status(400).send({code: 400, message: 'Specified ID is not valid'});
+    } else if (!all_right_numberOf_params(params, put_rightInputParams)) {
+        res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
+    } else if (!all_params_present(params, put_rightInputParams)) {
+        res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
+    } else if (!all_params_set(params)) {
+        res.status(400).send({code: 400, message: 'Wrong/missing parameters'});
+    } else {
+        model_task_categories
+            .update(
+                params,
+                {where: {id: reqId}}
+            )
+            .then(numRowsUpdatedArray => {
+                const numRowsUpdated = numRowsUpdatedArray[0];
+                if (numRowsUpdated !== 1) {
+                    res.status(404).send({code: 404, message: 'No TaskCategory for that ID'});
+                } else {
+                    res.status(204).send();
+                }
             });
     }
 });
