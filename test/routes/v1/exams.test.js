@@ -75,7 +75,7 @@ describe(`POST ${route}`, () => {
             ownerIDs: defaultBody.ownerIDs.map(toString)
         }
     ));
-    test('examTemplateID integer instead of string', () => expectPostError(
+    test('defaultDeadlineEnd integer instead of string', () => expectPostError(
         {
             ...defaultBody,
             defaultDeadlineEnd: parseInt(defaultBody.defaultDeadlineEnd)
