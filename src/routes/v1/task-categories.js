@@ -34,14 +34,14 @@ router.get('/', function (req, res) {
 
 ////////////////////////////////////////////
 
-let getId_params_correctType = function (params) {
-    return Number.isInteger(Number.parseInt(params.id));
+let getId_param_correctType = function (id) {
+    return Number.isInteger(id);
 };
 
 router.get('/:id', function (req, res) {
-    const params = req.params;
+    const reqId = Number.parseInt(req.params.id);
     res.set('Accept', 'application/json');
-    if (!getId_params_correctType(params)) {
+    if (!getId_param_correctType(reqId)) {
         res.status(400).send({code: 400, message: 'Specified ID is not valid'});
     } else {
         model_task_categories
