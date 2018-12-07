@@ -1650,8 +1650,9 @@ definitions:
         title: Task
         type: object
         properties:
-            taskID:
-                type: string
+            id:
+                type: integer
+                minimum: 0
             exerciseText:
                 type: string
             answers:
@@ -1673,7 +1674,7 @@ definitions:
                 type: string
                 format: date-time
         required:
-        - taskID
+        - id
         - exerciseText
         - totalPoints
         - categoryID

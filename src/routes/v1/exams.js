@@ -15,16 +15,16 @@ router.post('/', (req, res) => {
     if (!(params.hasOwnProperty('examTemplateID') &&
         params.hasOwnProperty('ownersIDs') &&
         params.hasOwnProperty('defaultDeadlineEnd'))) {
-        res.status(400).send({code: 400, message: 'Bad request'});
+        res.status(400).send({code: 400, message: 'Missing parameters'});
     } else if (params.examTemplateID == null ||
         params.ownersIDs == null ||
         params.defaultDeadlineEnd == null) {
-        res.status(400).send({code: 400, message: 'Bad request'});
+        res.status(400).send({code: 400, message: 'Some required parameters are null'});
     } else if (!(Number.isInteger(params.examTemplateID) &&
         Array.isArray(params.ownersIDs) &&
         params.ownersIDs.every(val => Number.isInteger(val)) &&
         typeof params.defaultDeadlineEnd === 'string')) {
-        res.status(400).send({code: 400, message: 'Bad request'});
+        res.status(400).send({code: 400, message: 'Parameters are of the wrong type'});
     } else {
         examsModel.create({...params})
             .then(model => model.get('id'))
