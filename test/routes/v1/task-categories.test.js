@@ -98,6 +98,27 @@ describe(`GET ${route}/:id`, () => {
 });
 
 describe(`POST ${route}`, () => {
+
+    const expectPostError = id => {
+        expect.assertions(2);
+        return request(app)
+            .post(route + '/' + id)
+            .then(res => {
+                expect(res.status).toBe(405);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+    test('wrong param', () => {
+        return expectPostError(1);
+    });
+});
+
+describe(`POST ${route}`, () => {
     const correct_body = {
         name: 'test_post_1'
     };

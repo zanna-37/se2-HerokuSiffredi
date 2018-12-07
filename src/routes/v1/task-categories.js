@@ -58,6 +58,13 @@ router.get('/:id', function (req, res) {
 
 ////////////////////////////////////////////
 
+router.post('/:id', function (req, res) {
+    res.set('Accept', 'application/json');
+    res.status(405).send({code: 405, message: 'Method not allowed'});
+});
+
+////////////////////////////////////////////
+
 const post_rightInputParams = ['name'];
 
 router.post('/', function (req, res) {
