@@ -95,6 +95,27 @@ describe(`GET ${route}/:id`, () => {
     });
 });
 
+describe(`POST ${route}/:id`, () => {
+
+    const expectPostError = id => {
+        expect.assertions(2);
+        return request(app)
+            .post(route + '/' + id)
+            .then(res => {
+                expect(res.status).toBe(405);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+    test('Method not allowed', () => {
+        return expectPostError(1);
+    });
+});
+
 // Three required inputs: examTemplateID:integer, ownersIDs:[integer], defaultDeadlineEnd:date
 // Inputs are passed as json in body
 describe(`POST ${route}`, () => {

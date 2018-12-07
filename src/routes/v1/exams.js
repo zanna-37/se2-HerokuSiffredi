@@ -36,6 +36,15 @@ router.get('/', (req, res) => {
         .then(exams => res.send(exams));
 });
 
+////////////////////////////////////////////
+
+router.post('/:id', function (req, res) {
+    res.set('Accept', 'application/json');
+    res.status(405).send({code: 405, message: 'Method not allowed'});
+});
+
+////////////////////////////////////////////
+
 router.post('/', (req, res) => {
     const params = req.body;
     if (!(params.hasOwnProperty('examTemplateID') &&

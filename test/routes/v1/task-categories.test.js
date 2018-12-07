@@ -97,7 +97,7 @@ describe(`GET ${route}/:id`, () => {
     });
 });
 
-describe(`POST ${route}`, () => {
+describe(`POST ${route}/:id`, () => {
 
     const expectPostError = id => {
         expect.assertions(2);
@@ -113,7 +113,7 @@ describe(`POST ${route}`, () => {
                 );
             });
     };
-    test('wrong param', () => {
+    test('Method not allowed', () => {
         return expectPostError(1);
     });
 });
