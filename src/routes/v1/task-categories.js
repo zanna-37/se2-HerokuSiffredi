@@ -45,7 +45,7 @@ router.get('/:id', function (req, res) {
         res.status(400).send({code: 400, message: 'Specified ID is not valid'});
     } else {
         model_task_categories
-            .findByPk(params.id)
+            .findByPk(reqId)
             .then(task_categories => {
                 if (task_categories == null) {
                     res.status(404).send({code: 404, message: 'No TaskCategory for that ID'});
