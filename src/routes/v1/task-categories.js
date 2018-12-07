@@ -116,4 +116,32 @@ router.put('/:id', function (req, res) {
     }
 });
 
+////////////////////////////////////////////
+
+let deleteId_param_correctType = function (id) {
+    return Number.isInteger(id);
+};
+
+router.delete('/:id', function (req, res) {
+    const reqId = Number.parseInt(req.params.id);
+    res.set('Accept', 'application/json');
+    if (!deleteId_param_correctType(reqId)) {
+        res.status(400).send({code: 400, message: 'Specified ID is not valid'});
+    } else {
+        model_task_categories
+            .destroy({
+                where: {
+                    id: reqId
+                }
+            })
+            .then(numRowsUpdated => {
+                if (numRowsUpdated !== 1) {
+                    res.status(404).send({code: 404, message: 'No TaskCategory for that ID'});
+                } else {
+                    res.status(204).send();
+                }
+            });
+    }
+});
+
 module.exports = router;

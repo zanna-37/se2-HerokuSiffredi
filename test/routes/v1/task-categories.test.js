@@ -35,7 +35,6 @@ describe(`GET ${route}/:id`, () => {
         return request(app)
             .get(route + '/' + id)
             .then(res => {
-                expect.assertions(2);
                 expect(res.statusCode).toBe(200);
                 expect(res.body).toEqual(
                     {
@@ -84,7 +83,7 @@ describe(`GET ${route}/:id`, () => {
     });
 
     test('invalid id', () => {
-        return expectGetIdError('ae1');
+        return expectGetIdError('wrong Id (as a string)');
     });
     test('empty id', () => {
         return expectGetIdError();
@@ -94,7 +93,7 @@ describe(`GET ${route}/:id`, () => {
     });
 
     test('id not present', () => {
-        return expectGetIdNotFound('-1');
+        return expectGetIdNotFound(-1);
     });
 });
 
@@ -133,8 +132,8 @@ describe(`POST ${route}`, () => {
             .post(route)
             .send(body)
             .then(async res => {
-                await expect(res.statusCode).toBe(201);
-                await expect(res.body).toEqual({id: expect.any(Number)});
+                expect(res.statusCode).toBe(201);
+                expect(res.body).toEqual({id: expect.any(Number)});
                 return res.body.id;
             });
     };
@@ -173,8 +172,8 @@ describe(`PUT ${route}/:id`, () => {
             .put(route + '/' + id)
             .send(body)
             .then(async res => {
-                await expect(res.statusCode).toBe(204);
-                await expect(res.body).toEqual({});
+                expect(res.statusCode).toBe(204);
+                expect(res.body).toEqual({});
             });
     };
 
@@ -212,41 +211,41 @@ describe(`PUT ${route}/:id`, () => {
 
     test('correct update', async () => {
         const elementOLD = await model_task_categories.create({name: 'test_putId_1_OLD'}).then((new_task_category) => new_task_category);
-        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_1_NEW'};
+        const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_1_NEW'};
         await expectPutIdOkWithUpdatedId(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
     test('not existing id', async () => {
         const elementOLD = await model_task_categories.create({name: 'test_putId_2_OLD'}).then((new_task_category) => new_task_category);
-        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_2_NEW'};
+        const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_2_NEW'};
         await expectPutIdNotFound(elementNEW, -1);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
     test('not valid id', async () => {
         const elementOLD = await model_task_categories.create({name: 'test_putId_3_OLD'}).then((new_task_category) => new_task_category);
-        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_3_NEW'};
+        const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_3_NEW'};
         await expectPutIdError(elementNEW, 'not a valid id');
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
     test('too much params', async () => {
         const elementOLD = await model_task_categories.create({name: 'test_putId_4_OLD'}).then((new_task_category) => new_task_category);
-        const elementNEW = {...elementOLD.dataValues, name: 'test_putId_4_NEW', excidingParam: 'too much'};
+        const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_4_NEW', excidingParam: 'too much'};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
@@ -256,17 +255,17 @@ describe(`PUT ${route}/:id`, () => {
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
     test('null param', async () => {
         const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'}).then((new_task_category) => new_task_category);
-        const elementNEW = {...elementOLD.dataValues, name: null};
+        const elementNEW = {...(elementOLD.dataValues), name: null};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
     });
@@ -276,8 +275,71 @@ describe(`PUT ${route}/:id`, () => {
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
             where: {
-                id: elementOLD.id
+                id: elementNEW.id
             }
         });
+    });
+});
+
+describe(`DELETE ${route}/:id`, () => {
+    const expectDeleteIdOk = id => {
+        expect.assertions(2);
+        return request(app)
+            .delete(route + '/' + id)
+            .then(res => {
+                expect.assertions(2);
+                expect(res.statusCode).toBe(204);
+                expect(res.body).toEqual({});
+            });
+    };
+
+    const expectDeleteIdError = id => {
+        expect.assertions(2);
+        return request(app)
+            .delete(route + '/' + id)
+            .then(res => {
+                expect.assertions(2);
+                expect(res.statusCode).toBe(400);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    const expectDeleteIdNotFound = id => {
+        expect.assertions(2);
+        return request(app)
+            .delete(route + '/' + id)
+            .then(res => {
+                expect(res.statusCode).toBe(404);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    test('valid id', async () => {
+        const element1 = await model_task_categories.create({'name': 'test_deleteId_1'}).then((new_task_category) => new_task_category);
+        await expectDeleteIdOk(element1.id);
+        element1.destroy();
+    });
+
+    test('invalid id', () => {
+        return expectDeleteIdError('wrong Id (as a string)');
+    });
+    test('empty id', () => {
+        return expectDeleteIdError();
+    });
+    test('null id', () => {
+        return expectDeleteIdError(null);
+    });
+    test('id not present', () => {
+        return expectDeleteIdNotFound(-1);
     });
 });
