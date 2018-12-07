@@ -123,7 +123,7 @@ router.put('/:id', async (req, res) => {
                     }
                 })
                 .catch(() => {
-                    res.status(409).send('Bad request');
+                    res.status(408).send('Bad request');
                 });
         }
     }
