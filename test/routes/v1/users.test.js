@@ -2,15 +2,17 @@ const db = require('../../../src/db');
 const request = require('supertest');
 const app = require('../../../src/app');
 
-afterAll(() => db.close());
-
-const route = '/v1/users';
+afterAll(() =>
+    db.close()
+);
 
 const rightBody = {
     name: 'Miriam',
     surname: 'Punzi',
     student_number: 186574
 };
+
+const route = '/v1/users';
 
 describe('GET /v1/users', () => {
     test('Test if it retrieves all the right attributes', () => {
@@ -137,8 +139,10 @@ describe('GET /v1/users/{id}', () => {
 });
 
 describe('PUT /v1/users/{id}', () => {
+    // temporary user for testing
     let idTempUser;
 
+    // creation of a temporary user
     request(app)
         .post(route)
         .send({...rightBody})
@@ -179,29 +183,98 @@ describe('PUT /v1/users/{id}', () => {
     };
 
     // Tests right body
-    test('Test right body', () => exceptPutOK(rightBody));
+    test('Test right body', () => exceptPutOK({...rightBody, id: idTempUser}));
 
     // Test body missing parameters
-    test('Test name undefined', () => expectPutBadRequest({...rightBody, name: undefined}));
-    test('Test surname undefined', () => expectPutBadRequest({...rightBody, surname: undefined}));
-    test('Test student number undefined', () => expectPutBadRequest({...rightBody, student_number: undefined}));
+    test('Test id undefined', () => expectPutBadRequest(rightBody));
+    test('Test name undefined', () => expectPutBadRequest({...rightBody, name: undefined, id: idTempUser}));
+    test('Test surname undefined', () => expectPutBadRequest({...rightBody, surname: undefined, id: idTempUser}));
+    test('Test student number undefined', () => expectPutBadRequest({
+        ...rightBody,
+        student_number: undefined,
+        id: idTempUser
+    }));
 
     // Test body with invalid parameters
-    test('Test body with average in json', () => expectPutBadRequest({...rightBody, average: 18}));
-    test('Test body with strange parameters', () => expectPutBadRequest({...rightBody, birth: '08/04/1997'}));
+    test('Test body with average in json', () => expectPutBadRequest({...rightBody, average: 18, id: idTempUser}));
+    test('Test body with strange parameters', () => expectPutBadRequest({
+        ...rightBody,
+        birth: '08/04/1997',
+        id: idTempUser
+    }));
 
     // Test body missing values of parameters
-    test('Test name null', () => expectPutBadRequest({...rightBody, name: null}));
-    test('Test surname null', () => expectPutBadRequest({...rightBody, surname: null}));
-    test('Test student number null', () => expectPutBadRequest({...rightBody, student_number: null}));
+    test('Test id null', () => expectPutBadRequest({...rightBody, id: null}));
+    test('Test name null', () => expectPutBadRequest({...rightBody, name: null, id: idTempUser}));
+    test('Test surname null', () => expectPutBadRequest({...rightBody, surname: null, id: idTempUser}));
+    test('Test student number null', () => expectPutBadRequest({...rightBody, student_number: null, id: idTempUser}));
 
     // Test body with invalid values
-    test('Test name is not string', () => expectPutBadRequest({...rightBody, name: 1}));
-    test('Test surname is not string', () => expectPutBadRequest({...rightBody, surname: 1}));
-    test('Test student number is not number', () => expectPutBadRequest({...rightBody, student_number: 'hello'}));
-    test('Test student number < 0', () => expectPutBadRequest({...rightBody, student_number: -12}));
-    test('Test student number = 0', () => expectPutBadRequest({...rightBody, student_number: 0}));
+    test('Test id is not number', () => expectPutBadRequest({...rightBody, id: 'hello'}));
+    test('Test name is not string', () => expectPutBadRequest({...rightBody, name: 1, id: idTempUser}));
+    test('Test surname is not string', () => expectPutBadRequest({...rightBody, surname: 1, id: idTempUser}));
+    test('Test student number is not number', () => expectPutBadRequest({
+        ...rightBody,
+        student_number: 'hello',
+        id: idTempUser
+    }));
+    test('Test student number < 0', () => expectPutBadRequest({...rightBody, student_number: -12, id: idTempUser}));
+    test('Test student number = 0', () => expectPutBadRequest({...rightBody, student_number: 0, id: idTempUser}));
+
+    // Test id in body different from id in route
+    test('Test id is different from id in route', () => expectPutBadRequest({...rightBody, id: -1}));
 
     // Test an id not in db
-    test('Test id not in db', () => expectPutNotFound({...rightBody}));
+    test('Test id not in db', () => expectPutNotFound({...rightBody, id: -1}));
+});
+
+describe('DELETE /v1/users/{id}', () => {
+    // temporary user for testing
+    let idTempUser;
+
+    // creation of a temporary user
+    request(app)
+        .post(route)
+        .send({...rightBody})
+        .then(result => {
+            idTempUser = result.body.id;
+            return idTempUser;
+        });
+
+    const expectDeleteBadRequest = body => {
+        return request(app)
+            .delete(route + '/' + idTempUser)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(400);
+                expect(res.body).toHaveProperty('code');
+                expect(res.body).toHaveProperty('message');
+            });
+    };
+
+    const expectDeleteNotFound = body => {
+        return request(app)
+            .delete(route + '/' + idTempUser)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(404);
+                expect(res.body).toHaveProperty('code');
+                expect(res.body).toHaveProperty('message');
+            });
+    };
+
+    const expectDeleteOK = body => {
+        return request(app)
+            .delete(route + '/' + idTempUser)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(204);
+                expect(res.body).toHaveProperty('code');
+                expect(res.body).toHaveProperty('message');
+            });
+    };
+
+    test('Test id in body different from id in route', () => expectDeleteBadRequest({id: -1}));
+    test('Test id in db', () => expectDeleteOK({id: idTempUser}));
+    test('Test id NOT in db', () => expectDeleteNotFound({id: idTempUser}));
 });
