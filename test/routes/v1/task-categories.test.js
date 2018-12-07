@@ -9,8 +9,8 @@ const route = '/v1/task-categories';
 
 describe(`GET ${route}`, () => {
     test('plain', async () => {
-        const element1 = await model_task_categories.create({'name': 'test_get_1'}).then((new_task_category) => new_task_category);
-        const element2 = await model_task_categories.create({'name': 'test_get_2'}).then((new_task_category) => new_task_category);
+        const element1 = await model_task_categories.create({'name': 'test_get_1'});
+        const element2 = await model_task_categories.create({'name': 'test_get_2'});
 
         await request(app).get(route).then(response => {
             expect(response.statusCode).toBe(200);
@@ -77,7 +77,7 @@ describe(`GET ${route}/:id`, () => {
     };
 
     test('valid id', async () => {
-        const element1 = await model_task_categories.create({'name': 'test_getId_1'}).then((new_task_category) => new_task_category);
+        const element1 = await model_task_categories.create({'name': 'test_getId_1'});
         await expectGetIdOk(element1.id);
         element1.destroy();
     });
@@ -126,12 +126,12 @@ describe(`POST ${route}`, () => {
             });
     };
 
-    const expectPostOk = async body => {
+    const expectPostOk = body => {
         expect.assertions(2);
         return request(app)
             .post(route)
             .send(body)
-            .then(async res => {
+            .then(res => {
                 expect(res.statusCode).toBe(201);
                 expect(res.body).toEqual({id: expect.any(Number)});
                 return res.body.id;
@@ -159,19 +159,19 @@ describe(`POST ${route}`, () => {
     test('name=null', () => {
         return expectPostError(wrong_body_param_null);
     });
-    test('wrong param', async () => {
-        await expectPostError(wrong_body_param);
+    test('wrong param', () => {
+        return expectPostError(wrong_body_param);
     });
 });
 
 describe(`PUT ${route}/:id`, () => {
 
-    const expectPutIdOkWithUpdatedId = async (body, id) => {
+    const expectPutIdOkWithUpdatedId = (body, id) => {
         expect.assertions(2);
-        return await request(app)
+        return request(app)
             .put(route + '/' + id)
             .send(body)
-            .then(async res => {
+            .then(res => {
                 expect(res.statusCode).toBe(204);
                 expect(res.body).toEqual({});
             });
@@ -210,7 +210,7 @@ describe(`PUT ${route}/:id`, () => {
     };
 
     test('correct update', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_1_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_1_OLD'});
         const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_1_NEW'};
         await expectPutIdOkWithUpdatedId(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
@@ -220,7 +220,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('not existing id', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_2_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_2_OLD'});
         const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_2_NEW'};
         await expectPutIdNotFound(elementNEW, -1);
         await model_task_categories.destroy({
@@ -230,7 +230,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('not valid id', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_3_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_3_OLD'});
         const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_3_NEW'};
         await expectPutIdError(elementNEW, 'not a valid id');
         await model_task_categories.destroy({
@@ -240,7 +240,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('too much params', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_4_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_4_OLD'});
         const elementNEW = {...(elementOLD.dataValues), name: 'test_putId_4_NEW', excidingParam: 'too much'};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
@@ -250,7 +250,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('too few params', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'});
         const elementNEW = {id: elementOLD.id};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
@@ -260,7 +260,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('null param', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_5_OLD'});
         const elementNEW = {...(elementOLD.dataValues), name: null};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
@@ -270,7 +270,7 @@ describe(`PUT ${route}/:id`, () => {
         });
     });
     test('wrong param', async () => {
-        const elementOLD = await model_task_categories.create({name: 'test_putId_6_OLD'}).then((new_task_category) => new_task_category);
+        const elementOLD = await model_task_categories.create({name: 'test_putId_6_OLD'});
         const elementNEW = {id: elementOLD.id, wrongParameterName: 'test_putId_6_NEW'};
         await expectPutIdError(elementNEW, elementOLD.id);
         await model_task_categories.destroy({
@@ -325,7 +325,7 @@ describe(`DELETE ${route}/:id`, () => {
     };
 
     test('valid id', async () => {
-        const element1 = await model_task_categories.create({'name': 'test_deleteId_1'}).then((new_task_category) => new_task_category);
+        const element1 = await model_task_categories.create({'name': 'test_deleteId_1'});
         await expectDeleteIdOk(element1.id);
         element1.destroy();
     });
