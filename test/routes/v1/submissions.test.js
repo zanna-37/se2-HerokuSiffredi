@@ -277,7 +277,7 @@ describe('PUT /v1/submissions/id', () => {
             .put(route + '/' + firstId)
             .send({...body})
             .then(async resp => {
-                deleteSubmissions([firstId,secondId]);
+                deleteSubmissions([firstId, secondId]);
                 expect(resp.statusCode).toBe(204);
 
             });
@@ -326,7 +326,7 @@ describe('PUT /v1/submissions/id', () => {
         const idThatWillBeDeleted = await createSubmission(defaultPostBody);
         await deleteSubmissions(idThatWillBeDeleted);
         return tester(app)
-            .put(route+'/'+idThatWillBeDeleted)
+            .put(route + '/' + idThatWillBeDeleted)
             .send(defaultPutBody)
             .then(resp => {
                 expect(resp.statusCode).toBe(404);
@@ -374,6 +374,52 @@ describe('PUT /v1/submissions/id', () => {
     test('correct put request with only mandatory arguments', () => {
         return correctPutRequest({...defaultPutBody, id: 5});
     });
+});
+describe('PUT /v1/submissions', () => {
+    const wrongPutRequest = body => {
+        return tester(app)
+            .put(route)
+            .send(body)
+            .then(resp => {
+                expect(resp.statusCode).toBe(400);
+                expect(resp.body).toHaveProperty('code');
+                expect(resp.body).toHaveProperty('message');
+            });
+    };
+    test('empty body', wrongPutRequest());
+    test('wrong body', wrongPutRequest({}));
+
+    test('empty array', wrongPutRequest([]));
+    test('array of non-object', wrongPutRequest([1, 2, 3]));
+
+    test('array with object that has not all arguments', async () => {
+        const firstNewSubmissionId = await createSubmission(defaultPostBody);
+        const secondNewSubmissionId = await createSubmission(defaultPostBody);
+        return wrongPutRequest([{assignedTaskId: 3, id: firstNewSubmissionId}, {
+            examInstanceId: 3,
+            id: secondNewSubmissionId
+        }]);
+    });
+
+    test('put request with id that does not exist', async () => {
+        const firstSubmissionIdThatWillBeDeleted = await createSubmission(defaultPostBody);
+        const secondSubmissionIdThatWillBeDeleted = await createSubmission(defaultPostBody);
+        await deleteSubmissions([firstSubmissionIdThatWillBeDeleted, secondSubmissionIdThatWillBeDeleted]);
+        return wrongPutRequest([{...defaultPostBody, id:firstSubmissionIdThatWillBeDeleted},
+            {...defaultPostBody, id: secondSubmissionIdThatWillBeDeleted}]);
+    });
+    test('correct put request', async () => {
+        const firstNewSubmissionId = await createSubmission(defaultPostBody);
+        const secondNewSubmissionId = await createSubmission(defaultPostBody);
+
+        return tester(app)
+            .put(route)
+            .send([{...defaultPostBody, id: firstNewSubmissionId}, {...defaultPostBody, id: secondNewSubmissionId}])
+            .then(resp => {
+                expect(resp.statusCode).toBe(204);
+            });
+    });
+
 });
 
 describe('DELETE /v1/submissions', () => {
