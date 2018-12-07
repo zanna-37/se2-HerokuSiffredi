@@ -9,12 +9,12 @@ afterAll(() =>
 const rightBody = {
     name: 'Miriam',
     surname: 'Punzi',
-    student_number: 186574
+    student_number: 123456
 };
 
 const route = '/v1/users';
 
-describe('GET /v1/users', () => {
+describe(`GET ${route}`, () => {
     test('Test if it retrieves all the right attributes', () => {
         return request(app)
             .get(route)
@@ -44,7 +44,7 @@ describe('GET /v1/users', () => {
     });
 });
 
-describe('POST /v1/users', () => {
+describe(`POST ${route}`, () => {
     // Functions that send a post request
     const expectPostError = body => {
         return request(app)
@@ -67,7 +67,6 @@ describe('POST /v1/users', () => {
             });
     };
 
-    // Tests right body
     test('Test right body', () => exceptPostOK(rightBody));
 
     // Test body missing parameters
@@ -92,9 +91,11 @@ describe('POST /v1/users', () => {
     test('Test student number = 0', () => expectPostError({...rightBody, student_number: 0}));
 });
 
-describe('GET /v1/users/{id}', () => {
+describe(`GET ${route} /{id}`, () => {
+    // temporary user for testing
     let idTempUser;
 
+    // creation of temporary user
     request(app)
         .post(route)
         .send({...rightBody})
@@ -138,7 +139,19 @@ describe('GET /v1/users/{id}', () => {
     });
 });
 
-describe('PUT /v1/users/{id}', () => {
+describe(`POST ${route} /{id}`, () => {
+    // test the status code we want for post on /users/id
+    return request(app)
+        .post(route + '/' + 3)
+        .send()
+        .then(res => {
+            expect(res.status).toBe(405);
+            expect(res.body).toHaveProperty('code');
+            expect(res.body).toHaveProperty('message');
+        });
+});
+
+describe(`PUT ${route} /{id}`, () => {
     // temporary user for testing
     let idTempUser;
 
@@ -151,6 +164,7 @@ describe('PUT /v1/users/{id}', () => {
             return idTempUser;
         });
 
+    // functions that send a put request
     const expectPutBadRequest = body => {
         return request(app)
             .put(route + '/' + idTempUser)
@@ -182,7 +196,6 @@ describe('PUT /v1/users/{id}', () => {
             });
     };
 
-    // Tests right body
     test('Test right body', () => exceptPutOK({...rightBody, id: idTempUser}));
 
     // Test body missing parameters
@@ -190,17 +203,13 @@ describe('PUT /v1/users/{id}', () => {
     test('Test name undefined', () => expectPutBadRequest({...rightBody, name: undefined, id: idTempUser}));
     test('Test surname undefined', () => expectPutBadRequest({...rightBody, surname: undefined, id: idTempUser}));
     test('Test student number undefined', () => expectPutBadRequest({
-        ...rightBody,
-        student_number: undefined,
-        id: idTempUser
+        ...rightBody, student_number: undefined, id: idTempUser
     }));
 
     // Test body with invalid parameters
     test('Test body with average in json', () => expectPutBadRequest({...rightBody, average: 18, id: idTempUser}));
     test('Test body with strange parameters', () => expectPutBadRequest({
-        ...rightBody,
-        birth: '08/04/1997',
-        id: idTempUser
+        ...rightBody, birth: '08/04/1997', id: idTempUser
     }));
 
     // Test body missing values of parameters
@@ -214,9 +223,7 @@ describe('PUT /v1/users/{id}', () => {
     test('Test name is not string', () => expectPutBadRequest({...rightBody, name: 1, id: idTempUser}));
     test('Test surname is not string', () => expectPutBadRequest({...rightBody, surname: 1, id: idTempUser}));
     test('Test student number is not number', () => expectPutBadRequest({
-        ...rightBody,
-        student_number: 'hello',
-        id: idTempUser
+        ...rightBody, student_number: 'hello', id: idTempUser
     }));
     test('Test student number < 0', () => expectPutBadRequest({...rightBody, student_number: -12, id: idTempUser}));
     test('Test student number = 0', () => expectPutBadRequest({...rightBody, student_number: 0, id: idTempUser}));
@@ -228,7 +235,7 @@ describe('PUT /v1/users/{id}', () => {
     test('Test id not in db', () => expectPutNotFound({...rightBody, id: -1}));
 });
 
-describe('DELETE /v1/users/{id}', () => {
+describe(`DELETE ${route} /{id}`, () => {
     // temporary user for testing
     let idTempUser;
 

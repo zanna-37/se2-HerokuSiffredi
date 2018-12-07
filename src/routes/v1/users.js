@@ -48,6 +48,10 @@ router.get('/:id', function (req, res) {
         });
 });
 
+router.post('/:id', function (req, res) {
+    res.status(405).send({code: 405, message: 'Method Not Allowed: you can not decide the id of a new user'});
+});
+
 router.put('/:id', function (req, res) {
     const req_body = req.body;
     const id = req.params.id;

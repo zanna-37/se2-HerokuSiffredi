@@ -596,7 +596,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
         put:
-            summary: Update some tasks
+            summary: Update some users
             tags:
             - users
             parameters:
@@ -615,7 +615,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
         delete:
-            summary: Delete a batch of tasks
+            summary: Delete a batch of users
             tags:
             - users
             parameters:
