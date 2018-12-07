@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
         res.status(400).send({code: 400, message: 'Some required parameters are null'});
     } else if (!(
         Array.isArray(params.userIDs) && params.userIDs.every(val => Number.isInteger(val)) &&
-        Array.isArray(params.assignedTaskIDs) && params.userIDs.every(val => Number.isInteger(val)) &&
+        Array.isArray(params.assignedTaskIDs) && params.assignedTaskIDs.every(val => Number.isInteger(val)) &&
         Number.isInteger(params.examEventID)
     )) {
         res.status(400).send({code: 400, message: 'Parameters are of the wrong type'});
@@ -62,7 +62,7 @@ router.post('/', (req, res) => {
                     }
                 )
                     .then(examInstance => {
-                        res.status(200).send({id: examInstance.id});
+                        res.status(201).send({id: examInstance.id});
                     });
             });
 

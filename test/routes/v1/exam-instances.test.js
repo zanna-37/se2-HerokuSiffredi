@@ -10,11 +10,10 @@ test(`GET ${route}`, () =>
     request(app)
         .get(route)
         .then(res => {
-            expect.assertions(8);
             expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
             res.body.forEach(examInstance => {
-                expect(examInstance.keys().length).toBe(5);
+                expect(Object.keys(examInstance).length).toBe(5);
                 expect(examInstance).toHaveProperty('id');
                 expect(examInstance).toHaveProperty('userIDs');
                 expect(examInstance).toHaveProperty('assignedTaskIDs');
@@ -24,13 +23,49 @@ test(`GET ${route}`, () =>
         })
 );
 
+describe(`GET ${route}/:id`, () => {
+    const expectGetError = id =>
+        request(app)
+            .get(`${route}${id}`)
+            .then(res => {
+                expect.assertions(3);
+                expect(res.status).toBe(400);
+                expect(res.body).toHaveProperty('code');
+                expect(res.body).toHaveProperty('message');
+            });
+
+    test('no id', () => expectGetError(''));
+    test('id is alphanumerical', () => expectGetError('tt1'));
+    test('id is unvalid', () => expectGetError('0'));
+    test('valid id', async () => {
+        const testExamInstance = {
+            userIDs: [4, 6, 9],
+            assignedTaskIDs: [10, 20, 30],
+            examEventID: 14
+        };
+        const examInstance = await db.model('exam_instances').create(testExamInstance);
+        await request(app)
+            .get(`${route}/${examInstance.id}`)
+            .then(res => {
+                const instID = examInstance.id;
+                expect(res.status).toBe(200);
+                expect(res.body).toEqual({id: instID, ...testExamInstance});
+                return db.model('exam_instances').destroy({
+                    where: {
+                        id: instID
+                    }
+                });
+            });
+    });
+});
+
+
 describe(`POST ${route}`, () => {
     const expectPostError = body =>
         request(app)
             .post(route)
             .send(body)
             .then(res => {
-                expect.assertions(3);
                 expect(res.status).toBe(400);
                 expect(res.body).toHaveProperty('code');
                 expect(res.body).toHaveProperty('message');
@@ -47,7 +82,6 @@ describe(`POST ${route}`, () => {
         request(app)
             .post(route)
             .then(res => {
-                expect.assertions(3);
                 expect(res.status).toBe(400);
                 expect(res.body).toHaveProperty('code');
                 expect(res.body).toHaveProperty('message');
