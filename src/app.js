@@ -18,10 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // });
 
 app.get('/', (req, res) => res.send(
-    'Hello ' + Math.round(Math.random() * 100) + '° World!<br>' +
-    '<a href="/v1/users">users</a><br>' +
-    '<a href="/v1/task-categories">task-categories</a><br>' +
-    '<a href="/v1/tasks">tasks</a>'
+    '<h1>Welcome to the HerokuSiffredi\'s group project</h1>' +
+    '<a href="https://se2herokusiffredi1.docs.apiary.io/#">Check out our documentation on Apiary to get more information</a><br>'
 ));
 
 app.use('/v1/task-categories', task_categories_v1);
