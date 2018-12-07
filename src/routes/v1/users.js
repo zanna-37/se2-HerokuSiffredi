@@ -81,4 +81,17 @@ router.put('/:id', function (req, res) {
     }
 });
 
+router.delete('/:id', function (req, res) {
+    const id = req.params.id;
+
+    model_users
+        .destroy({where: {id: id}})
+        .then(numRowsDeleted => {
+            if (Number.parseInt(numRowsDeleted) === 0)
+                res.status(404).send({code: 404, message: 'Not Found: id not found'});
+            else
+                res.status(204).send();
+        });
+});
+
 module.exports = router;

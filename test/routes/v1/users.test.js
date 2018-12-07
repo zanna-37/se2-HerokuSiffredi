@@ -241,17 +241,6 @@ describe('DELETE /v1/users/{id}', () => {
             return idTempUser;
         });
 
-    const expectDeleteBadRequest = body => {
-        return request(app)
-            .delete(route + '/' + idTempUser)
-            .send(body)
-            .then(res => {
-                expect(res.status).toBe(400);
-                expect(res.body).toHaveProperty('code');
-                expect(res.body).toHaveProperty('message');
-            });
-    };
-
     const expectDeleteNotFound = body => {
         return request(app)
             .delete(route + '/' + idTempUser)
@@ -269,12 +258,9 @@ describe('DELETE /v1/users/{id}', () => {
             .send(body)
             .then(res => {
                 expect(res.status).toBe(204);
-                expect(res.body).toHaveProperty('code');
-                expect(res.body).toHaveProperty('message');
             });
     };
 
-    test('Test id in body different from id in route', () => expectDeleteBadRequest({id: -1}));
     test('Test id in db', () => expectDeleteOK({id: idTempUser}));
-    test('Test id NOT in db', () => expectDeleteNotFound({id: idTempUser}));
+    test('Test id NOT in db', () => expectDeleteNotFound({id: -1}));
 });
