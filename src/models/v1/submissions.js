@@ -24,10 +24,9 @@ const Submissions = db.define('submissions', {
         type: Sequelize.INTEGER,
         allowNull: true
     }
-
 });
 
 // noinspection JSIgnoredPromiseFromCall
-Submissions.sync({force: true});
+Submissions.sync({force: false});
 
 module.exports = Submissions;
