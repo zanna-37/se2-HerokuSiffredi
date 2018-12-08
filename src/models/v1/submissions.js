@@ -12,7 +12,7 @@ const Submissions = db.define('submissions', {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    assignedTaskId : {
+    taskId: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
