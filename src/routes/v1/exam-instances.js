@@ -12,6 +12,20 @@ router.get('/', (req, res) => {
         .then(instances => res.send(instances));
 });
 
+router.get('/:id', async (req, res) => {
+    const id = req.params.id;
+    if (!Number.parseInt(id) && id !== '0') {
+        res.status(400).send({code: 400, message: 'Id is not an integer'});
+    } else {
+        const examInstance = await examInstancesModel.findByPk(id);
+        if (!examInstance) {
+            res.status(404).send({code: 404, message: 'No exam instance with that id'});
+        } else {
+            res.send(examInstance);
+        }
+    }
+});
+
 router.post('/', (req, res) => {
     const params = req.body;
     if (!(
