@@ -28,6 +28,6 @@ const Submissions = db.define('submissions', {
 });
 
 // noinspection JSIgnoredPromiseFromCall
-Submissions.sync({force: false});
+Submissions.sync({force: true});
 
 module.exports = Submissions;
