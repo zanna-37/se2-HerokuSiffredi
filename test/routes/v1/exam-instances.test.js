@@ -40,7 +40,8 @@ describe(`GET ${route}/:id`, () => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
             assignedTaskIDs: [10, 20, 30],
-            examEventID: 14
+            examEventID: 14,
+            finalEvaluation: null
         };
         const examInstance = await db.model('exam_instances').create(testExamInstance);
         await request(app)
@@ -162,11 +163,17 @@ describe(`PUT ${route}/:id`, () => {
         const examInstance = await model.create(testExamInstance);
         return request(app)
             .put(`${route}/${examInstance.id}`)
-            .body(body)
+            .send(body)
             .then(async res => {
                 expect(res.status).toBe(204);
                 const newExamInstance = await model.findByPk(examInstance.id);
-                expect(newExamInstance).toEqual(body);
+                expect(newExamInstance.dataValues).toEqual(
+                    {
+                        id: examInstance.id,
+                        ...body,
+                        finalEvaluation: null
+                    }
+                );
                 await model.destroy({where: {id: examInstance.id}});
             });
     };
@@ -179,12 +186,15 @@ describe(`PUT ${route}/:id`, () => {
         };
         const model = db.model('exam_instances');
         const examInstance = await model.create(testExamInstance);
-        return expectPutErrorWithBody(examInstance.id, 400, body);
+        return expectPutErrorWithBody(examInstance.id, 400, body)
+            .then(async () => {
+                await model.destroy({where: {id: examInstance.id}});
+            });
     };
 
     // Tests on id
-    test('no id', () => expectPutErrorWithoutBody('', 404));
-    test('id is alphanumerical', () => expectPutErrorWithoutBody('aa2', 404));
+    test('no id', () => expectPutErrorWithoutBody('', 400));
+    test('id is alphanumerical', () => expectPutErrorWithoutBody('aa2', 400));
     test('id does not exist', () => expectPutErrorWithoutBody('0', 404));
 
     // Tests on body

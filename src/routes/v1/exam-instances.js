@@ -83,4 +83,53 @@ router.post('/', (req, res) => {
     }
 });
 
+router.put('/', (req, res) => {
+    res.status(400).send({code: 400, message: 'PUT request without id not implemented.'});
+});
+
+router.put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+    //////////////////////////
+    // Parameter Validation //
+    //////////////////////////
+    if (!Number.parseInt(id) && id !== '0') {
+        res.status(400).send({code: 400, message: 'Expected integer as id'});
+    } else {
+        // Try to find the exam instance with the given id
+        const examInstance = await examInstancesModel.findByPk(id);
+        if (!examInstance) {
+            res.status(404).send({code: 404, message: 'No exam instance for that id'});
+        } else if (
+            !(
+                body.hasOwnProperty('userIDs') &&
+                body.hasOwnProperty('assignedTaskIDs') &&
+                body.hasOwnProperty('examEventID')
+            )
+        ) {
+            res.status(400).send({code: 400, message: 'Missing parameters'});
+        } else if (
+            body.userIDs == null ||
+            body.assignedTaskIDs == null ||
+            body.examEventID == null
+        ) {
+            res.status(400).send({code: 400, message: 'Some required parameters are null'});
+        } else if (
+            !(
+                Array.isArray(body.userIDs) && body.userIDs.every(val => Number.isInteger(val)) &&
+                Array.isArray(body.assignedTaskIDs) && body.assignedTaskIDs.every(val => Number.isInteger(val)) &&
+                Number.isInteger(body.examEventID)
+            )
+        ) {
+            res.status(400).send({code: 400, message: 'Parameters are of the wrong type'});
+        } else {
+            ///////////////////////////////
+            // Actual PUT implementation //
+            ///////////////////////////////
+            await examInstance.update(body);
+            res.sendStatus(204);
+        }
+    }
+});
+
 module.exports = router;
