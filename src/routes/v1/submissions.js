@@ -106,8 +106,28 @@ router.put('/:id', async (req, res) => {
         }
     }
 });
-router.put('/', (req, res) => {
-    res.sendStatus(204);
+router.put('/', async (req, res) => {
+    const params = req.body;
+    if (!Array.isArray(params) || params.length === 0) {
+        res.status(400).send({code: 400, message: 'Bad request, wrong input type'});
+    } else if (params.some(item => {
+        return !(typeof item === 'object');
+    })) {
+        res.status(400).send({code: 400, message: 'Bad request, wrong input type'});
+    } else if (params.some(item => {
+        return !(item.hasOwnProperty('id') &&
+            item.hasOwnProperty('examInstanceId') &&
+            item.hasOwnProperty('assignedTaskId') &&
+            item.hasOwnProperty('userAnswer'));
+    })) {
+        res.status(400).send({code: 400, message: 'Bad request, not enough arguments'});
+    } else {
+
+        await params.forEach(item => {
+            model_submissions.update(item, {where: {id: item.id}});
+        }) ;
+        res.sendStatus(204);
+    }
 });
 
 router.delete('/', (req, res) => {
