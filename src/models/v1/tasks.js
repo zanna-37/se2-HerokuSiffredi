@@ -2,23 +2,25 @@ const Sequelize = require('sequelize');
 const db = require('../../db');
 
 const Tasks = db.define('tasks', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     exerciseText: {
         type: Sequelize.STRING
     },
-    answers: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
-    },
-    explanation: {
+    rightAnswer: {
         type: Sequelize.STRING
     },
-    categoryId: {
-        type: Sequelize.INTEGER
-    },
     totalPoints: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
     },
-    lastEdit: {
-        type: Sequelize.DATE
+    average: {
+        type: Sequelize.FLOAT
+    },
+    categoryIDs: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
     }
 });
 
