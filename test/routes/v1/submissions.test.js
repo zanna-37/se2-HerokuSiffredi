@@ -66,7 +66,7 @@ describe('GET /v1/submissions/', () => {
 describe('GET /v1/submissions/id', () => {
     test('check the existence of all attributes and the status code', () => {
         return createSubmission({...defaultPostBody, userAnswer: 'new'})
-            .then(async id => {
+            .then( id => {
                 return tester(app)
                     .get(route + '/' + id)
                     .then(resp => {
@@ -82,7 +82,7 @@ describe('GET /v1/submissions/id', () => {
     });
     test('check the type of the attributes', () => {
         return createSubmission({...defaultPostBody, userAnswer: 'new'})
-            .then(async id => {
+            .then( id => {
                 return tester(app)
                     .get(route + '/' + id)
                     .then(resp => {
@@ -165,7 +165,7 @@ describe('POST /v1/submissions', () => {
             });
     };
 
-    const correctPostRequest = async body => {
+    const correctPostRequest =  body => {
         return tester(app)
             .post(route)
             .send(body)
@@ -208,11 +208,11 @@ describe('POST /v1/submissions', () => {
     test('finalCorrectionId not a Integer', () => wrongPostRequest({...defaultPostBody, finalCorrectionId: 'string'}));
     test('not enough arguments', () => wrongPostRequest({examInstanceId: 2, finalCorrectionId: 2}));
 
-    test('right POST request without finalCorrectionId', async () => {
+    test('right POST request without finalCorrectionId',  () => {
         return correctPostRequest({...defaultPostBody});
     });
 
-    test('right POST request with all attributes', async () => {
+    test('right POST request with all attributes',  () => {
         return correctPostRequest({...defaultPostBody, finalCorrectionId: defaultFinalCorrectionId});
     });
 
@@ -276,7 +276,7 @@ describe('PUT /v1/submissions/id', () => {
         return tester(app)
             .put(route + '/' + firstId)
             .send({...body})
-            .then(async resp => {
+            .then( resp => {
                 deleteSubmissions([firstId, secondId]);
                 expect(resp.statusCode).toBe(204);
 
@@ -403,14 +403,7 @@ describe('PUT /v1/submissions', () => {
             id: secondNewSubmissionId
         }]);
     });
-    /*
-        test('put request with id that does not exist', async () => {
-            const firstSubmissionIdThatWillBeDeleted = await createSubmission(defaultPostBody);
-            const secondSubmissionIdThatWillBeDeleted = await createSubmission(defaultPostBody);
-            await deleteSubmissions([firstSubmissionIdThatWillBeDeleted, secondSubmissionIdThatWillBeDeleted]);
-            return wrongPutRequest([{...defaultPostBody, id:firstSubmissionIdThatWillBeDeleted},
-                {...defaultPostBody, id: secondSubmissionIdThatWillBeDeleted}]);
-        });*/
+
     test('correct put request', async () => {
         const firstNewSubmissionId = await createSubmission(defaultPostBody);
         const secondNewSubmissionId = await createSubmission(defaultPostBody);
@@ -448,18 +441,18 @@ describe('DELETE /v1/submissions', () => {
         return wrongDeleteRequest([1, '2', 3]);
     });
 
-    test('sent an array with at least a non-integer element', async () => {
+    test('sent an array with at least a non-integer element',  () => {
         return wrongDeleteRequest([1, 1.2, 3]);
     });
     test('sent negative number as id', () => wrongDeleteRequest([-1, -3]));
     test('sent a correct delete request with only one id', () => {
         return createSubmission(defaultPostBody)
-            .then(async id => {
-                await correctDeleteRequest([id]);
+            .then( id => {
+                return correctDeleteRequest([id]);
             });
     });
 
-    test('sent a correct delete request with a list of id', async () => {
+    test('sent a correct delete request with a list of id',  () => {
         return createSubmission(defaultPostBody)
             .then(() => {
                 return createSubmission(defaultPostBody)

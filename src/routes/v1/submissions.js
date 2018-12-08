@@ -18,7 +18,7 @@ router.get('/:id', (req, res) => {
         res.status(400).send({code: 400, message: 'Bad request, wrong id'});
     } else {
         model_submissions.findByPk(id)
-            .then(async submission => {
+            .then( submission => {
                 if (submission == null) {
                     res.status(404).send({code: 404, message: 'Bad request, id not found'});
                 } else {
@@ -71,7 +71,7 @@ router.post('/:id', (req, res) => {
     res.status(404).send({code: 404, message: 'method not allowed'});
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',  (req, res) => {
     res.set('Accept', 'appliation/json');
     const params = req.body;
     const keys = Object.keys(params);
@@ -96,7 +96,7 @@ router.put('/:id', async (req, res) => {
             res.status(400).send({code: 400, message: 'Bad request, wrong input type'});
         } else {
             model_submissions.update(params, {where: {id: id}})
-                .then(async (rows) => {
+                .then( (rows) => {
                     if (rows[0] === 0) {
                         res.status(404).send({code: 404, message: 'Bad request, id not found'});//TODO: cambiare messaggio
                     } else {
@@ -106,7 +106,7 @@ router.put('/:id', async (req, res) => {
         }
     }
 });
-router.put('/', async (req, res) => {
+router.put('/',  (req, res) => {
     const params = req.body;
     if (!Array.isArray(params) || params.length === 0) {
         res.status(400).send({code: 400, message: 'Bad request, wrong input type'});
@@ -165,7 +165,7 @@ router.delete('/:id', (req, res) => {
         res.status(400).send({code: 400, message: 'Bad request, wrong type id'});
     } else {
         model_submissions.destroy({where: {id: id}})
-            .then(async (resp) => {
+            .then( (resp) => {
                 if (resp === 0) {
                     res.status(404).send({code: 404, message: 'id not found '});
                 } else {
