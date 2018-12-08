@@ -16,7 +16,7 @@ afterAll(() => {
 
 const defaultPostBody = {
     examInstanceId: 2,
-    assignedTaskId: 5,
+    taskId: 5,
     userAnswer: 'user answer'
 };
 
@@ -40,7 +40,7 @@ describe('GET /v1/submissions/', () => {
                     expect(item).toBeInstanceOf(Object);
                     expect(item.hasOwnProperty('id') &&
                         item.hasOwnProperty('examInstanceId') &&
-                        item.hasOwnProperty('assignedTaskId') &&
+                        item.hasOwnProperty('taskId') &&
                         item.hasOwnProperty('userAnswer') &&
                         item.hasOwnProperty('finalCorrectionId')).toBeTruthy();
                 });
@@ -54,7 +54,7 @@ describe('GET /v1/submissions/', () => {
                 resp.body.forEach(item => {
                     expect(Number.isInteger(item.id)).toBeTruthy();
                     expect(Number.isInteger(item.examInstanceId)).toBeTruthy();
-                    expect(Number.isInteger(item.assignedTaskId)).toBeTruthy();
+                    expect(Number.isInteger(item.taskId)).toBeTruthy();
                     expect(typeof item.userAnswer).toBe('string');
                     expect(Number.isInteger(item.finalCorrectionId) ||
                         (item.finalCorrectionId == null && typeof item.finalCorrectionId == 'object'))
@@ -74,7 +74,7 @@ describe('GET /v1/submissions/id', () => {
                         expect(resp.body).toBeInstanceOf(Object);
                         expect(resp.body.hasOwnProperty('id') &&
                             resp.body.hasOwnProperty('examInstanceId') &&
-                            resp.body.hasOwnProperty('assignedTaskId') &&
+                            resp.body.hasOwnProperty('taskId') &&
                             resp.body.hasOwnProperty('userAnswer') &&
                             resp.body.hasOwnProperty('finalCorrectionId')).toBeTruthy();
                     });
@@ -88,7 +88,7 @@ describe('GET /v1/submissions/id', () => {
                     .then(resp => {
                         expect(typeof resp.body.id).toBe('number');
                         expect(typeof resp.body.examInstanceId).toBe('number');
-                        expect(typeof resp.body.assignedTaskId).toBe('number');
+                        expect(typeof resp.body.taskId).toBe('number');
                         expect(typeof resp.body.userAnswer).toBe('string');
                         expect(typeof resp.body.finalCorrectionId == 'number' ||
                             (resp.body.finalCorrectionId == null && typeof resp.body.finalCorrectionId == 'object'))
@@ -193,17 +193,17 @@ describe('POST /v1/submissions', () => {
     }));
 
     test('examInstanceId null', () => wrongPostRequest({...defaultPostBody, examInstanceId: null}));
-    test('assignedTaskId null', () => wrongPostRequest({...defaultPostBody, assignedTaskId: null}));
+    test('taskId null', () => wrongPostRequest({...defaultPostBody, taskId: null}));
     test('userAnswer null', () => wrongPostRequest({...defaultPostBody, userAnswer: null}));
 
     test('examId undefined', () => wrongPostRequest({...defaultPostBody, examInstanceId: undefined}));
-    test('assignedTaskId undefined', () => wrongPostRequest({...defaultPostBody, assignedTaskId: undefined}));
+    test('taskId undefined', () => wrongPostRequest({...defaultPostBody, taskId: undefined}));
     test('userAnswer undefined', () => wrongPostRequest({...defaultPostBody, userAnswer: undefined}));
 
     test('too many arguments', () => wrongPostRequest({...defaultPostBody, foo: 'foo', bar: 'bar'}));
 
     test('examId not a Integer', () => wrongPostRequest({...defaultPostBody, examInstanceId: 'string'}));
-    test('assignedTaskId not a Integer', () => wrongPostRequest({...defaultPostBody, assignedTaskId: 'string'}));
+    test('taskId not a Integer', () => wrongPostRequest({...defaultPostBody, taskId: 'string'}));
     test('userAnswer not a String', () => wrongPostRequest({...defaultPostBody, userAnswer: 9}));
     test('finalCorrectionId not a Integer', () => wrongPostRequest({...defaultPostBody, finalCorrectionId: 'string'}));
     test('not enough arguments', () => wrongPostRequest({examInstanceId: 2, finalCorrectionId: 2}));
@@ -254,7 +254,7 @@ describe('PUT /v1/submissions/id', () => {
     const defaultPutBody = {
         id: 934,
         examInstanceId: 6,
-        assignedTaskId: 9,
+        taskId: 9,
         userAnswer: 'user answer',
     };
 
@@ -287,13 +287,13 @@ describe('PUT /v1/submissions/id', () => {
     test('examId as a string instead of integer', () => wrongPutRequest({...defaultPutBody, examInstanceId: '6'}));
     test('examId as a a float instead of integer', () => wrongPutRequest({...defaultPutBody, examInstanceId: 6.4}));
 
-    test('assignedTaskId as a string instead of integer', () => wrongPutRequest({
+    test('taskId as a string instead of integer', () => wrongPutRequest({
         ...defaultPutBody,
-        assignedTaskId: '9'
+        taskId: '9'
     }));
-    test('assignedTaskId as a a float instead of integer', () => wrongPutRequest({
+    test('taskId as a a float instead of integer', () => wrongPutRequest({
         ...defaultPutBody,
-        assignedTaskId: 9.6
+        taskId: 9.6
     }));
 
     test('finalCorrectionId as a string instead of integer', () => wrongPutRequest({
@@ -313,11 +313,11 @@ describe('PUT /v1/submissions/id', () => {
     test('empty body', () => wrongPutRequest({}));
 
     test('examId null', () => wrongPutRequest({...defaultPutBody, examInstanceId: null}));
-    test('assignedTaskId null', () => wrongPutRequest({...defaultPutBody, assignedTaskId: null}));
+    test('taskId null', () => wrongPutRequest({...defaultPutBody, taskId: null}));
     test('userAnswer null', () => wrongPutRequest({...defaultPutBody, userAnswer: null}));
 
     test('examId undefined', () => wrongPutRequest({...defaultPutBody, examInstanceId: undefined}));
-    test('assignedTaskId undefined', () => wrongPutRequest({...defaultPutBody, assignedTaskId: undefined}));
+    test('taskId undefined', () => wrongPutRequest({...defaultPutBody, taskId: undefined}));
     test('userAnswer undefined', () => wrongPutRequest({...defaultPutBody, userAnswer: undefined}));
 
     test('too many arguments ', () => wrongPutRequest({...defaultPutBody, foo: 'foo', bar: 5}));
@@ -337,7 +337,7 @@ describe('PUT /v1/submissions/id', () => {
     test('not enough arguments (no id)', () => {
         return wrongPutRequest({
             examInstanceId: 6,
-            assignedTaskId: 9,
+            taskId: 9,
             userAnswer: 'user answer'
         });
     });
@@ -345,12 +345,12 @@ describe('PUT /v1/submissions/id', () => {
     test('not enough arguments (no examId)', () => {
         return wrongPutRequest({
             id: 934,
-            assignedTaskId: 9,
+            taskId: 9,
             userAnswer: 'user answer'
         });
     });
 
-    test('not enough arguments (no assignedTaskId )', () => {
+    test('not enough arguments (no taskId )', () => {
         return wrongPutRequest({
             id: 934,
             examInstanceId: 6,
@@ -362,7 +362,7 @@ describe('PUT /v1/submissions/id', () => {
         return wrongPutRequest({
             id: 934,
             examInstanceId: 6,
-            assignedTaskId: 9,
+            taskId: 9,
         });
     });
 
@@ -398,7 +398,7 @@ describe('PUT /v1/submissions', () => {
     test('array with object that has not all arguments', async () => {
         const firstNewSubmissionId = await createSubmission(defaultPostBody);
         const secondNewSubmissionId = await createSubmission(defaultPostBody);
-        return wrongPutRequest([{assignedTaskId: 3, id: firstNewSubmissionId}, {
+        return wrongPutRequest([{taskId: 3, id: firstNewSubmissionId}, {
             examInstanceId: 3,
             id: secondNewSubmissionId
         }]);

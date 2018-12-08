@@ -10,7 +10,7 @@ const examInstances = database.define(
             autoIncrement: true
         },
         userIDs: {type: Sequelize.ARRAY(Sequelize.INTEGER)},
-        assignedTaskIDs: {type: Sequelize.ARRAY(Sequelize.INTEGER)},
+        taskIDs: {type: Sequelize.ARRAY(Sequelize.INTEGER)},
         examEventID: {type: Sequelize.INTEGER},
         finalEvaluation: {type: Sequelize.DOUBLE}
     }

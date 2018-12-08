@@ -37,7 +37,7 @@ router.post('/', function (req, res) {
 
     if (!(params.hasOwnProperty('examInstanceId') &&
         params.hasOwnProperty('userAnswer') &&
-        params.hasOwnProperty('assignedTaskId'))) {
+        params.hasOwnProperty('taskId'))) {
         res.status(400).send({code: 400, message: 'Bad request, not enough parameters'});
     } else if (Object.values(params).some((items) => {
         return items == null;
@@ -46,13 +46,13 @@ router.post('/', function (req, res) {
             .send({code: 400, message: 'Bad request, some parameters are null'});
     } else if (keys.some(key => {
         return (key !== 'examInstanceId' &&
-            key !== 'assignedTaskId' &&
+            key !== 'taskId' &&
             key !== 'userAnswer' &&
             key !== 'finalCorrectionId');
     })) {
         res.status(400).send({code: 400, message: 'Bad request, too many arguments'});
     } else if (!(Number.isInteger(params.examInstanceId) &&
-        Number.isInteger(params.assignedTaskId) &&
+        Number.isInteger(params.taskId) &&
         typeof params.userAnswer === 'string')) {
         res.status(400).send({code: 400, message: 'Bad request, wrong arguments type'});
     } else {
@@ -81,14 +81,14 @@ router.put('/:id',  (req, res) => {
     } else if (keys.some(key => {
         return (key !== 'id' &&
             key !== 'examInstanceId' &&
-            key !== 'assignedTaskId' &&
+            key !== 'taskId' &&
             key !== 'userAnswer' &&
             key !== 'finalCorrectionId');
     })) {
         res.status(400).send({code: 400, message: 'Bad request, to many arguments'});
     } else if (!(Number.isInteger(params.examInstanceId) &&
         Number.isInteger(params.id) &&
-        Number.isInteger(params.assignedTaskId) &&
+        Number.isInteger(params.taskId) &&
         typeof params.userAnswer === 'string')) {
         res.status(400).send({code: 400, message: 'Bad request wrong type of arguments'});
     } else {
@@ -117,7 +117,7 @@ router.put('/',  (req, res) => {
     } else if (params.some(item => {
         return !(item.hasOwnProperty('id') &&
             item.hasOwnProperty('examInstanceId') &&
-            item.hasOwnProperty('assignedTaskId') &&
+            item.hasOwnProperty('taskId') &&
             item.hasOwnProperty('userAnswer'));
     })) {
         res.status(400).send({code: 400, message: 'Bad request, not enough arguments'});

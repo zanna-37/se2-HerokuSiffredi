@@ -16,7 +16,7 @@ test(`GET ${route}`, () =>
                 expect(Object.keys(examInstance).length).toBe(5);
                 expect(examInstance).toHaveProperty('id');
                 expect(examInstance).toHaveProperty('userIDs');
-                expect(examInstance).toHaveProperty('assignedTaskIDs');
+                expect(examInstance).toHaveProperty('taskIDs');
                 expect(examInstance).toHaveProperty('examEventID');
                 expect(examInstance).toHaveProperty('finalEvaluation');
             });
@@ -39,7 +39,7 @@ describe(`GET ${route}/:id`, () => {
     test('valid id', async () => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
-            assignedTaskIDs: [10, 20, 30],
+            taskIDs: [10, 20, 30],
             examEventID: 14,
             finalEvaluation: null
         };
@@ -73,7 +73,7 @@ describe(`POST ${route}`, () => {
 
     const defaultBody = {
         userIDs: [7, 9, 10],
-        assignedTaskIDs: [1, 11, 21],
+        taskIDs: [1, 11, 21],
         examEventID: 23,
         finalEvaluation: null
     };
@@ -97,10 +97,10 @@ describe(`POST ${route}`, () => {
         }
     ));
     test('userIDs is null', () => expectPostError({...defaultBody, userIDs: null}));
-    test('assignedTaskIDs is null', () => expectPostError({...defaultBody, assignedTaskIDs: null}));
+    test('taskIDs is null', () => expectPostError({...defaultBody, taskIDs: null}));
     test('examEventID is null', () => expectPostError({...defaultBody, examEventID: null}));
     test('userIDs is undefined', () => expectPostError({...defaultBody, userIDs: undefined}));
-    test('assignedTaskIDs is undefined', () => expectPostError({...defaultBody, assignedTaskIDs: undefined}));
+    test('taskIDs is undefined', () => expectPostError({...defaultBody, taskIDs: undefined}));
     test('examEventID is undefined', () => expectPostError({...defaultBody, examEventID: undefined}));
     test('userIDs string instead of integer', () => expectPostError(
         {
@@ -108,10 +108,10 @@ describe(`POST ${route}`, () => {
             userIDs: defaultBody.userIDs.map(toString)
         }
     ));
-    test('assignedTaskIDs string instead of integer', () => expectPostError(
+    test('taskIDs string instead of integer', () => expectPostError(
         {
             ...defaultBody,
-            assignedTaskIDs: defaultBody.assignedTaskIDs.map(toString)
+            taskIDs: defaultBody.taskIDs.map(toString)
         }
     ));
     test('examEventID string instead of integer', () => expectPostError(
@@ -156,7 +156,7 @@ describe(`PUT ${route}/:id`, () => {
     const bodyAndIdOK = async body => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
-            assignedTaskIDs: [10, 20, 30],
+            taskIDs: [10, 20, 30],
             examEventID: 14
         };
         const model = db.model('exam_instances');
@@ -181,7 +181,7 @@ describe(`PUT ${route}/:id`, () => {
     const bodyWrongIdOK = async body => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
-            assignedTaskIDs: [10, 20, 30],
+            taskIDs: [10, 20, 30],
             examEventID: 14
         };
         const model = db.model('exam_instances');
@@ -193,14 +193,14 @@ describe(`PUT ${route}/:id`, () => {
     };
 
     // Tests on id
-    test('no id', () => expectPutErrorWithoutBody('', 400));
+    test('no id', () => expectPutErrorWithoutBody('', 501));
     test('id is alphanumerical', () => expectPutErrorWithoutBody('aa2', 400));
     test('id does not exist', () => expectPutErrorWithoutBody('0', 404));
 
     // Tests on body
     const defaultBody = {
         userIDs: [120, 5, 9, 19],
-        assignedTaskIDs: [23, 15, 1, 1000],
+        taskIDs: [23, 15, 1, 1000],
         examEventID: 201
     };
     test('valid id and empty body', () => bodyWrongIdOK({}));
@@ -212,10 +212,10 @@ describe(`PUT ${route}/:id`, () => {
         }
     ));
     test('valid id and userIDs is null', () => bodyWrongIdOK({...defaultBody, userIDs: null}));
-    test('valid id and assignedTaskIDs is null', () => bodyWrongIdOK({...defaultBody, assignedTaskIDs: null}));
+    test('valid id and taskIDs is null', () => bodyWrongIdOK({...defaultBody, taskIDs: null}));
     test('valid id and examEventID is null', () => bodyWrongIdOK({...defaultBody, examEventID: null}));
     test('valid id and userIDs is undefined', () => bodyWrongIdOK({...defaultBody, userIDs: undefined}));
-    test('valid id and assignedTaskIDs is undefined', () => bodyWrongIdOK({...defaultBody, assignedTaskIDs: undefined}));
+    test('valid id and taskIDs is undefined', () => bodyWrongIdOK({...defaultBody, taskIDs: undefined}));
     test('valid id and examEventID is undefined', () => bodyWrongIdOK({...defaultBody, examEventID: undefined}));
     test('userIDs string instead of integer', () => bodyWrongIdOK(
         {
@@ -223,10 +223,10 @@ describe(`PUT ${route}/:id`, () => {
             userIDs: defaultBody.userIDs.map(toString)
         }
     ));
-    test('assignedTaskIDs string instead of integer', () => bodyWrongIdOK(
+    test('taskIDs string instead of integer', () => bodyWrongIdOK(
         {
             ...defaultBody,
-            assignedTaskIDs: defaultBody.assignedTaskIDs.map(toString)
+            taskIDs: defaultBody.taskIDs.map(toString)
         }
     ));
     test('examEventID string instead of integer', () => bodyWrongIdOK(
@@ -256,7 +256,7 @@ describe(`DELETE ${route}/:id`, () => {
     test('valid id', async () => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
-            assignedTaskIDs: [10, 20, 30],
+            taskIDs: [10, 20, 30],
             examEventID: 14
         };
         const model = db.model('exam_instances');

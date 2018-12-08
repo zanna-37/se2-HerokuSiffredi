@@ -1262,7 +1262,7 @@ paths:
                         examID:
                             type: integer
                             minimum: 0
-                        assignedTaskIDs:
+                        taskIDs:
                             type: array
                             items:
                                 type: integer
@@ -1467,7 +1467,7 @@ paths:
                         userID:
                             type: integer
                             minimum: 0
-                        assignedTaskID:
+                        taskIDs:
                             type: integer
                             minimum: 0
                         userAnswer:
@@ -1478,7 +1478,7 @@ paths:
                     required:
                     - examID
                     - userID
-                    - assignedTaskID
+                    - taskIDs
                     - userAnswer
             responses:
                 201:
@@ -1817,7 +1817,7 @@ definitions:
                 items:
                     type: integer
                     minimum: 0
-            assignedTaskIDs:
+            taskIDs:
                 type: array
                 items:
                     type: integer
@@ -1837,7 +1837,7 @@ definitions:
         required:
         - id
         - userIDs
-        - assignedTaskIDs
+        - taskIDs
         - examEventID
     Submission:
         title: Submission
@@ -1852,7 +1852,7 @@ definitions:
             userID:
                 type: integer
                 minimum: 0
-            assignedTaskID:
+            taskIDs:
                 type: integer
                 minimum: 0
             userAnswer:
@@ -1864,7 +1864,7 @@ definitions:
         - submissionID
         - examID
         - userID
-        - assignedTaskID
+        - taskIDs
         - userAnswer
     Error:
         title: Error
