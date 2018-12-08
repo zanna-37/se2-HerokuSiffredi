@@ -5,24 +5,25 @@ const Submissions = db.define('submissions', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false
     },
-    examId: {
-        type: Sequelize.INTEGER
-    },
-    userId: {
-        type: Sequelize.INTEGER
+    examInstanceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     assignedTaskId : {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
     },
     userAnswer : {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     finalCorrectionId : {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
     }
-
 });
 
 // noinspection JSIgnoredPromiseFromCall
