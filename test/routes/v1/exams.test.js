@@ -20,7 +20,7 @@ test(`GET ${route}`, () => {
         });
 });
 
-// Three required inputs: examTemplateID:integer, ownerIDs:[integer], defaultDeadlineEnd:date
+// Three required inputs: examTemplateID:integer, ownersIDs:[integer], defaultDeadlineEnd:date
 // Inputs are passed as json in body
 describe(`POST ${route}`, () => {
     const expectPostError = body => {
@@ -35,7 +35,7 @@ describe(`POST ${route}`, () => {
     };
     const defaultBody = {
         examTemplateID: 23,
-        ownerIDs: [5, 10, 70],
+        ownersIDs: [5, 10, 70],
         defaultDeadlineEnd: '2019-10-19 10:23:54+02'
     };
 
@@ -58,10 +58,10 @@ describe(`POST ${route}`, () => {
         }
     ));
     test('examTemplateID is null', () => expectPostError({...defaultBody, examTemplateID: null}));
-    test('ownerIDs is null', () => expectPostError({...defaultBody, ownerIDs: null}));
+    test('ownersIDs is null', () => expectPostError({...defaultBody, ownersIDs: null}));
     test('defaultDeadlineEnd is null', () => expectPostError({...defaultBody, defaultDeadlineEnd: null}));
     test('examTemplateID is undefined', () => expectPostError({...defaultBody, examTemplateID: undefined}));
-    test('ownerIDs is undefined', () => expectPostError({...defaultBody, ownerIDs: undefined}));
+    test('ownersIDs is undefined', () => expectPostError({...defaultBody, ownersIDs: undefined}));
     test('defaultDeadlineEnd is undefined', () => expectPostError({...defaultBody, defaultDeadlineEnd: undefined}));
     test('examTemplateID string instead of integer', () => expectPostError(
         {
@@ -69,10 +69,10 @@ describe(`POST ${route}`, () => {
             examTemplateID: defaultBody.examTemplateID.toString()
         }
     ));
-    test('ownerIDs string instead of integer', () => expectPostError(
+    test('ownersIDs string instead of integer', () => expectPostError(
         {
             ...defaultBody,
-            ownerIDs: defaultBody.ownerIDs.map(toString)
+            ownersIDs: defaultBody.ownersIDs.map(toString)
         }
     ));
     test('examTemplateID integer instead of string', () => expectPostError(
