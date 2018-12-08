@@ -241,18 +241,18 @@ describe(`PUT ${route}/:id`, () => {
 });
 
 describe(`DELETE ${route}/:id`, () => {
-    const deleteError = id =>
+    const deleteError = (id, code) =>
         request(app)
             .delete(`${route}/${id}`)
             .then(res => {
-                expect(res.status).toBe(404);
+                expect(res.status).toBe(code);
                 expect(res.body).toHaveProperty('code');
                 expect(res.body).toHaveProperty('message');
             });
 
-    test('no id', () => deleteError(''));
-    test('alphanumerical id', () => deleteError('bbs213l'));
-    test('id does not exist', () => deleteError('0'));
+    test('no id', () => deleteError('', 400));
+    test('alphanumerical id', () => deleteError('bbs213l', 400));
+    test('id does not exist', () => deleteError('0', 404));
     test('valid id', async () => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
@@ -265,7 +265,8 @@ describe(`DELETE ${route}/:id`, () => {
             .delete(`${route}/${examInstance.id}`)
             .then(async res => {
                 expect(res.status).toBe(204);
-                await model.destroy({where: {id: examInstance.id}});
+                const testing = await model.findByPk(examInstance.id);
+                expect(testing).toBeFalsy();
             });
     });
 });

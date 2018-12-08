@@ -132,4 +132,23 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.delete('/', (req, res) => {
+    res.status(400).send({code: 400, message: 'PUT request without id not implemented.'});
+});
+
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    if (!Number.parseInt(id) && id !== '0') {
+        res.status(400).send({code: 400, message: 'Expected integer as id'});
+    } else {
+        const examInstance = await examInstancesModel.findByPk(id);
+        if (!examInstance) {
+            res.status(404).send({code: 404, message: 'No exam instance for that id'});
+        } else {
+            await examInstance.destroy();
+            res.sendStatus(204);
+        }
+    }
+});
+
 module.exports = router;
