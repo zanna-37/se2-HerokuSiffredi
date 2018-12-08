@@ -98,7 +98,7 @@ router.put('/:id',  (req, res) => {
             model_submissions.update(params, {where: {id: id}})
                 .then( (rows) => {
                     if (rows[0] === 0) {
-                        res.status(404).send({code: 404, message: 'Bad request, id not found'});//TODO: cambiare messaggio
+                        res.status(404).send({code: 404, message: 'Bad request, id not found'});
                     } else {
                         res.status(204).send();
                     }

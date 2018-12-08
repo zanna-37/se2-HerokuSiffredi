@@ -6,7 +6,6 @@ const Tasks = db.define('tasks', {
         type: Sequelize.STRING
     },
     answers: {
-        // TODO answers[] type
         type: Sequelize.ARRAY(Sequelize.INTEGER)
     },
     explanation: {
