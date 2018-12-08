@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 
-/////////////////////////////////////////////////////////////
-//                      ATTENTION!!!                       //
-// How to solve "db-connection-uri.js" not found down here //
-/////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//                  ATTENTION!!!                    //
+// What to do if "db-connection-uri.js" isn't found //
+//////////////////////////////////////////////////////
 
 // the db-connection-uri.js should contain something like: module.exports = 'postgres://user:password@example.com:5432/dbname';
 const DB_CONNECTION_URI = process.env.DATABASE_URL || require('../db-connection-uri');
