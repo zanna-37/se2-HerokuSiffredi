@@ -1440,16 +1440,17 @@ paths:
 
     /submissions:
         get:
-            summary: Not supported
-            deprecated: true
+            summary: Returns all submissions
             tags:
             - submissions
+            description: Returns all submissions
             responses:
-                405:
-                    description: Method not allowed
+                200:
+                    description: All submissions
                     schema:
-                        $ref: '#/definitions/Error'
-
+                        type: array
+                        items:
+                            $ref: '#/definitions/Submission'
         post:
             summary: New Submission
             tags:
@@ -1461,10 +1462,7 @@ paths:
                 schema:
                     type: object
                     properties:
-                        examID:
-                            type: integer
-                            minimum: 0
-                        userID:
+                        examInstanceID:
                             type: integer
                             minimum: 0
                         taskIDs:
@@ -1476,8 +1474,7 @@ paths:
                             type: integer
                             minimum: 0
                     required:
-                    - examID
-                    - userID
+                    - examInstanceID
                     - taskIDs
                     - userAnswer
             responses:
@@ -1846,10 +1843,7 @@ definitions:
             submissionID:
                 type: integer
                 minimum: 0
-            examID:
-                type: integer
-                minimum: 0
-            userID:
+            examInstanceID:
                 type: integer
                 minimum: 0
             taskIDs:
@@ -1862,8 +1856,7 @@ definitions:
                 minimum: 0
         required:
         - submissionID
-        - examID
-        - userID
+        - examInstanceID
         - taskIDs
         - userAnswer
     Error:
