@@ -459,18 +459,25 @@ describe('DELETE /v1/submissions', () => {
             });
     });
 
-    test('sent a correct delete request with a list of id', () => {
-        let ids = [];
-        return tester(app)
-            .get(route)
-            .then(resp => {
-                resp.body.forEach(item => {
-                    ids.push(item.id);
-                });
-            })
-            .then(async () => {
-                await correctDeleteRequest(ids);
+    test('sent a correct delete request with a list of id', async () => {
+        return createSubmission(defaultPostBody)
+            .then(() => {
+                return createSubmission(defaultPostBody)
+                    .then(() => {
+                        let ids = [];
+                        return tester(app)
+                            .get(route)
+                            .then(resp => {
+                                resp.body.forEach(item => {
+                                    ids.push(item.id);
+                                });
+                            })
+                            .then(async () => {
+                                await correctDeleteRequest(ids);
+                            });
+                    });
             });
+
     });
 });
 describe('DELETE /v1/submissions/id', () => {

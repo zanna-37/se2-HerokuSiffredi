@@ -122,11 +122,18 @@ router.put('/', async (req, res) => {
     })) {
         res.status(400).send({code: 400, message: 'Bad request, not enough arguments'});
     } else {
+        let submissionPromises = [];
+        params.forEach(subm => {
+            submissionPromises.push(
+                model_submissions.update(subm, {where: {id: subm.id}})
+            );
+        });
 
-        await params.forEach(item => {
-            model_submissions.update(item, {where: {id: item.id}});
-        }) ;
-        res.sendStatus(204);
+        Promise.all(submissionPromises)
+            .then(() => {
+                res.sendStatus(204);
+            });
+
     }
 });
 
