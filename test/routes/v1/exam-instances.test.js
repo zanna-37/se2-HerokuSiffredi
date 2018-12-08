@@ -24,19 +24,18 @@ test(`GET ${route}`, () =>
 );
 
 describe(`GET ${route}/:id`, () => {
-    const expectGetError = id =>
+    const expectGetError = (id, code) =>
         request(app)
             .get(`${route}/${id}`)
             .then(res => {
                 expect.assertions(3);
-                expect(res.status).toBe(400);
+                expect(res.status).toBe(code);
                 expect(res.body).toHaveProperty('code');
                 expect(res.body).toHaveProperty('message');
             });
 
-    test('no id', () => expectGetError(''));
-    test('id is alphanumerical', () => expectGetError('tt1'));
-    test('id is unvalid', () => expectGetError('0'));
+    test('id is alphanumerical', () => expectGetError('tt1', 400));
+    test('id is unvalid', () => expectGetError('0', 404));
     test('valid id', async () => {
         const testExamInstance = {
             userIDs: [4, 6, 9],
