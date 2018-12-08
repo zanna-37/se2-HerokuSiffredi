@@ -12,19 +12,17 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const params = req.body;
-    if (params == null || params === {}) {
-        res.status(400).send({code: 400, message: 'Bad request'});
-    } else if (!(params.hasOwnProperty('examTemplateID') &&
-        params.hasOwnProperty('ownerIDs') &&
+    if (!(params.hasOwnProperty('examTemplateID') &&
+        params.hasOwnProperty('ownersIDs') &&
         params.hasOwnProperty('defaultDeadlineEnd'))) {
         res.status(400).send({code: 400, message: 'Bad request'});
     } else if (params.examTemplateID == null ||
-        params.ownerIDs == null ||
+        params.ownersIDs == null ||
         params.defaultDeadlineEnd == null) {
         res.status(400).send({code: 400, message: 'Bad request'});
     } else if (!(Number.isInteger(params.examTemplateID) &&
-        Array.isArray(params.ownerIDs) &&
-        params.ownerIDs.every(val => Number.isInteger(val)) &&
+        Array.isArray(params.ownersIDs) &&
+        params.ownersIDs.every(val => Number.isInteger(val)) &&
         typeof params.defaultDeadlineEnd === 'string')) {
         res.status(400).send({code: 400, message: 'Bad request'});
     } else {
