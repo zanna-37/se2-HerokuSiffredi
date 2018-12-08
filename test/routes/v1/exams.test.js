@@ -243,16 +243,6 @@ describe(`PUT ${route}/:id`, () => {
 
     test('correct update', async () => {
         const elementOLD = await examsModel.create(defaultBody);
-        const elementNEW = {...defaultBody, id: elementOLD.id, defaultDeadlineEnd: '2020-10-19 10:23:54+02'};
-        await expectPutIdOkWithUpdatedId(elementNEW, elementOLD.id);
-        await examsModel.destroy({
-            where: {
-                id: elementNEW.id
-            }
-        });
-    });
-    test('correct update', async () => {
-        const elementOLD = await examsModel.create(defaultBody);
         const elementNEW = {...defaultBody, id: elementOLD.id, defaultDeadlineStart: '2020-10-19 10:23:54+02'};
         await expectPutIdOkWithUpdatedId(elementNEW, elementOLD.id);
         await examsModel.destroy({
