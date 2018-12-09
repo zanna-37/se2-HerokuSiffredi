@@ -14,7 +14,7 @@ consumes:
 produces:
 - application/json
 paths:
-    /tasks:
+    /v1/tasks:
         get:
             summary: Returns a list of all tasks.
             tags:
@@ -114,7 +114,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /tasks/{id}:
+    /v1/tasks/{id}:
         get:
             summary: Returns a specific task
             tags:
@@ -196,7 +196,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /task-corrections:
+    /v1/task-corrections:
         get:
             summary: Returns a list of all task corrections for an exam.
             tags:
@@ -299,7 +299,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /task-corrections/{id}:
+    /v1/task-corrections/{id}:
         get:
             summary: Returns a specific task correction
             tags:
@@ -381,7 +381,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /task-categories:
+    /v1/task-categories:
         get:
             summary: Returns a list of all task categories
             tags:
@@ -461,7 +461,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /task-categories/{id}:
+    /v1/task-categories/{id}:
         get:
             summary: Returns a specific task category
             tags:
@@ -547,7 +547,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /users:
+    /v1/users:
         get:
             summary: Returns a list of all users
             tags:
@@ -634,7 +634,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /users/{id}:
+    /v1/users/{id}:
         get:
             summary: Returns a specific user
             tags:
@@ -716,7 +716,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /courses:
+    /v1/courses:
         get:
             summary: Returns a list of all courses
             tags:
@@ -799,7 +799,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /courses/{id}:
+    /v1/courses/{id}:
         get:
             summary: Returns a specific course
             tags:
@@ -881,7 +881,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exams:
+    /v1/exams:
         get:
             summary: Returns all Exam events
             tags:
@@ -977,7 +977,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exams/{id}:
+    /v1/exams/{id}:
         get:
             summary: Returns a specific Exam event
             tags:
@@ -1059,7 +1059,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exam-templates:
+    /v1/exam-templates:
         get:
             summary: Returns all Exam templates
             tags:
@@ -1149,7 +1149,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exam-templates/{id}:
+    /v1/exam-templates/{id}:
         get:
             summary: Returns a specific Exam template
             tags:
@@ -1231,12 +1231,11 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exam-instances:
+    /v1/exam-instances:
         get:
             summary: Returns all instances of an exam
             tags:
             - exam instances
-            description: Returns all instances of a exam
             responses:
                 200:
                     description: All exam instances
@@ -1248,7 +1247,6 @@ paths:
             summary: Create an exam instance for a user
             tags:
             - exam instances
-            description: Creates an instance of that exam for that user
             parameters:
             -   in: body
                 name: atomic-exam
@@ -1319,7 +1317,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /exam-instances/{id}:
+    /v1/exam-instances/{id}:
         get:
             summary: Returns a specific exam instance
             tags:
@@ -1438,12 +1436,11 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /submissions:
+    /v1/submissions:
         get:
             summary: Returns all submissions
             tags:
             - submissions
-            description: Returns all submissions
             responses:
                 200:
                     description: All submissions
@@ -1524,7 +1521,7 @@ paths:
                     schema:
                         $ref: '#/definitions/Error'
 
-    /submissions/{id}:
+    /v1/submissions/{id}:
         get:
             summary: Returns a specific submission
             tags:
