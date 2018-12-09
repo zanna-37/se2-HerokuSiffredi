@@ -38,4 +38,57 @@ router.get('/:id', (req, res) => {
     }
 });
 
+router.post('/', (req, res) => {
+    const params = req.body;
+    res.set('Accept', 'application/json');
+
+    if (!(params.hasOwnProperty('exerciseText') &&
+        params.hasOwnProperty('rightAnswer') &&
+        params.hasOwnProperty('totalPoints') &&
+        params.hasOwnProperty('categoryIDs'))) {
+
+        res.status(400).send({code: 400, message: 'Missing parameters'});
+    } else if (params.hasOwnProperty('average')) {
+        res.status(400).send({code: 400, message: 'Cannot set average on creation'});
+    } else if (
+        Object.keys(params).some(key => {
+            return (key !== 'exerciseText' &&
+                key !== 'rightAnswer' &&
+                key !== 'totalPoints' &&
+                key !== 'categoryIDs');
+        })) {
+
+        res.status(400).send({code: 400, message: 'Exceeding parameters'});
+    } else if (params.exerciseText == null ||
+        params.rightAnswer == null ||
+        params.totalPoints == null ||
+        params.categoryIDs == null) {
+
+        res.status(400).send({code: 400, message: 'Some required parameters are null'});
+    } else if (!(typeof params.exerciseText === 'string' &&
+        typeof params.rightAnswer === 'string' &&
+        !isNaN(params.totalPoints) &&
+        Array.isArray(params.categoryIDs) &&
+        params.categoryIDs.length !== 0 &&
+        params.categoryIDs.every(item => Number.isInteger(item)))) {
+
+        res.status(400).send({code: 400, message: 'Wrong type parameters'});
+    } else {
+        model_tasks.create({...params})
+            .then(task => {
+                res.status(201).send({id: task.id});
+            });
+    }
+});
+
+router.post('/:id', (req, res) => {
+    res.set('Accept', 'application/json');
+    res
+        .status(405)
+        .send({
+            code: 405,
+            message: 'Method not allowed'
+        });
+});
+
 module.exports = router;
