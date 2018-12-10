@@ -145,4 +145,29 @@ router.put('/:id', (req, res) => {
     }
 });
 
+router.delete('/:id', (req, res) => {
+    const id = Number.parseInt(req.params.id);
+    res.set('Accept', 'application/json');
+
+    if (!Number.isInteger(id)) {
+        res.status(400).send({code: 400, message: 'Specified ID is not an integer'});
+    } else if (id < 0) {
+        res.status(400).send({code: 400, message: 'Specified ID is not valid'});
+    } else {
+        model_tasks
+            .destroy({
+                where: {
+                    id: id
+                }
+            })
+            .then(numRowsUpdated => {
+                if (numRowsUpdated !== 1) {
+                    res.status(404).send({code: 404, message: 'Task not found'});
+                } else {
+                    res.status(204).send();
+                }
+            });
+    }
+});
+
 module.exports = router;
