@@ -16,9 +16,6 @@ const Tasks = db.define('tasks', {
     totalPoints: {
         type: Sequelize.FLOAT
     },
-    average: {
-        type: Sequelize.FLOAT
-    },
     categoryIDs: {
         type: Sequelize.ARRAY(Sequelize.INTEGER)
     }

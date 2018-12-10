@@ -11,7 +11,6 @@ const demoTask = {
     exerciseText: 'demoText',
     rightAnswer: 'demoAnswer',
     totalPoints: 1,
-    average: 1,
     categoryIDs: [1, 2, 3]
 };
 
@@ -31,7 +30,6 @@ describe(`GET ${route}`, () => {
                         exerciseText: expect.any(String),
                         rightAnswer: expect.any(String),
                         totalPoints: expect.any(Number),
-                        average: expect.any(Number),
                         categoryIDs: expect.arrayContaining([expect.any(Number)])
                     });
                 });
@@ -56,7 +54,6 @@ describe(`GET ${route}/:id`, () => {
                         exerciseText: expect.any(String),
                         rightAnswer: expect.any(String),
                         totalPoints: expect.any(Number),
-                        average: expect.any(Number),
                         categoryIDs: expect.arrayContaining([expect.any(Number)])
                     }
                 );
@@ -130,8 +127,6 @@ describe(`GET ${route}/:id`, () => {
 });
 
 describe(`POST ${route}`, () => {
-    const newTask = {...demoTask, average: undefined};
-
     const postOk = body => {
         expect.assertions(2);
         return request(app)
@@ -161,7 +156,7 @@ describe(`POST ${route}`, () => {
     };
 
     test('valid parameters', async () => {
-        const tmp = await postOk(newTask);
+        const tmp = await postOk(demoTask);
         model_tasks.destroy({
             where: {
                 id: tmp
@@ -170,25 +165,27 @@ describe(`POST ${route}`, () => {
 
     });
 
-    test('exerciseText is undefined', async () => postError({...newTask, exerciseText: undefined}));
-    test('rightAnswer is undefined', async () => postError({...newTask, rightAnswer: undefined}));
-    test('totalPoints is undefined', async () => postError({...newTask, totalPoints: undefined}));
-    test('categoryIDs is undefined', async () => postError({...newTask, categoryIDs: undefined}));
+    test('exerciseText is undefined', async () => postError({...demoTask, exerciseText: undefined}));
+    test('rightAnswer is undefined', async () => postError({...demoTask, rightAnswer: undefined}));
+    test('totalPoints is undefined', async () => postError({...demoTask, totalPoints: undefined}));
+    test('categoryIDs is undefined', async () => postError({...demoTask, categoryIDs: undefined}));
 
-    test('exerciseText is null', async () => postError({...newTask, exerciseText: null}));
-    test('rightAnswer is null', async () => postError({...newTask, rightAnswer: null}));
-    test('totalPoints is null', async () => postError({...newTask, totalPoints: null}));
-    test('categoryIDs is null', async () => postError({...newTask, categoryIDs: null}));
+    test('exerciseText is null', async () => postError({...demoTask, exerciseText: null}));
+    test('rightAnswer is null', async () => postError({...demoTask, rightAnswer: null}));
+    test('totalPoints is null', async () => postError({...demoTask, totalPoints: null}));
+    test('categoryIDs is null', async () => postError({...demoTask, categoryIDs: null}));
 
-    test('setting average on creation', async () => postError({...newTask, average: 10}));
-    test('exceeding parameters', async () => postError({...newTask, oneMore: true}));
+    test('exceeding parameters', async () => postError({...demoTask, oneMore: true}));
 
-    test('exerciseText value is not valid', async () => postError({...newTask, exerciseText: 10}));
-    test('rightAnswer value is not valid', async () => postError({...newTask, rightAnswer: 10}));
-    test('totalPoints value is not valid', async () => postError({...newTask, totalPoints: 'wrong'}));
-    test('categoryIDs is not an array', async () => postError({...newTask, categoryIDs: 10}));
-    test('zero-length categoryIDs', async () => postError({...newTask, categoryIDs: []}));
-    test('categoryIDs has some values which are not numbers', async () => postError({...newTask, categoryIDs: [1,'wrong',3]}));
+    test('exerciseText value is not valid', async () => postError({...demoTask, exerciseText: 10}));
+    test('rightAnswer value is not valid', async () => postError({...demoTask, rightAnswer: 10}));
+    test('totalPoints value is not valid', async () => postError({...demoTask, totalPoints: 'wrong'}));
+    test('categoryIDs is not an array', async () => postError({...demoTask, categoryIDs: 10}));
+    test('zero-length categoryIDs', async () => postError({...demoTask, categoryIDs: []}));
+    test('categoryIDs has some values which are not numbers', async () => postError({
+        ...demoTask,
+        categoryIDs: [1, 'wrong', 3]
+    }));
 });
 
 describe(`POST ${route}/:id`, () => {
@@ -199,6 +196,267 @@ describe(`POST ${route}/:id`, () => {
             .post(route + '/' + randID)
             .then(res => {
                 expect(res.status).toBe(405);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    });
+});
+
+describe(`PUT ${route}/:id`, () => {
+    const putIdError = (body, id) => {
+        expect.assertions(2);
+        return request(app)
+            .put(route + '/' + id)
+            .send(body)
+            .then(res => {
+                expect(res.status).toBe(400);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    test('update successful', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: 'new text'};
+        expect.assertions(2);
+        await request(app)
+            .put(route + '/' + tmp.id)
+            .send(tmp1)
+            .then(res => {
+                expect(res.statusCode).toBe(204);
+                expect(res.body).toEqual({});
+            });
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    // missing parameters
+    test('ID is undefined', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), id: undefined};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp.id
+            }
+        });
+    });
+    test('exerciseText is undefined', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: undefined};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('rightAnswer is undefined', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), rightAnswer: undefined};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('totalPoints is undefined', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), totalPoints: undefined};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('categoryIDs is undefined', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), categoryIDs: undefined};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    test('exceeding parameter', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), oneMore: true};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    // null parameters
+    test('ID is null', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), id: null};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp.id
+            }
+        });
+    });
+    test('exerciseText is null', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: null};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('rightAnswer is null', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), rightAnswer: null};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('totalPoints is null', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), totalPoints: null};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('categoryIDs is null', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), categoryIDs: null};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    // wrong type parameters
+    test('ID is not an integer', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), id: 'wrong'};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp.id
+            }
+        });
+    });
+    test('exerciseText is not a string', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: 10};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('rightAnswer is not a string', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), rightAnswer: 10};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('totalPoints is not a number', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), totalPoints: 'wrong'};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('categoryIDs is not an array', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), categoryIDs: 'wrong'};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('categoryIDs is empty', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), categoryIDs: []};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+    test('categoryIDs has some values that are not integers', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), categoryIDs: [1,2,'wrong',4]};
+        await putIdError(tmp1, tmp.id);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    test('url ID and the one in parameters are different', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: 'new exerciseText'};
+        await putIdError(tmp1, -1);
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    test('not valid url ID', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        const tmp1 = {...(tmp.dataValues), exerciseText: 'new text'};
+        await putIdError(tmp1, 'wrong');
+        await model_tasks.destroy({
+            where: {
+                id: tmp1.id
+            }
+        });
+    });
+
+    test('ID not found', async () => {
+        expect.assertions(2);
+        await request(app)
+            .put(route + '/' + 0)
+            .send({...demoTask, id: 0})
+            .then(res => {
+                expect(res.statusCode).toBe(404);
                 expect(res.body).toEqual(
                     {
                         code: expect.any(Number),
