@@ -419,7 +419,7 @@ describe(`PUT ${route}/:id`, () => {
     });
     test('categoryIDs has some values that are not integers', async () => {
         const tmp = await model_tasks.create(demoTask);
-        const tmp1 = {...(tmp.dataValues), categoryIDs: [1,2,'wrong',4]};
+        const tmp1 = {...(tmp.dataValues), categoryIDs: [1, 2, 'wrong', 4]};
         await putIdError(tmp1, tmp.id);
         await model_tasks.destroy({
             where: {
@@ -456,6 +456,65 @@ describe(`PUT ${route}/:id`, () => {
             .put(route + '/' + 0)
             .send({...demoTask, id: 0})
             .then(res => {
+                expect(res.statusCode).toBe(404);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    });
+});
+
+describe(`DELETE ${route}/:id`, () => {
+    const deleteIdError = id => {
+        expect.assertions(2);
+        return request(app)
+            .delete(route + '/' + id)
+            .then(res => {
+                expect.assertions(2);
+                expect(res.statusCode).toBe(400);
+                expect(res.body).toEqual(
+                    {
+                        code: expect.any(Number),
+                        message: expect.any(String)
+                    }
+                );
+            });
+    };
+
+    test('valid ID', async () => {
+        const tmp = await model_tasks.create(demoTask);
+        expect.assertions(2);
+        await request(app)
+            .delete(route + '/' + tmp.id)
+            .then(res => {
+                expect.assertions(2);
+                expect(res.statusCode).toBe(204);
+                expect(res.body).toEqual({});
+            });
+    });
+
+    test('ID is not an integer', () => {
+        return deleteIdError('wrong');
+    });
+    test('ID < 0', () => {
+        return deleteIdError(-1);
+    });
+    test('empty ID', () => {
+        return deleteIdError();
+    });
+    test('null ID', () => {
+        return deleteIdError(null);
+    });
+    test('ID not found', async () => {
+        const id = 0;
+        expect.assertions(2);
+        await request(app)
+            .delete(route + '/' + id)
+            .then(res => {
+                expect.assertions(2);
                 expect(res.statusCode).toBe(404);
                 expect(res.body).toEqual(
                     {
