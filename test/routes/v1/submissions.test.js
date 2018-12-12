@@ -372,7 +372,12 @@ describe('PUT /v1/submissions/id', () => {
     });
 
     test('correct put request with only mandatory arguments', () => {
-        return correctPutRequest({...defaultPutBody, id: 5});
+        createSubmission(defaultPostBody)
+            .then(id => {
+                deleteSubmissions(id);
+                return id;
+            })
+            .then(id =>  correctPutRequest({...defaultPutBody, id: id}));
     });
 });
 
